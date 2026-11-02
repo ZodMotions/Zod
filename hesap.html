@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hesabım · ZodMotions</title>
+<meta name="description" content="ZodMotions hesabın: paket, kredi ve motion hakların.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="Hesabım · ZodMotions"><meta property="og:description" content="ZodMotions hesabın: paket, kredi ve motion hakların."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap">
+<link rel="stylesheet" href="zm.css">
+</head>
+<body data-page="hesap">
+<header id="zh" style="height:79px"></header>
+<main class="wrap" lang="tr">
+ <div class="page-h" id="ph"><span class="eyebrow">Hesabım</span><h1 id="hi">Hesabın</h1></div>
+ <p class="note-prev" id="prevNote" hidden style="margin-bottom:14px">Önizleme modu: hesap bu tarayıcıda saklanıyor; ödeme adımı yerine paketi aşağıdan deneme amaçlı açabilirsin.</p>
+ <div class="acct" id="acct" hidden>
+  <div style="display:grid;gap:14px">
+   <section class="panel" aria-labelledby="pk">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">Paketin</span><h2 id="pk" style="margin-top:6px">Ücretsiz</h2></div><a class="btn pri sm" href="fiyatlar.html" id="upg">Paketi yükselt</a></div>
+    <div class="stat">
+     <div><b id="sKredi">0</b><span>AI kredisi</span></div>
+     <div><b id="sMotion">3</b><span id="sMotionL">motion hakkı</span></div>
+     <div><b id="sClean">1</b><span id="sCleanL">damgasız video</span></div>
+    </div>
+    <div><div style="display:flex;justify-content:space-between;font-size:13px;color:var(--mute);margin-bottom:8px"><span id="mLbl">Kredi kullanımı</span><span id="mVal"></span></div><div class="meter"><i id="meter" style="width:0"></i></div></div>
+    <p class="msg" id="renew"></p>
+   </section>
+   <section class="qa" aria-label="Hızlı erişim">
+    <a href="ai-studyo.html">AI Stüdyo<span>Fotoğraftan reklam üret</span></a>
+    <a href="editor.html">Editör<span>Motion şablonunu düzenle</span></a>
+    <a href="sablonlar.html">Şablonlar<span>3.815 hazır şablon</span></a>
+   </section>
+   <section class="panel" id="demoPlans" hidden aria-labelledby="dp"><h2 id="dp" style="font-size:22px">Paketi dene (önizleme)</h2><p class="msg">Ödeme sistemi bağlanana kadar paketleri buradan açıp kredilerin nasıl işlediğini görebilirsin.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px" id="dpBtns"></div></section>
+   <section class="panel" aria-labelledby="od"><h2 id="od" style="font-size:22px">Ödemeler ve faturalar</h2><p class="msg" id="odMsg">Henüz bir ödemen yok. Paket aldığında faturaların burada listelenir ve e-postana gönderilir.</p></section>
+  </div>
+  <div style="display:grid;gap:14px">
+   <section class="panel" aria-labelledby="pf"><h2 id="pf" style="font-size:22px">Profil</h2>
+    <form id="fProf" style="display:grid;gap:12px" novalidate>
+     <div class="fld"><label for="ad">Ad soyad</label><input id="ad" autocomplete="name"></div>
+     <div class="fld"><label for="firma">Firma adı</label><input id="firma" autocomplete="organization"></div>
+     <div class="fld"><label for="em">E-posta</label><input id="em" disabled></div>
+     <button class="btn" type="submit">Kaydet</button><p class="msg" id="pMsg" role="status"></p>
+    </form></section>
+   <section class="panel" aria-labelledby="sf" id="sifre"><h2 id="sf" style="font-size:22px">Şifre</h2>
+    <form id="fPw" style="display:grid;gap:12px" novalidate>
+     <div class="fld" id="wOld"><label for="op">Mevcut şifre</label><input id="op" type="password" autocomplete="current-password"></div>
+     <div class="fld"><label for="np">Yeni şifre</label><input id="np" type="password" autocomplete="new-password" placeholder="En az 8 karakter"></div>
+     <button class="btn" type="submit">Şifreyi değiştir</button><p class="msg" id="wMsg" role="status"></p>
+    </form></section>
+   <section class="panel"><button class="btn" id="out" type="button">Çıkış yap</button>
+    <details><summary style="cursor:pointer;color:var(--mute);font-size:14px">Hesabımı sil</summary><p class="msg" style="margin:10px 0">Hesabın, kalan kredilerin ve bilgilerin kalıcı olarak silinir. Bu işlem geri alınamaz.</p><button class="btn danger" id="del" type="button">Hesabımı kalıcı olarak sil</button></details></section>
+  </div>
+ </div>
+</main>
+<footer id="zf"></footer>
+<script src="zm-config.js"></script><script src="zm-auth.js"></script><script src="zm-engine.js"></script>
+<script src="zm-site.js"></script>
+<script>
+(()=>{const $=id=>document.getElementById(id);const fmt=n=>n===null?'∞':Number(n).toLocaleString('tr-TR');
+ZMA.ready.then(()=>{if(!ZMA.user()){location.replace('giris.html?mode=giris&next=hesap.html');return}});
+if(ZMA.mode==='preview'){$('prevNote').hidden=false;$('demoPlans').hidden=false;$('wOld').hidden=false}else{$('wOld').hidden=true}
+function render(u){if(!u)return;const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;$('acct').hidden=false;
+ const first=(p.ad||'').split(' ')[0];$('hi').textContent=first?'Merhaba, '+first:'Hesabın';
+ $('pk').textContent=P.n;$('sKredi').textContent=fmt(p.kredi);
+ const free=p.plan==='free'||p.plan==='deneme';
+ $('sMotion').textContent=fmt(p.motion_left);$('sMotionL').textContent=free?'ücretsiz motion':'motion hakkı bu ay';
+ $('sClean').textContent=free?fmt(p.clean_left):'Hepsi';$('sCleanL').textContent='damgasız video';
+ if(free&&p.kredi===0){$('mLbl').textContent='Ücretsiz motion kullanımı';$('mVal').textContent=(3-p.motion_left)+' / 3';$('meter').style.width=((3-p.motion_left)/3*100)+'%'}
+ else{const tot=Math.max(P.kredi,p.kredi);$('mLbl').textContent='Kalan AI kredisi';$('mVal').textContent=fmt(p.kredi)+' / '+fmt(tot);$('meter').style.width=(tot?p.kredi/tot*100:0)+'%'}
+ $('renew').textContent=p.period_end?'Paketin '+new Date(p.period_end).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})+' tarihinde yenilenir; krediler o gün yeniden yüklenir.':free?'AI üretimi için ₺299 deneme paketi ya da aylık bir paket seç.':'';
+ $('upg').textContent=p.plan==='ajans'?'Paketleri gör':'Paketi yükselt';
+ if(document.activeElement!==$('ad'))$('ad').value=p.ad||'';if(document.activeElement!==$('firma'))$('firma').value=p.firma||'';$('em').value=u.email;
+ const db=$('dpBtns');db.innerHTML='';[['deneme','+ Deneme paketi (50 kredi)'],['baslangic','Başlangıç'],['pro','Pro'],['ajans','Ajans']].forEach(([k,n])=>{const b=document.createElement('button');b.className='btn sm';b.type='button';b.textContent=n;if(p.plan===k)b.setAttribute('aria-pressed','true');b.onclick=async()=>{const r=await ZMA.demoSetPlan(k);ZMS.toast(r.ok?n+' açıldı (önizleme).':r.error)};db.appendChild(b)})}
+ZMA.onChange(render);
+$('fProf').onsubmit=async e=>{e.preventDefault();const r=await ZMA.updateProfile({ad:$('ad').value,firma:$('firma').value});$('pMsg').className='msg '+(r.ok?'ok':'err');$('pMsg').textContent=r.ok?'Kaydedildi.':r.error};
+$('fPw').onsubmit=async e=>{e.preventDefault();const r=await ZMA.changePassword($('op').value,$('np').value);$('wMsg').className='msg '+(r.ok?'ok':'err');$('wMsg').textContent=r.ok?'Şifren değişti.':r.error;if(r.ok){$('op').value='';$('np').value=''}};
+$('out').onclick=async()=>{await ZMA.signOut();location.href='./'};
+$('del').onclick=async()=>{if(!confirm('Hesabın kalıcı olarak silinsin mi?'))return;const r=await ZMA.deleteAccount();if(r.ok)location.href='./';else ZMS.toast(r.error)};
+})();
+</script>
+</body></html>

@@ -1,0 +1,215 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ZodMotions · İşletmeler için AI reklam stüdyosu</title>
+<meta name="description" content="Ürün fotoğrafını yükle, yapay zekâ reklam videonu çeksin. 3.815 motion şablonu, 45 sektör, Türkçe seslendirme. İlk 3 motion video ücretsiz.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="ZodMotions · İşletmeler için AI reklam stüdyosu"><meta property="og:description" content="Ürün fotoğrafını yükle, yapay zekâ reklam videonu çeksin. 3.815 motion şablonu, 45 sektör, Türkçe seslendirme. İlk 3 motion video ücretsiz."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap">
+<link rel="stylesheet" href="zm.css">
+<style>
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(28px,5vw,72px);align-items:center;padding-block:clamp(28px,4vw,56px) clamp(24px,3vw,40px)}
+.hero-t{display:grid;gap:24px;min-width:0}
+.hero-t h1 .ln{display:block}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.specs{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:8px 28px;padding-top:8px;border-top:1px solid var(--line)}
+.specs div{display:grid;gap:2px}
+.specs b{font-family:var(--f-disp);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums;font-stretch:110%;font-variation-settings:"wdth" 110}
+.specs span{font-family:var(--f-mono);font-size:12px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.monitor{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;min-width:0;max-width:440px;justify-self:end;width:100%}
+.mon-h{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--f-mono);font-size:12px;color:var(--mute);letter-spacing:.06em;min-width:0}
+.mon-h .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mon-h .live{display:flex;align-items:center;gap:6px;color:var(--fg);flex:none}
+.mon-h .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--rec);animation:blink 1.6s steps(2) infinite}
+.mon-cv{aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000;max-width:100%}
+.mon-cv canvas{width:100%;height:100%}
+.mon-tl{display:grid;gap:4px;position:relative;padding:8px 0 2px;border-top:1px solid var(--line)}
+.mon-tl .row{display:grid;grid-template-columns:62px 1fr;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--dim)}
+.mon-tl .row span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.mon-tl .lane{position:relative;height:8px;background:var(--s2);border-radius:6px}
+.mon-tl .lane i{position:absolute;top:0;bottom:0;border-radius:6px;background:var(--acc)}
+.mon-tl .lane i.bg{background:var(--s3)}
+.mon-tl .ph{position:absolute;top:4px;bottom:0;width:1.5px;background:var(--rec);left:70px;pointer-events:none}
+.mon-f{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mon-f .tcode{font-family:var(--f-mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mon-f .link{white-space:nowrap}
+@media (max-width:480px){.monitor{max-width:340px}.dots{display:none!important}}
+.dots{display:flex;gap:6px}
+.dots button{width:22px;height:4px;border-radius:6px;border:0;background:var(--s3);cursor:pointer;padding:0}
+.dots button[aria-pressed="true"]{background:var(--fg)}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr)}.monitor{justify-self:center}.specs{grid-template-columns:repeat(2,auto)}}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:26px;display:grid;gap:12px;align-content:start;min-width:0}
+.step .n{font-family:var(--f-disp);font-weight:900;font-size:64px;line-height:.8;font-stretch:130%;font-variation-settings:"wdth" 130;color:var(--acc-hi)}
+.step p{color:var(--mute)}
+.step .tagl{font-family:var(--f-mono);font-size:12px;color:var(--dim);letter-spacing:.06em;margin-top:6px}
+@media (max-width:820px){.steps{grid-template-columns:1fr}}
+
+.secs{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.sec-t{background:var(--bg);display:grid;grid-template-columns:1fr 64px;gap:14px;align-items:center;padding:18px;text-decoration:none;min-width:0;transition:background .2s}
+.sec-t:hover{background:var(--s1)}
+.sec-t b{font-family:var(--f-disp);font-weight:600;font-size:19px;letter-spacing:-.01em;text-transform:none;line-height:1.05;font-stretch:105%;font-variation-settings:"wdth" 105;display:block}
+.sec-t span{font-family:var(--f-mono);font-size:12px;color:var(--mute);display:block;margin-top:6px}
+.sec-t .mini{aspect-ratio:9/16;border-radius:12px;overflow:hidden;max-width:100%;background:var(--s2)}
+.sec-t .mini canvas{width:100%;height:100%}
+.sec-t.all{background:var(--s1)}.sec-t .mini.plus{display:grid;place-items:center;font-family:var(--f-disp);font-weight:800;font-size:20px;color:var(--acc,#fff)}
+@media (max-width:1000px){.secs{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.secs{grid-template-columns:1fr}}
+
+.film{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:clamp(24px,5vw,64px);align-items:center}
+.film .v{aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000;border:1px solid var(--line);max-width:100%}
+.film .v video{width:100%;height:100%;object-fit:cover}
+.film .side{display:grid;gap:20px;min-width:0;max-width:520px}
+@media (max-width:760px){.film{grid-template-columns:1fr}.film .v{max-width:320px;margin:0 auto;width:100%}}
+
+.plans-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pm{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.pm ul{flex:1}
+.pm.hot{border-color:var(--acc);background:linear-gradient(180deg,var(--acc-soft),var(--s1) 60%)}
+.pm .p{font-family:var(--f-disp);font-weight:800;font-size:40px;font-variant-numeric:tabular-nums}
+.pm .p small{font-family:var(--f-body);font-size:14px;color:var(--mute);font-weight:500}
+.pm ul{margin:0;padding-left:18px;color:var(--mute);display:grid;gap:4px;font-size:14px}
+@media (max-width:820px){.plans-mini{grid-template-columns:1fr}}
+
+.band{background:var(--acc);color:var(--acc-ink);border-radius:16px;padding:clamp(28px,4vw,48px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden}
+.band h2{font-size:clamp(30px,3.6vw,52px);max-width:none}
+.band .btn.light{color:var(--acc)}
+.band .eyebrow::before{background:#fff}
+.band::after{content:"";position:absolute;right:-40px;bottom:-60px;width:320px;height:320px;border-radius:50%;border:2px solid rgba(255,255,255,.25);box-shadow:0 0 0 40px rgba(255,255,255,.06),0 0 0 80px rgba(255,255,255,.04)}
+.monitor{border:0;background:none;padding:0;gap:10px;max-width:340px}.mon-h,.mon-tl,.mon-f .tcode{display:none!important}.mon-cv{border-radius:16px}.mon-f{justify-content:center;gap:16px}.specs{border-top:0;padding-top:4px;gap:6px 36px}.specs b{font-family:var(--f-disp);font-stretch:normal;font-variation-settings:normal;font-size:30px}.specs span{font-family:var(--f-body);letter-spacing:0;text-transform:none;font-size:13px}.hero-t{gap:18px}.hero-t h1{font-size:clamp(48px,6.4vw,104px)}
+@media (max-width:900px){.monitor{max-width:240px}}
+.xhero{position:relative;overflow-x:clip;display:grid;justify-items:center;text-align:center;gap:22px;padding-block:clamp(56px,8vw,112px) clamp(24px,3vw,48px);isolation:isolate}
+.xglow{position:absolute;left:50%;top:44%;width:min(1100px,120vw);height:720px;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(50% 45% at 50% 60%,rgba(210,215,222,.22),rgba(210,215,222,.06) 45%,transparent 70%),radial-gradient(30% 25% at 50% 20%,rgba(240,243,247,.08),transparent 70%)}
+.xpill{display:inline-flex;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;border:1px solid var(--line2);background:rgba(255,255,255,.04);backdrop-filter:blur(8px);text-decoration:none;font-size:14px;color:var(--mute)}
+.xpill span{background:var(--gold);color:var(--acc-ink);font-weight:600;font-size:12px;border-radius:999px;padding:4px 10px}
+.xpill b{color:var(--acc-hi);font-weight:500}
+.xpill:hover{color:var(--fg);border-color:rgba(210,215,222,.4)}
+.xhero h1{max-width:16ch}
+.xhero .lead{max-width:56ch}
+.xprompt{display:flex;align-items:center;gap:12px;width:min(760px,100%);padding:8px 8px 8px 18px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 6px rgba(210,215,222,.04);backdrop-filter:blur(14px);margin-top:6px}
+.xprompt svg{width:22px;height:22px;flex:none}
+.xprompt input{flex:1;min-width:0;background:none;border:0;outline:none;font-size:16px;color:var(--fg)}
+.xprompt input::placeholder{color:var(--dim)}
+.xprompt:focus-within{border-color:rgba(210,215,222,.55)}
+.xmodels{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.xmodels span{font-size:13px;color:var(--mute);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.xstage{position:relative;display:flex;justify-content:center;align-items:center;height:clamp(300px,34vw,500px);width:100%;margin-top:28px;perspective:1800px}
+.xstage::after{content:"";position:absolute;left:10%;right:10%;bottom:-6%;height:22%;background:radial-gradient(50% 50% at 50% 50%,rgba(210,215,222,.22),transparent 70%);filter:blur(10px);z-index:-1}
+.xstage canvas{position:absolute;aspect-ratio:9/16;height:88%;width:auto;border-radius:16px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.4);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.xstage canvas.c0{height:100%;z-index:5;transform:translateZ(60px);box-shadow:0 50px 120px -30px rgba(210,215,222,.35),0 40px 90px -30px rgba(0,0,0,.9)}
+.xstage canvas.l1{z-index:4;transform:translateX(-62%) rotateY(18deg) scale(.9)}
+.xstage canvas.r1{z-index:4;transform:translateX(62%) rotateY(-18deg) scale(.9)}
+.xstage canvas.l2{z-index:3;transform:translateX(-118%) rotateY(28deg) scale(.78);filter:brightness(.75)}
+.xstage canvas.r2{z-index:3;transform:translateX(118%) rotateY(-28deg) scale(.78);filter:brightness(.75)}
+@media (max-width:700px){.xstage canvas.l2,.xstage canvas.r2{display:none}.xstage canvas.l1{transform:translateX(-48%) rotateY(18deg) scale(.82)}.xstage canvas.r1{transform:translateX(48%) rotateY(-18deg) scale(.82)}.xprompt{border-radius:22px;flex-wrap:wrap;padding:12px}.xprompt input{flex-basis:calc(100% - 40px)}.xprompt .btn{width:100%}}
+.xstats{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 44px;margin-top:22px}
+@media (max-width:600px){.xstats{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px}}
+.xstats div{display:grid;gap:2px}
+.xstats b{font-family:var(--f-disp);font-weight:600;font-size:30px;letter-spacing:-.03em}
+.xstats span{font-size:13px;color:var(--dim)}
+
+</style>
+
+<header id="zh" style="height:79px"></header>
+<main class="wrap" lang="tr">
+  <section class="hf-promos" aria-label="Öne çıkanlar">
+    <div class="hf-scroll" id="promos"></div>
+  </section>
+
+  <section class="hf-row">
+    <div class="hf-ban">
+      <div class="hf-ban-bg" id="banBg" aria-hidden="true"></div>
+      <div class="hf-ban-tx">
+        <h2>İlk AI reklamını üret,<br><span class="acc">₺299'a dene</span></h2>
+        <ul><li>MiniMax H3 ve Kling 3.0 Pro ile gerçekçi video</li><li>Logo, fiyat ve Türkçe seslendirme otomatik</li><li>Üstüne 3 motion video ücretsiz</li></ul>
+        <a class="btn pri big" href="ai-studyo.html">Hemen başla</a>
+      </div>
+    </div>
+    <div class="hf-tiles">
+      <a class="hf-tile" href="ai-studyo.html"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg><em>YENİ</em><b>AI Reklam Stüdyosu</b><span>Fotoğraftan reklam videosu</span></a>
+      <a class="hf-tile" href="ai-studyo.html#model"><svg viewBox="0 0 24 24"><path d="M5 19V9M10 19V5M15 19v-7M20 19V8"/></svg><b>MiniMax H3</b><span>Gerçekçi video modeli</span></a>
+      <a class="hf-tile" href="ai-studyo.html#model"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5M16 4v5"/></svg><b>Kling 3.0 Pro</b><span>1080p premium çekim</span></a>
+      <a class="hf-tile" href="sablonlar.html"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="7" height="8" rx="2"/><rect x="13" y="3" width="7" height="5" rx="2"/><rect x="13" y="10" width="7" height="11" rx="2"/><rect x="4" y="13" width="7" height="8" rx="2"/></svg><b>Motion Şablonları</b><span>3.815 şablon, 45 sektör</span></a>
+      <a class="hf-tile" href="ai-studyo.html#ses"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg><em>YENİ</em><b>AI Seslendirme</b><span>Türkçe ses ve müzik</span></a>
+      <a class="hf-tile" href="editor.html"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg><b>Editör</b><span>Tarayıcıda düzenle, indir</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><div><h2 class="gold">Bu hafta vitrinde</h2><p class="lead">İmza şablonlarımızdan seçki. Dokun, editörde aç, markana uyarla.</p></div><div class="sh-btns"><a class="btn pri" href="ai-studyo.html">Üretmeye başla</a><a class="btn light" href="sablonlar.html">Tümünü gör</a></div></div>
+    <div class="hf-grid" id="strip"></div>
+  </section>
+
+
+  <section class="sec">
+    <div class="sh"><div><span class="eyebrow">Sektörler</span><h2 class="gold">Her sektöre ayrı reklam</h2></div><a class="btn" href="sektorler.html">Sektörleri incele</a></div>
+    <div class="secs" id="secs"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><div><span class="eyebrow">ZodClip seçkisi</span><h2 class="gold">Ajans işlerimizden <span lang="en">motion</span>lar</h2></div><div style="display:grid;gap:12px;justify-items:start;max-width:44ch"><p class="lead">ZodClip sistemimizle ürettiğimiz özel motionlar. Bunları markana biz uyarlıyoruz; dokun, büyüsün.</p><a class="link" href="https://www.instagram.com/zodiacmedya/" target="_blank" rel="noopener">Müşteri işlerimiz Instagram'da · @zodiacmedya ↗</a></div></div>
+    <div class="gal" id="feat"></div>
+  </section>
+
+  <section class="sec">
+    <div class="film">
+      <div class="v"><video id="filmV" src="film.mp4" poster="film.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="ZodMotions tanıtım filmi"></video></div>
+      <div class="side">
+        <span class="eyebrow">Tanıtım filmi</span>
+        <h2>Fotoğraftan reklama, 18 saniyede</h2>
+        <p class="lead">ZodMotions’ın kendi reklam filmi: bir ürün fotoğrafının AI Stüdyo’da nasıl paylaşıma hazır reklama dönüştüğünü gösterir. Müzikli, 1080 × 1920.</p>
+        <div class="kv"><div><span>Süre</span><b>18 sn</b></div><div><span>Format</span><b>1080 × 1920 · 30 fps</b></div><div><span>Ses</span><b>Özgün müzik</b></div></div>
+        <div><button class="btn pri" id="filmSound" type="button">Sesli izle</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><div><span class="eyebrow">Fiyatlar</span><h2 class="gold">Ücretsiz başla, büyüdükçe geç</h2></div><a class="btn" href="fiyatlar.html">Tüm paketleri karşılaştır</a></div>
+    <div class="plans-mini">
+      <div class="pm"><h3>Ücretsiz</h3><div class="p">₺0</div><ul><li>3 motion video: 1 damgasız, 2 damgalı</li><li>Tüm şablonları dene</li><li>AI üretimi ücretli paketlerde</li></ul><a class="btn" href="editor.html">Hemen dene</a></div>
+      <div class="pm hot"><h3>Pro</h3><div class="p">₺1.299 <small>/ ay</small></div><ul><li>250 AI kredisi (≈ 16 adet 15 sn reklam)</li><li>Kling 3.0 Pro dahil tüm modeller</li><li>200 motion video, 3 marka kiti</li></ul><a class="btn pri" href="fiyatlar.html">Pro'yu incele</a></div>
+      <div class="pm"><h3>Ajans</h3><div class="p">₺3.499 <small>/ ay</small></div><ul><li>700 AI kredisi (≈ 46 adet 15 sn reklam)</li><li>Sınırsız motion video, 10 marka kiti</li><li>5 ekip üyesi, müşteri alanları</li></ul><a class="btn" href="fiyatlar.html">Tüm paketler</a></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="band"><span class="eyebrow" style="color:rgba(255,255,255,.8)">AI Reklam Stüdyosu</span><h2>İlk AI reklamın bir dakika uzakta</h2><a class="btn light" href="ai-studyo.html">Stüdyoyu aç</a></div>
+  </section>
+</main>
+<footer id="zf"></footer>
+
+<script>document.body.dataset.page='home'</script>
+<script src="zm-config.js"></script><script src="zm-auth.js"></script><script src="zm-engine.js"></script>
+<script src="zm-site.js"></script>
+<script>
+(()=>{const Z=ZM,S=ZMS,$=S.$;
+const T=Z.TEMPLATES;const find=(sec,cat,v=0)=>T.filter(t=>t.sector===sec&&t.cat===cat)[v]||T[0];
+
+/* öne çıkan kartlar ve afiş */
+const IM=(sec,k)=>{const L=T.filter(t=>t.sector===sec&&t.imza);return L[k%Math.max(1,L.length)]||T[k]};
+/* vitrin şeridi */
+const pick=[['Restoran & Kafe',0],['Spor & Fitness',4],['Moda & E-ticaret',2],['Teknoloji & Uygulama',1],['Etkinlik & Düğün',6],['Turizm & Otel',3],['Güzellik & Kuaför',8],['Eğitim & Kurs',2],['Otomotiv',5],['Çiçekçi',1],['Sağlık & Klinik',4],['Emlak & İnşaat',0]];
+S.ready(()=>{
+  const st=$('strip');pick.forEach(([s,k],i)=>{const tp=IM(s,k);st.appendChild(S.tplCard(tp,{sub:s,variants:S.groupOf(tp)}))});
+  const sc=$('secs');Z.SECTORS.slice(0,11).forEach((s,i)=>{const n=S.GROUPS.filter(g=>Z.secOf(g[0])===s.n).length;const a=document.createElement('a');a.className='sec-t';a.href='sektorler.html#'+S.slug(s.n);
+    a.innerHTML=`<div style="min-width:0"><b>${S.esc(s.n)}</b><span>${n} şablon</span></div><div class="mini"><canvas width="128" height="228"></canvas></div>`;sc.appendChild(a);
+    const tp=T.filter(t=>t.sector===s.n)[i%6*3]||T[i];const th=S.thumb(a.querySelector('canvas'),tp,{still:true});a.onmouseenter=()=>th.hover=true;a.onmouseleave=()=>th.hover=false});
+  {const a=document.createElement('a');a.className='sec-t all';a.href='sektorler.html';a.innerHTML=`<div style="min-width:0"><b>Tüm ${Z.SECTORS.length} sektör</b><span>Fırın, kuyumcu, berber, nakliyat ve dahası →</span></div><div class="mini plus" aria-hidden="true">+${Z.SECTORS.length-11}</div>`;sc.appendChild(a)}
+  const fe=$('feat');Z.FEAT.forEach(k=>{const m=Z.MOT.find(x=>x.k===k);if(m)fe.appendChild(S.motionCard(m,true))});
+  const PR=[['ai-studyo.html','AI Reklam Stüdyosu','Bir fotoğraf yükle. Paylaşıma hazır reklam al.','YENİ','#3a2a12','#8a5a1c',[['Restoran & Kafe',0],['Fırın & Pastane',0],['Moda & E-ticaret',2]]],
+   ['sablonlar.html','Motion Şablonları','3.815 şablon. Tarayıcıda düzenle, saniyeler içinde indir.','','#1d2a3a','#2f5d8a',[['Spor & Fitness',2],['Teknoloji & Uygulama',1],['Etkinlik & Düğün',6]]],
+   ['sektorler.html','Sektör Paketleri','45 sektöre ayrı yazılmış kampanyalar.','','#3a1a2a','#8a2f5a',[['Güzellik & Kuaför',8],['Kuyumcu',0],['Çiçekçi',1]]],
+   ['ai-studyo.html#ses','AI Seslendirme','Türkçe ses ve müzik, otomatik eklenir.','YENİ','#16302a','#2f7a62',[['Sağlık & Klinik',1],['Eğitim & Kurs',2],['Turizm & Otel',3]]]];
+  const pb=$('promos');PR.forEach(([u,t,d,b,c1,c2,ps])=>{const a=document.createElement('a');a.className='hf-pc';a.href=u;
+    a.innerHTML=`<div class="hf-pm" style="--c1:${c1};--c2:${c2}">${ps.map(()=>'<canvas width="360" height="640"></canvas>').join('')}${b?`<span class="badge">${b}</span>`:''}</div><b lang="${/Motion/.test(t)?'en':'tr'}">${S.esc(t)}</b><span>${S.esc(d)}</span>`;
+    const ths=[...a.querySelectorAll('canvas')].map((cv,i)=>S.thumb(cv,IM(ps[i][0],ps[i][1]),{still:i!==1}));
+    a.onmouseenter=()=>ths.forEach(t=>t.hover=true);a.onmouseleave=()=>ths.forEach((t,i)=>t.hover=false);pb.appendChild(a)});
+  const bb=$('banBg');[['Kuyumcu',4],['Restoran & Kafe',6],['Moda & E-ticaret',9]].forEach(([sec,k])=>{const cv=document.createElement('canvas');cv.width=360;cv.height=640;bb.appendChild(cv);S.thumb(cv,IM(sec,k),{})});
+  });
+$('filmSound').onclick=()=>{const v=$('filmV');v.muted=false;v.currentTime=0;const p=v.play();if(p&&p.catch)p.catch(()=>{})};
+})();
+</script>
+
+</body></html>

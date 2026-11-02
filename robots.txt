@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /hesap.html
+Disallow: /giris.html

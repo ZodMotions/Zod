@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Stüdyo · ZodMotions</title>
+<meta name="description" content="Fotoğraftan reklam videosu: ürününü yükle, sahneyi bir cümleyle anlat, AI çeksin. Logo, fiyat ve Türkçe ses otomatik.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="AI Stüdyo · ZodMotions"><meta property="og:description" content="Fotoğraftan reklam videosu: ürününü yükle, sahneyi bir cümleyle anlat, AI çeksin. Logo, fiyat ve Türkçe ses otomatik."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="zm.css">
+<style>
+.ovl{position:absolute;inset:auto 14px 18px 14px;z-index:3;display:grid;gap:6px;text-align:center;pointer-events:none}
+.ovl b{font-family:var(--f-disp);font-weight:800;font-size:24px;text-transform:uppercase;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.ovl span{justify-self:center;background:var(--acc);color:var(--acc-ink);font-weight:700;font-size:14px;padding:6px 12px;border-radius:16px}
+.models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.models .panel{display:grid;gap:10px;align-content:start}
+.models .panel b{font-family:var(--f-disp);font-weight:800;font-size:22px;text-transform:uppercase}
+@media (max-width:860px){.models{grid-template-columns:minmax(0,1fr)}}
+.endm{display:flex;gap:14px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.03)}.endm video{width:96px;height:171px;border-radius:12px;object-fit:cover;flex:none;background:#000}.endm div{display:grid;gap:4px}.endm b{font-size:15px}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rules div{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:16px;font-size:14px;color:var(--mute)}
+.rules b{display:block;color:var(--fg);margin-bottom:4px}
+@media (max-width:700px){.rules{grid-template-columns:minmax(0,1fr)}}
+</style></head>
+<body data-page="ai">
+<header id="zh" style="height:79px"></header>
+<main class="wrap" lang="tr">
+  <div class="page-h">
+    <span class="eyebrow rec">AI Reklam Stüdyosu · Yeni</span>
+    <h1>Fotoğrafını yükle,<br><span class="acc">reklamını çeksin</span></h1>
+    <p class="lead">Ürününü veya mekânını yükle, sahneyi bir cümleyle anlat. Yapay zekâ gerçekçi videoyu çeker; ZodMotions markanı, fiyatını, kapanış motionını ve Türkçe seslendirmeyi ekler.</p>
+  </div>
+
+  <div class="studio">
+    <div class="panel">
+      <div class="fld"><label for="sek">Sektörün</label><select id="sek"></select></div>
+      <div class="fld"><label>Ürün veya mekân fotoğrafı</label>
+        <label class="drop" id="drop" for="file"><span id="dropTx">Fotoğraf seç veya buraya sürükle<br><small class="mono">JPG · PNG · en az 1080 px</small></span><img id="dropImg" alt="" hidden></label>
+        <input type="file" id="file" accept="image/*" hidden></div>
+      <div class="fld"><label for="scn">Sahneyi anlat</label><textarea id="scn" placeholder="Örn. Ahşap masada dumanı tüten burger, kamera yavaşça yaklaşıyor, sıcak akşam ışığı"></textarea>
+        <div class="chips" id="ideas" aria-label="Hazır sahne fikirleri"></div></div>
+      <div class="fld" id="model"><label>Model</label>
+        <div class="opts" id="mods">
+          <button type="button" class="opt" data-m="std" aria-pressed="true"><b>Standart · MiniMax H3</b><span>768p · gerçekçi · 1 kredi / sn</span></button>
+          <button type="button" class="opt" data-m="pre" aria-pressed="false"><b>Premium · Kling 3.0 Pro</b><span>1080p · Pro ve Ajans · 3 kredi / sn</span></button>
+        </div></div>
+      <div class="fld"><label>Süre</label><div class="seg" role="group" aria-label="Süre" id="durs"><button data-d="5" aria-pressed="false">5 sn</button><button data-d="10" aria-pressed="true">10 sn</button><button data-d="15" aria-pressed="false">15 sn</button></div></div>
+      <div class="fld"><label for="firm">Firma adı</label><input id="firm" placeholder="Örn. Zodiac Burger" maxlength="28"></div>
+      <div class="fld"><label for="camp">Kampanya veya fiyat yazısı</label><input id="camp" placeholder="Örn. Menü 249 ₺ · Hemen sipariş ver" maxlength="40"></div>
+      <div class="fld"><label for="end">Kapanış motionı</label><select id="end"></select></div>
+      <div class="fld" id="ses"><label for="vo">Seslendirme metni (isteğe bağlı)</label><textarea id="vo" placeholder="Örn. Bu akşam açlığa son. Zodiac Burger'de menü sadece 249 lira."></textarea>
+        <div class="seg" role="group" aria-label="Ses" id="voices"><button aria-pressed="true">Sıcak kadın</button><button aria-pressed="false">Güven veren erkek</button><button aria-pressed="false">Genç enerjik</button></div></div>
+      <div class="cost"><div><span class="mono" style="color:var(--mute)">Bu üretim</span><br><b id="cost">10</b> <span style="color:var(--mute)">kredi</span></div><div style="text-align:right"><span class="mono" style="color:var(--mute)">Bakiye (deneme)</span><br><b id="bal">50</b></div></div>
+      <button class="btn pri" id="go" type="button">Reklamı üret</button>
+      <p class="msg" id="msg">Prototip: üretim akışını gösterir. Gerçek AI üretimi, ödeme bağlandığında açılacak.</p>
+    </div>
+
+    <div class="prev">
+      <div class="scr"><canvas id="pc" width="540" height="960" style="width:100%;height:100%;display:block"></canvas>
+        <div class="ovl" id="ovl"><b id="ovF">Firma adın</b><span id="ovC">Kampanya yazın</span></div>
+        <div class="st" id="st" hidden><b id="stT" style="color:var(--fg);font-size:16px">Sıraya alındı</b><div class="bar"><i id="stB"></i></div><span id="stS">Sahne görseli hazırlanıyor</span></div>
+      </div>
+      <div class="endm"><video id="pv" muted loop playsinline autoplay width="96" height="171"></video><div><span class="note">Kapanış motionı</span><b id="kvE2">—</b><span class="note">Videonun sonuna eklenir</span></div></div>
+      <div class="kv"><div><span>Format</span><b>1080 × 1920 · 30 fps</b></div><div><span>Model</span><b id="kvM">MiniMax H3</b></div><div><span>Kapanış</span><b id="kvE">—</b></div></div>
+      <p class="note" style="text-align:center">Önizleme, sektörüne uygun örnek bir şablonla gösterilir; gerçek üretimde AI sahnen burada olur.</p>
+    </div>
+  </div>
+
+  <section class="sec" style="margin-top:56px">
+    <div class="sh"><div><span class="eyebrow">Modeller</span><h2>Hangi model <span class="acc">ne için?</span></h2></div><a class="btn" href="fiyatlar.html">Kredi paketleri</a></div>
+    <div class="models">
+      <div class="panel"><span class="eyebrow">Standart</span><b>MiniMax H3</b><p class="msg">Bağımsız kalite sıralamalarında en üst grupta. Gerçekçi insan, yemek ve mekân sahneleri için varsayılan seçim. 768p, 1 kredi / saniye.</p></div>
+      <div class="panel"><span class="eyebrow">Premium</span><b>Kling 3.0 Pro</b><p class="msg">1080p, akıcı kamera hareketleri. Ürün yakın çekimleri ve vitrin işleri için. 3 kredi / saniye.</p></div>
+      <div class="panel"><span class="eyebrow">Her pakette</span><b>ZodClip motionları</b><p class="msg">99+ motion ile logo, fiyat, madde listesi, geçiş ve son kart. Kredi harcamaz.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><div><span class="eyebrow">Kurallar</span><h2>Güvenli üretim</h2></div></div>
+    <div class="rules">
+      <div><b>18 yaş ve üzeri</b>AI stüdyosu yetişkin kullanıcılara açıktır.</div>
+      <div><b>Gerçek kişiler</b>İzni olmayan birinin yüzü veya sesiyle video üretilemez.</div>
+      <div><b>Yasak içerik</b>Çıplaklık, şiddet, nefret ve yanıltıcı reklam engellenir.</div>
+      <div><b>Senin hakların</b>Ücretli paketlerde ürettiğin videoları ticari olarak kullanırsın.</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><div><span class="eyebrow">Sık sorulanlar</span><h2>AI stüdyosu</h2></div></div>
+    <div class="faq">
+      <details><summary>Bir reklam kaç kredi harcar?</summary><p>Standart modelle 15 saniyelik bir reklam 15 kredi harcar. Premium modelle 45 kredi. Başarısız üretimde kredi iade edilir.</p></details>
+      <details><summary>Ücretsiz planda AI var mı?</summary><p>Hayır. Ücretsiz planda 3 motion video üretirsin. AI denemek için ₺299'luk 50 kredilik deneme paketi var.</p></details>
+      <details><summary>Videolar kimin?</summary><p>Ücretli paketlerde ürettiğin videolar senindir; reklamlarında ve müşteri işlerinde kullanabilirsin.</p></details>
+    </div>
+  </section>
+</main>
+<footer id="zf"></footer>
+<script src="zm-config.js"></script><script src="zm-auth.js"></script><script src="zm-engine.js"></script>
+<script src="zm-site.js"></script>
+<script>
+(()=>{const Z=ZM,S=ZMS,$=S.$;
+const IDEAS=['Kamera yavaşça yaklaşıyor, sıcak akşam ışığı','Ürün döner tabla üzerinde, stüdyo ışığı','Mutlu müşteri ürünü kullanıyor, doğal gün ışığı','Mekân içinde akıcı kamera turu'];
+Z.SECTORS.forEach(s=>{const o=document.createElement('option');o.textContent=s.n;$('sek').appendChild(o)});
+IDEAS.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.onclick=()=>{const a=$('scn');a.value=(a.value?a.value+', ':'')+t.toLocaleLowerCase('tr')};$('ideas').appendChild(b)});
+const ends=Z.MOT.filter(m=>'SAY'.includes(m.k[0]));ends.forEach(m=>{const o=document.createElement('option');o.value=m.k;o.textContent=`${m.k} · ${m.ad}`;$('end').appendChild(o)});
+const st={m:'std',d:10,bal:0};
+ZMA.onChange(u=>{st.bal=u?u.profile.kredi:0;$('go').textContent=u?'Reklamı üret':'Ücretsiz hesap aç';cost()});
+function setEnd(){const k=$('end').value;$('pv').src=`m/${k}.mp4`;$('pv').poster=`m/${k}.jpg`;const m=Z.MOT.find(x=>x.k===k);$('kvE').textContent=m?m.ad:'—';$('kvE2').textContent=m?m.ad:'—';const p=$('pv').play();if(p&&p.catch)p.catch(()=>{})}
+$('end').onchange=setEnd;setEnd();
+let pth=null;function setScene(){const sec=$('sek').value;const L=Z.TEMPLATES.filter(t=>t.sector===sec&&t.imza);const tp=L[0]||Z.TEMPLATES.find(t=>t.sector===sec)||Z.TEMPLATES[0];if(pth){pth.tpl=tp;pth.f=tp.def;pth.A=S.sampleFor(tp);S.draw(pth)}else pth=S.thumb($('pc'),tp,{})}
+$('sek').onchange=setScene;setScene();
+function cost(){const c=st.d*(st.m==='pre'?3:1);$('cost').textContent=c;$('bal').textContent=st.bal;$('kvM').textContent=st.m==='pre'?'Kling 3.0 Pro':'MiniMax H3';return c}
+$('mods').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{st.m=b.dataset.m;$('mods').querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cost()});
+$('durs').querySelectorAll('button').forEach(b=>b.onclick=()=>{st.d=+b.dataset.d;$('durs').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cost()});
+$('voices').querySelectorAll('button').forEach(b=>b.onclick=()=>$('voices').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))));
+const upd=()=>{$('ovF').textContent=$('firm').value||'Firma adın';$('ovC').textContent=$('camp').value||'Kampanya yazın'};$('firm').oninput=upd;$('camp').oninput=upd;
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=$('dropImg');im.src=URL.createObjectURL(f);im.hidden=false;$('dropTx').textContent=f.name};
+const dr=$('drop');dr.ondragover=e=>{e.preventDefault()};dr.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const im=$('dropImg');im.src=URL.createObjectURL(f);im.hidden=false;$('dropTx').textContent=f.name}};
+const STEPS=['Sahne görseli hazırlanıyor','Yapay zekâ sahneyi çekiyor','ZodClip motionları ekleniyor','Seslendirme ve müzik ekleniyor'];
+$('go').onclick=()=>{const c=cost();const msg=$('msg');
+  if(!$('scn').value.trim()){msg.className='msg err';msg.textContent='Önce sahneyi bir cümleyle anlat.';$('scn').focus();return}
+  if(!ZMA.user()){ZMA.requireLogin('ai-studyo.html');return}
+  if(st.m==='pre'&&!ZMA.PLANS[ZMA.user().profile.plan].premium){msg.className='msg err';msg.innerHTML='Premium model (Kling 3.0 Pro) Pro ve Ajans paketlerinde açık. Standart modelle devam edebilir ya da <a class="link" href="fiyatlar.html">paketini yükseltebilirsin</a>.';return}
+  if(st.bal<c){msg.className='msg err';msg.innerHTML=`Bakiyen yetmiyor: ${c} kredi gerekli, ${st.bal} kredin var. <a class="link" href="fiyatlar.html">₺299 deneme paketiyle 50 kredi al</a>.`;return}
+  $('go').disabled=true;const box=$('st');box.hidden=false;let i=0;$('stT').textContent='Üretiliyor';
+  const tick=()=>{$('stS').textContent=STEPS[i];$('stB').style.width=((i+1)/STEPS.length*100)+'%';i++;if(i<STEPS.length)setTimeout(tick,900);else setTimeout(done,900)};tick();
+  async function done(){box.hidden=true;const r=await ZMA.useCredits(c,st.m==='pre');$('go').disabled=false;if(!r.ok){msg.className='msg err';msg.textContent=r.error;return}cost();msg.className='msg ok';msg.textContent=`Prototip üretimi tamamlandı, ${c} kredi düştü. Gerçek sürümde AI sahnesi bu motionın önüne eklenir.`;S.toast('Reklamın hazır (prototip)')}};
+cost();upd();
+try{const q=new URLSearchParams(location.search).get('s');if(q)$('scn').value=q}catch(e){}
+})();
+</script>
+</body></html>

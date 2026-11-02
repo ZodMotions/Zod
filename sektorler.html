@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sektörler · ZodMotions</title>
+<meta name="description" content="Restoran, kuaför, emlak, kuyumcu ve 41 sektör için hazır reklam kampanyaları.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="Sektörler · ZodMotions"><meta property="og:description" content="Restoran, kuaför, emlak, kuyumcu ve 41 sektör için hazır reklam kampanyaları."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap">
+<link rel="stylesheet" href="zm.css">
+<style>
+.lay{display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px;align-items:start}
+.idx{position:sticky;top:calc(env(safe-area-inset-top,0px) + 100px);display:grid;gap:2px}
+.idx a{padding:8px 12px;border-radius:12px;text-decoration:none;color:var(--mute);font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.idx a:hover{color:var(--fg);background:var(--s1)}
+.idx a.on{color:var(--fg);background:var(--s2)}
+.idx a small{font-family:var(--f-mono);font-size:12px;color:var(--dim)}
+.sct{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px;padding-block:48px;border-top:1px solid var(--line);scroll-margin-top:100px}
+.sct:first-child{border-top:0;padding-top:0}
+.sct .txt{display:grid;gap:16px;align-content:start;min-width:0}
+.sct .sw{display:flex;gap:6px}.sct .sw i{width:28px;height:28px;border-radius:12px;border:1px solid var(--line2)}
+.sct .cnt{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
+.sct .types{display:flex;flex-wrap:wrap;gap:6px}
+.sct .types span{font-size:12.5px;padding:5px 10px;border-radius:16px;background:var(--s1);border:1px solid var(--line);color:var(--mute)}
+.sct .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;min-width:0}
+.sct .thumbs .sub{display:none}
+@media (max-width:1000px){.lay{grid-template-columns:1fr}.idx{display:none}.sct{grid-template-columns:1fr}}
+@media (max-width:560px){.sct .thumbs{grid-template-columns:repeat(2,1fr)}}
+.jump{display:none;margin-bottom:20px}
+@media (max-width:1000px){.jump{display:flex}}
+</style></head>
+<body data-page="sektorler">
+<header id="zh" style="height:79px"></header>
+<main class="wrap" lang="tr">
+  <div class="page-h">
+    <span class="eyebrow">45 sektör · 3815 şablon · 135 imza motion · 4 stil</span>
+    <h1>Her sektöre<br><span class="acc">kendi reklamı</span></h1>
+    <p class="lead">Şablonlar o sektörün diliyle yazıldı: restorana menü ve günün yemeği, kuyumcuya altın fiyatı, berbere randevu takvimi, nakliyatçıya ekspertiz daveti. Kendi işletmeni bul, sana uygun reklamları gör.</p>
+  </div>
+  <div class="chips scroll jump" id="jump" aria-label="Sektöre git"></div>
+  <div class="lay">
+    <nav class="idx" id="idx" aria-label="Sektörler"></nav>
+    <div id="list"></div>
+  </div>
+</main>
+<footer id="zf"></footer>
+<script src="zm-config.js"></script><script src="zm-auth.js"></script><script src="zm-engine.js"></script>
+<script src="zm-site.js"></script>
+<script>
+(()=>{const Z=ZM,S=ZMS,$=S.$,T=Z.TEMPLATES;
+const BL={'Restoran & Kafe':'Yeni menü, günün yemeği, happy hour, paket servis ve rezervasyon kampanyaları.',
+'Güzellik & Kuaför':'Randevu kampanyaları, önce ve sonra dönüşümleri, kupon kodları ve bakım paketleri.',
+'Moda & E-ticaret':'Yeni koleksiyon, sepette indirim, kargo seçenekleri, kombin önerisi ve müşteri yorumları.',
+'Spor & Fitness':'Üyelik kampanyaları, ders programı, antrenör tanıtımı ve dönüşüm hikâyeleri.',
+'Eğitim & Kurs':'Kayıt dönemi, kurs paketleri, başarı rakamları ve eğitmen tanıtımı.',
+'Otomotiv':'Galeri ilanları, servis ve bakım paketleri, test sürüşü daveti ve kampanyalar.',
+'Sağlık & Klinik':'Check-up paketleri, bölüm tanıtımları, randevu süreci ve hekim kartları.',
+'Teknoloji & Uygulama':'Uygulama lansmanı, yeni özellikler, indirme rakamları ve sık sorulan sorular.',
+'Etkinlik & Düğün':'Davetiye, geri sayım, mekân konumu ve organizasyon paketleri.',
+'Turizm & Otel':'Erken rezervasyon, oda paketleri, konum, deneyimler ve misafir yorumları.',
+'Emlak & İnşaat':'Satılık ve kiralık ilanlar, proje lansmanı, inşaat ilerlemesi ve kredi bilgisi.',
+'Ajans & Kurumsal':'Marka tanıtımı, ekip, hizmetler, referans rakamları ve iletişim kartları.',
+'Fırın & Pastane':'Günün ekmeği, pasta siparişi, sıcak çıkış saatleri ve özel gün pastaları.',
+'Kuyumcu':'Yeni koleksiyon, tektaş ve alyans, gram fiyatları, kampanyalar ve güven vurgusu.',
+'Çiçekçi':'Özel gün buketleri, aynı gün teslim, abonelik ve çiçek bakım ipuçları.',
+'Market & Şarküteri':'Haftanın fırsatları, taze ürünler, kapıya teslim ve sadakat kartı.',
+'Veteriner & Pet Shop':'Aşı takvimi, check-up paketleri, mama kampanyaları ve minik hasta hikâyeleri.',
+'Mobilya & Dekorasyon':'Yeni koleksiyon, ölçüye özel üretim, showroom daveti ve taksit kampanyaları.',
+'Temizlik & Ev Hizmetleri':'Ev ve ofis temizliği, abonelik paketleri, önce ve sonra, güven garantisi.',
+'Berber & Erkek Bakım':'Randevu takvimi, sakal bakımı, damat paketi ve usta tanıtımı.',
+'Elektronik & Telefon':'Yeni model lansmanı, takas kampanyası, taksit seçenekleri ve aksesuarlar.',
+'Teknik Servis & Tamir':'Ekran ve batarya değişimi, aynı gün tamir, garanti ve ücretsiz arıza tespiti.',
+'Kırtasiye & Kitapçı':'Okula dönüş, çok satan kitaplar, imza günleri ve kırtasiye setleri.',
+'Oyuncak & Bebek':'Yaşa göre oyuncak önerileri, bebek ürünleri, doğum günü ve hediye paketleri.',
+'Optik':'Yeni çerçeveler, ücretsiz göz ölçümü, lens kampanyaları ve güneş gözlükleri.',
+'Kozmetik & Parfümeri':'Yeni parfümler, cilt bakım rutinleri, hediye setleri ve indirim günleri.',
+'Spa & Masaj':'Masaj paketleri, çift spa, hediye çeki ve rahatlama ritüelleri.',
+'Kreş & Anaokulu':'Kayıt dönemi, günlük program, öğretmen tanıtımı ve veli yorumları.',
+'Sürücü Kursu':'Kayıt kampanyası, ilk seferde başarı oranı, deneme dersi ve sınav ipuçları.',
+'Müzik & Sanat Kursu':'Enstrüman dersleri, öğrenci konseri, deneme dersi ve kardeş indirimi.',
+'Dans Okulu':'Yeni grup duyuruları, düğün dansı paketi, sosyal geceler ve deneme dersi.',
+'Fotoğraf Stüdyosu':'Aile ve yenidoğan çekimi, düğün hikâyesi, mini çekim günleri ve albüm.',
+'Nakliyat':'Ev ve ofis taşıma, ücretsiz ekspertiz, sigortalı taşıma ve depolama.',
+'Halı Yıkama & Kuru Temizleme':'Ücretsiz alım ve teslim, sezon kampanyaları, önce ve sonra dönüşümleri.',
+'Terzi & Tadilat':'Ölçüye özel dikim, aynı gün tadilat, damatlık ve gelinlik uyarlama.',
+'Usta Hizmetleri':'Kombi bakımı, elektrik ve tesisat, aynı gün usta ve işçilik garantisi.',
+'Bahçe & Peyzaj':'Peyzaj projesi, çim serimi, otomatik sulama ve bakım aboneliği.',
+'Mimarlık & İç Tasarım':'Proje tanıtımı, önce ve sonra, 3B tasarım süreci ve tanışma görüşmesi.',
+'Matbaa & Baskı':'Aynı gün kartvizit, broşür ve etiket baskısı, açılış paketleri.',
+'Catering & Ev Yemekleri':'Ofis yemeği, davet menüleri, günün menüsü ve tadım günleri.',
+'Gelinlik & Abiye':'Yeni koleksiyon, prova randevusu, kiralama ve gelin hikâyeleri.',
+'Araç Kiralama':'Günlük fiyatlar, havalimanı teslim, erken rezervasyon ve araç sınıfları.',
+'Seyahat Acentesi':'Tur duyuruları, erken rezervasyon, balayı paketleri ve vize hizmeti.',
+'Hırdavat & Yapı Market':'Haftanın fırsatları, el aletleri, boya kampanyaları ve kendin yap ipuçları.',
+'Kasap & Et Ürünleri':'Günün fiyatları, mangal paketleri, kesim seçenekleri ve ustanın tarifleri.'};
+const list=$('list'),idx=$('idx'),jump=$('jump');
+S.ready(()=>{Z.SECTORS.forEach((s,si)=>{const id=S.slug(s.n);const L=T.filter(t=>Z.secOf(t)===s.n);const cats=[...new Set(L.map(t=>t.cat))];const NG=S.GROUPS.filter(g=>Z.secOf(g[0])===s.n).length;
+  idx.insertAdjacentHTML('beforeend',`<a href="#${id}" data-id="${id}">${S.esc(s.n)}<small>${NG}</small></a>`);
+  jump.insertAdjacentHTML('beforeend',`<a class="chip" href="#${id}">${S.esc(s.n)}</a>`);
+  const sec=document.createElement('section');sec.className='sct';sec.id=id;
+  sec.innerHTML=`<div class="txt"><span class="cnt">${NG} ŞABLON · ${L.length} STİL</span><h2>${S.esc(s.n)}</h2><p class="lead">${S.esc(BL[s.n]||'')}</p>
+    <div class="sw" aria-hidden="true"><i style="background:${s.p[0]}"></i><i style="background:${s.p[1]}"></i></div>
+    <div class="types">${cats.slice(0,14).map(c=>`<span>${S.esc(c)}</span>`).join('')}${cats.length>14?`<span>+${cats.length-14}</span>`:''}</div>
+    <div><a class="btn pri" href="sablonlar.html#${id}">${NG} şablonun hepsini gör</a></div></div><div class="thumbs"></div>`;
+  list.appendChild(sec);const th=sec.querySelector('.thumbs');
+  const IM=L.filter(t=>t.imza&&t.style===['Gece','Canlı','Kart'][0]);const picks=IM.concat([0,1,2,3].map(k=>L.filter(t=>t.cat===cats[(k*4+si)%cats.length]&&!t.imza)[k%3]||L[k])).filter(Boolean).slice(0,4);
+  picks.forEach(t=>th.appendChild(S.tplCard(t,{sub:false,variants:S.groupOf(t)})))});
+  const links=[...idx.querySelectorAll('a')];
+  if('IntersectionObserver' in window){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.dataset.id===e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});list.querySelectorAll('.sct').forEach(s=>o.observe(s))}
+  const h=location.hash.slice(1);if(h&&$(h))requestAnimationFrame(()=>$(h).scrollIntoView())});
+})();
+</script>
+</body></html>

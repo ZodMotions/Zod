@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reklam şablonları · ZodMotions</title>
+<meta name="description" content="45 sektör için 3.815 hazır reklam ve motion şablonu. Tarayıcıda düzenle, 1080×1920 indir.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="Reklam şablonları · ZodMotions"><meta property="og:description" content="45 sektör için 3.815 hazır reklam ve motion şablonu. Tarayıcıda düzenle, 1080×1920 indir."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap">
+<link rel="stylesheet" href="zm.css">
+<style>
+.ph-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px}
+.big-n{font-family:var(--f-disp);font-weight:900;font-size:clamp(56px,6vw,96px);line-height:.9;color:var(--acc);font-variant-numeric:tabular-nums}
+.tools{display:grid;gap:14px;padding:18px;background:var(--s1);border:1px solid var(--line);border-radius:16px;margin-bottom:28px}
+.tools .r1{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center}
+.tools select{background:var(--s2);border:1px solid var(--line2);border-radius:16px;padding:0 12px;height:44px;min-width:0;max-width:100%}
+.tools .search input{height:44px;padding-top:0;padding-bottom:0}
+@media (max-width:900px){.tools .r1{grid-template-columns:1fr 1fr}.tools .r1 .seg,.tools .r1 .search{grid-column:1/-1}.tools .r1 .seg{justify-self:start}}
+.res{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.more{display:flex;justify-content:center;margin-top:36px}
+.empty{padding:60px 20px;text-align:center;color:var(--mute);border:1px dashed var(--line2);border-radius:16px;display:grid;gap:12px;justify-items:center}
+.zc-note{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:18px 20px;border:1px solid var(--line);border-radius:16px;margin-bottom:22px;background:var(--s1)}
+@media (max-width:640px){.zc-note{grid-template-columns:1fr}}
+</style></head>
+<body data-page="sablonlar">
+<header id="zh" style="height:79px"></header>
+<main class="wrap" lang="tr">
+  <div class="page-h">
+    <span class="eyebrow">Kütüphane</span>
+    <div class="ph-row"><h1>Şablonlar</h1><span class="big-n" id="bigN" aria-hidden="true">15260</span></div>
+    <p class="lead"><b id="nT" style="color:var(--fg)">3815</b> şablon, her biri 4 farklı stille (Gece, Açık, Canlı, Kart); toplam <b id="nAll" style="color:var(--fg)">15260</b> hazır tasarım. Metin, renk, logo, fotoğraf ve video markana göre düzenlenir. Kartın altındaki renk noktalarından stili değiştir, karta dokun, editörde açılsın.</p>
+  </div>
+
+  <div class="tools">
+    <div class="r1">
+      <div class="seg" role="group" aria-label="Kütüphane türü"><button id="mT" aria-pressed="true">Düzenlenebilir <small class="mono" id="mTn"></small></button><button id="mZ" aria-pressed="false">ZodClip seçkisi <small class="mono">10</small></button></div>
+      <label class="search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input class="inp" type="search" id="q" placeholder="Ara: indirim, menü, kupon, düğün…" aria-label="Şablon ara"></label>
+      <select id="cat" aria-label="Reklam türü"></select>
+      <button class="chip" id="onlyNew" aria-pressed="false">Sadece yeniler</button>
+    </div>
+    <div class="chips scroll" id="secs" role="group" aria-label="Sektör"></div>
+  </div>
+
+  <div id="tplView">
+    <div class="res"><span class="mono" id="resN" style="color:var(--mute)"></span><button class="btn sm" id="reset" hidden>Filtreleri temizle</button></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden><b style="color:var(--fg);font-size:18px">Bu filtrelerle şablon bulunamadı</b><span>Aramayı kısalt ya da başka bir sektör seç.</span><button class="btn sm" id="reset2">Filtreleri temizle</button></div>
+    <div class="more"><button class="btn" id="more">Daha fazla göster</button></div>
+  </div>
+
+  <div id="zcView" hidden>
+    <div class="zc-note"><p style="color:var(--mute)">ZodClip seçkisindeki motionlar ajans hizmetimizle markana uyarlanır. Beğendiğin motionun kodunu bize yaz, videonu hazırlayalım.</p><a class="btn pri sm" href="hakkimizda.html#iletisim">Video iste</a></div>
+    <div class="grid" id="zgrid"></div>
+  </div>
+</main>
+<footer id="zf"></footer>
+<script src="zm-config.js"></script><script src="zm-auth.js"></script><script src="zm-engine.js"></script>
+<script src="zm-site.js"></script>
+<script>
+(()=>{const Z=ZM,S=ZMS,$=S.$,ALL=Z.TEMPLATES,T=S.GROUPS.map(g=>g[0]);
+const st={sec:'',cat:'',q:'',nw:false,shown:24};
+/* öne çıkan sıralama: sektörler arasında dönüşümlü, böylece ilk sayfada her sektörden örnek görünür */
+const ORD=(()=>{const B={};T.forEach(t=>{const k=Z.secOf(t);(B[k]=B[k]||[]).push(t)});const keys=Object.keys(B);keys.forEach((k,ki)=>{const im=B[k].filter(t=>t.imza),a=B[k].filter(t=>!t.imza);const r=a.length?(ki*7)%a.length:0;B[k]=im.concat(a.slice(r),a.slice(0,r))});
+  const out=[];let i=0,any=true;while(any){any=false;keys.forEach(k=>{if(B[k][i]){out.push(B[k][i]);any=true}});i++}return out})();
+$('bigN').textContent=T.length;$('mTn').textContent=T.length;$('nAll').textContent=ALL.length;$('nT').textContent=T.length;
+const base=()=>ORD.filter(t=>(!st.sec||Z.secOf(t)===st.sec)&&(!st.nw||t.isNew));
+function list(){const q=S.norm(st.q.trim());return base().filter(t=>(!st.cat||t.cat===st.cat)&&(!q||S.norm(t.cat+' '+Z.secOf(t)+' '+t.name+' '+Object.values(t.def).join(' ')).includes(q)))}
+function secChips(){const box=$('secs');const sl=box.scrollLeft;box.innerHTML='';[['','Tümü',T.length],...Z.SECTORS.map(s=>[s.n,s.n,T.filter(t=>Z.secOf(t)===s.n).length]),['Genel','Genel',T.filter(t=>Z.secOf(t)==='Genel').length]].forEach(([v,n,c])=>{if(!c)return;
+  const b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed',String(st.sec===v));b.innerHTML=`${S.esc(n)} <small>${c}</small>`;b.onclick=()=>{st.sec=v;st.shown=24;try{history.replaceState(null,'',v?'#'+S.slug(v):'#')}catch(e){}render()};box.appendChild(b)});box.scrollLeft=sl;const on=box.querySelector('[aria-pressed="true"]');if(on){const l=on.offsetLeft-box.offsetLeft,r=l+on.offsetWidth;if(l<box.scrollLeft||r>box.scrollLeft+box.clientWidth)box.scrollLeft=l-24}}
+function catSel(){const s=$('cat');const B=base();const m={};B.forEach(t=>m[t.cat]=(m[t.cat]||0)+1);if(st.cat&&!m[st.cat])st.cat='';
+  s.innerHTML=`<option value="">Tüm reklam türleri (${B.length})</option>`+Object.keys(m).sort((a,b)=>a.localeCompare(b,'tr')).map(k=>`<option value="${S.esc(k)}"${k===st.cat?' selected':''}>${S.esc(k)} (${m[k]})</option>`).join('')}
+function render(){secChips();catSel();const L=list();const g=$('grid');g.innerHTML='';
+  L.slice(0,st.shown).forEach(t=>g.appendChild(S.tplCard(t,{variants:S.groupOf(t)})));
+  $('resN').textContent=L.length?`${Math.min(st.shown,L.length)} / ${L.length} şablon`+(st.sec?` · ${st.sec}`:''):'';
+  $('empty').hidden=L.length>0;$('more').hidden=st.shown>=L.length;$('reset').hidden=!(st.sec||st.cat||st.q||st.nw);
+  $('onlyNew').setAttribute('aria-pressed',String(st.nw))}
+const reset=()=>{Object.assign(st,{sec:'',cat:'',q:'',nw:false,shown:24});$('q').value='';render()};
+$('reset').onclick=reset;$('reset2').onclick=reset;
+$('more').onclick=()=>{st.shown+=24;render()};
+let qt;$('q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{st.q=e.target.value;st.shown=24;render()},160)};
+$('cat').onchange=e=>{st.cat=e.target.value;st.shown=24;render()};
+$('onlyNew').onclick=()=>{st.nw=!st.nw;st.shown=24;render()};
+function mode(z){$('mT').setAttribute('aria-pressed',String(!z));$('mZ').setAttribute('aria-pressed',String(z));$('tplView').hidden=z;$('zcView').hidden=!z;
+  document.querySelectorAll('.tools .search,.tools select,#onlyNew,#secs').forEach(e=>e.hidden=z)}
+$('mT').onclick=()=>mode(false);$('mZ').onclick=()=>mode(true);
+const h=decodeURIComponent(location.hash.slice(1));
+if(h==='zodclip')mode(true);else{const s=Z.SECTORS.find(x=>S.slug(x.n)===h);if(s)st.sec=s.n}
+S.ready(()=>{render();const zg=$('zgrid');Z.FEAT.forEach(k=>{const m=Z.MOT.find(x=>x.k===k);if(m)zg.appendChild(S.motionCard(m))})});
+})();
+</script>
+</body></html>
