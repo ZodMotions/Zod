@@ -62,7 +62,7 @@ const local={
 /* ---------- Yayın modu (Supabase) ---------- */
 let sb=null;
 const live={
-  async init(){const m=await import('https://esm.sh/@supabase/supabase-js@2');sb=m.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,detectSessionInUrl:true}});
+  async init(){const m=window.supabase&&window.supabase.createClient?window.supabase:await import('https://esm.sh/@supabase/supabase-js@2');sb=m.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,detectSessionInUrl:true}});
     sb.auth.onAuthStateChange(()=>live.load());await live.load()},
   async load(){const {data:{user}}=await sb.auth.getUser();if(!user){current=null;emit();return}
     const {data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();current={id:user.id,email:user.email,profile:p||newProfile(user.id,user.email,'','')};emit()},
