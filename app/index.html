@@ -5,43 +5,78 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ZodMotions</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0B0C0E">
+<meta name="theme-color" content="#161618">
 <link rel="icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor"/></symbol>
+ <symbol id="i-film" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></g></symbol>
+ <symbol id="i-ai" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3M9.5 14.5l1.5-5 1.5 5M10 13h2M15 9.5v5"/></g></symbol>
+ <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+ <symbol id="i-cut" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></g></symbol>
+ <symbol id="i-cc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17.5 10.2a2.5 2.5 0 1 0 0 3.6"/></g></symbol>
+ <symbol id="i-wand" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 4 5 5L8 21l-5-5zM12 7l5 5"/><path d="M5 3v4M3 5h4M19 15v4M17 17h4"/></g></symbol>
+ <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+</defs></svg>
+
+<aside class="nav" aria-label="Uygulama menüsü">
+  <div class="logo"><img src="/logo-z.png" alt="" width="30" height="30"><b lang="en">ZodMotions</b></div>
+  <button data-go="home" aria-current="page" type="button"><svg><use href="#i-home"/></svg><span>Ana sayfa</span></button>
+  <button data-go="clip" type="button"><svg><use href="#i-film"/></svg><span lang="en">ZodClip</span></button>
+  <button data-go="motion" type="button"><svg><use href="#i-spark"/></svg><span><span lang="en">Motion</span>lar</span></button>
+  <button data-go="ai" type="button"><svg><use href="#i-ai"/></svg><span>AI Stüdyo</span></button>
+  <span class="grow"></span>
+  <button data-go="hesap" type="button"><svg><use href="#i-user"/></svg><span>Hesap</span></button>
+</aside>
+
 <main class="views">
   <section class="view on" id="v-home" aria-label="Ana sayfa">
     <div class="home">
       <header class="hh">
-        <div class="hb"><img src="/logo-z.png" alt="" width="40" height="40"><div><b lang="en">ZodMotions</b><small>Motion · ZodClip · AI Stüdyo</small></div></div>
-        <div class="acct" id="acct"><a class="btn pri sm" href="#hesap" data-go="hesap">Giriş yap</a></div>
+        <div><p class="kick" id="hello">Hoş geldin</p><h1>Bugün ne üretiyoruz?</h1></div>
+        <div class="acct" id="acct"></div>
       </header>
 
-      <h1 id="hi">Bugün ne üretiyoruz?</h1>
-
-      <div class="actions">
-        <button class="act big" data-go="clip" type="button"><i>＋</i><b>Yeni video</b><span>Videolarını yükle, kes, yazı ve müzik ekle</span></button>
-        <button class="act" data-go="clip" data-tab="klip" type="button"><i>✂</i><b>Klip çıkar</b><span>Uzun videodan en iyi anları bul</span></button>
-        <button class="act" data-go="clip" data-tab="altyazi" type="button"><i>≡</i><b>Otomatik altyazı</b><span>Türkçe konuşmayı yazıya çevir</span></button>
-        <button class="act" data-go="motion" type="button"><i>✦</i><b><span lang="en">Motion</span> şablonu</b><span>15.000+ hazır şablonu markana uyarla</span></button>
-        <button class="act" data-go="ai" type="button"><i>◎</i><b>AI reklam</b><span>Ürün fotoğrafından reklam videosu</span></button>
-      </div>
+      <section class="start">
+        <button class="newp" data-go="clip" type="button"><span class="pl"><svg><use href="#i-plus"/></svg></span><b>Yeni proje</b><small>ZodClip’te boş bir proje aç</small></button>
+        <div class="fmts">
+          <button data-go="clip" data-fmt="9:16" type="button"><i class="r916"></i><b>Reels · TikTok</b><small>9:16 · 1080×1920</small></button>
+          <button data-go="clip" data-fmt="4:5" type="button"><i class="r45"></i><b>Instagram gönderi</b><small>4:5 · 1080×1350</small></button>
+          <button data-go="clip" data-fmt="1:1" type="button"><i class="r11"></i><b>Kare</b><small>1:1 · 1080×1080</small></button>
+          <button data-go="clip" data-fmt="16:9" type="button"><i class="r169"></i><b>YouTube</b><small>16:9 · 1920×1080</small></button>
+        </div>
+      </section>
 
       <section class="blk" id="last" hidden>
         <div class="sh"><h2>Son proje</h2></div>
-        <button class="lastp" data-go="clip" type="button"><span class="lt" id="last-t"></span><span class="btn sm">Devam et</span></button>
+        <button class="lastp" data-go="clip" type="button"><span class="lthumb" id="last-th"><svg><use href="#i-film"/></svg></span><span class="lt"><b id="last-n">Proje</b><small id="last-t"></small></span><span class="go">Devam et<svg><use href="#i-arrow"/></svg></span></button>
       </section>
 
       <section class="blk">
-        <div class="sh"><h2><span lang="en">Motion</span> klipleri</h2><span class="muted">Dokun, ZodClip’te videona eklensin</span></div>
+        <div class="sh"><h2>Hızlı araçlar</h2></div>
+        <div class="tools">
+          <button data-go="clip" data-tab="klip" type="button"><svg><use href="#i-wand"/></svg><b>Klip çıkar</b><small>Uzun videodan en iyi anları bul</small></button>
+          <button data-go="clip" data-tab="altyazi" type="button"><svg><use href="#i-cc"/></svg><b>Otomatik altyazı</b><small>Türkçe konuşmayı yazıya çevir</small></button>
+          <button data-go="clip" data-tab="medya" type="button"><svg><use href="#i-cut"/></svg><b>Sessizlikleri kes</b><small>Boşlukları otomatik çıkar</small></button>
+          <button data-go="motion" type="button"><svg><use href="#i-spark"/></svg><b><span lang="en">Motion</span> şablonu</b><small>15.000+ şablonu markana uyarla</small></button>
+          <button data-go="ai" type="button"><svg><use href="#i-ai"/></svg><b>AI reklam</b><small>Ürün fotoğrafından reklam videosu</small></button>
+        </div>
+      </section>
+
+      <section class="blk">
+        <div class="sh"><h2><span lang="en">Motion</span> klipleri</h2><span class="muted">Tıkla, ZodClip’te videona eklensin</span></div>
         <div class="mots" id="mots"></div>
       </section>
 
       <section class="blk">
-        <div class="sh"><h2>Şablon kategorileri</h2><button class="lnk" data-go="motion" type="button">Tümü</button></div>
+        <div class="sh"><h2>Sektörlere göre şablonlar</h2><button class="lnk" data-go="motion" type="button">Tümü<svg><use href="#i-arrow"/></svg></button></div>
         <div class="cats" id="cats"></div>
       </section>
 
@@ -53,14 +88,6 @@
   <section class="view" id="v-ai" aria-label="AI Stüdyo"></section>
   <section class="view" id="v-hesap" aria-label="Hesap"></section>
 </main>
-
-<nav class="tabbar" aria-label="Uygulama menüsü">
-  <button data-go="home" aria-current="page" type="button"><i>⌂</i>Ana sayfa</button>
-  <button data-go="motion" type="button"><i>✦</i><span><span lang="en">Motion</span>lar</span></button>
-  <button data-go="clip" type="button" class="mid"><i>▶</i><span lang="en">ZodClip</span></button>
-  <button data-go="ai" type="button"><i>◎</i>AI Stüdyo</button>
-  <button data-go="hesap" type="button"><i>☺</i>Hesap</button>
-</nav>
 
 <div class="offline" id="offline" hidden>İnternet bağlantısı yok. Bağlantı gelince kaldığın yerden devam edebilirsin.</div>
 

@@ -29,8 +29,8 @@ function frame(v,url){
 function go(v,opt={}){
   if(!(v in VIEWS))v='home';cur=v;
   $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
-  $$('.tabbar button').forEach(b=>{if(b.dataset.go===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
-  if(v!=='home'){const f=frame(v,opt.url);if(opt.tab||opt.mot){const send=()=>{try{f.contentWindow.postMessage(opt.mot?{zc:'mot',k:opt.mot}:{zc:'tab',name:opt.tab},location.origin)}catch(e){}};
+  $$('.nav button').forEach(b=>{if(b.dataset.go===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  if(v!=='home'){const f=frame(v,opt.url);if(opt.tab||opt.mot||opt.fmt){const send=()=>{try{const w=f.contentWindow;if(opt.fmt)w.postMessage({zc:'fmt',v:opt.fmt},location.origin);if(opt.mot)w.postMessage({zc:'mot',k:opt.mot},location.origin);else if(opt.tab)w.postMessage({zc:'tab',name:opt.tab},location.origin)}catch(e){}};
       if(f.contentWindow&&f.contentWindow.ZC)send();else{let n=0;const t=setInterval(()=>{n++;if((f.contentWindow&&f.contentWindow.ZC)||n>60){clearInterval(t);send()}},250)}}
     try{f.contentWindow.focus()}catch(e){}}
   else renderHome();
@@ -64,18 +64,19 @@ $('#cats').addEventListener('click',e=>{const b=e.target.closest('button');if(b)
 function user(){for(const f of Object.values(frames)){try{const z=f.contentWindow.ZMA;if(z&&z.user&&z.user())return{u:z.user(),z}}catch(e){}}try{if(window.ZMA&&ZMA.user())return{u:ZMA.user(),z:ZMA}}catch(e){}return null}
 function renderAcct(){
   const r=user();const box=$('#acct');
-  if(!r){box.innerHTML='<button class="btn pri sm" data-go="hesap" type="button">Giriş yap</button>';$('#hi').textContent='Bugün ne üretiyoruz?';return}
+  if(!r){box.innerHTML='<button class="btn pri" data-go="hesap" type="button">Giriş yap</button>';$('#hello').textContent='Hoş geldin';return}
   const p=r.u.profile||{};const act=r.z.isActive?r.z.isActive(r.u):false;const P=(r.z.PLANS||{})[p.plan]||{n:'Ücretsiz'};
-  const first=(p.ad||'').split(' ')[0];$('#hi').textContent=first?`Merhaba ${first}, bugün ne üretiyoruz?`:'Bugün ne üretiyoruz?';
-  box.innerHTML=`<span class="chip${act?' on':''}">${act?esc(P.n)+' · aktif':'Abonelik yok'}</span><button class="btn sm" data-go="hesap" type="button">Hesabım</button>`;
+  const first=(p.ad||'').split(' ')[0];$('#hello').textContent=first?`Merhaba ${first}`:'Hoş geldin';
+  box.innerHTML=`<span class="chip${act?' on':''}"><i></i>${act?esc(P.n)+' paketi aktif':'Abonelik yok'}</span>${act?'':'<a class="btn pri" href="/zodmotionsBeta/fiyatlar.html" data-go="hesap">Paketleri gör</a>'}`;
 }
 function lastProject(){
   try{const r=indexedDB.open('zodclip',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');
     r.onsuccess=()=>{const db=r.result;try{const q=db.transaction('kv').objectStore('kv').get('project');q.onsuccess=()=>{const p=q.result;let n=0;try{n=JSON.parse(p.snap).items.length}catch(e){}
-      if(p&&n){$('#last').hidden=false;$('#last-t').innerHTML=`<b>ZodClip projesi</b> · ${n} parça · ${new Date(p.savedAt).toLocaleString('tr-TR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}`}else $('#last').hidden=true;db.close()}}catch(e){db.close()}}}catch(e){}
+      if(p&&n){let nm='ZodClip projesi';try{nm=JSON.parse(p.snap).cfg.name||nm}catch(e){}$('#last').hidden=false;$('#last-n').textContent=nm;$('#last-t').textContent=`${n} parça · ${new Date(p.savedAt).toLocaleString('tr-TR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}`;
+        const id=(p.srcIds||[])[0];if(id){try{const q2=db.transaction('kv').objectStore('kv').get('src:'+id);q2.onsuccess=()=>{const r2=q2.result;if(r2&&r2.thumb){$('#last-th').style.backgroundImage=`url('${r2.thumb}')`;$('#last-th').innerHTML=''}}}catch(e){}}}else $('#last').hidden=true}}catch(e){}}}catch(e){}
 }
 function renderHome(){renderAcct();lastProject()}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;e.preventDefault();go(b.dataset.go,{tab:b.dataset.tab})});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;e.preventDefault();go(b.dataset.go,{tab:b.dataset.tab,fmt:b.dataset.fmt})});
 window.addEventListener('online',()=>$('#offline').hidden=true);window.addEventListener('offline',()=>$('#offline').hidden=false);
 if(!navigator.onLine)$('#offline').hidden=false;
 if(window.zodNative&&window.zodNative.version)$('#ver').textContent='Masaüstü sürüm '+window.zodNative.version;else $('#ver').textContent='Web sürüm';
