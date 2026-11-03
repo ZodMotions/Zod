@@ -293,3 +293,17 @@ p{margin:0}
 .cmp th{color:var(--mute);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
 .cmp td:first-child{color:#C9CDD3}
 .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r3);background:var(--s1)}
+
+/* indir */
+.dlw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+.dlc{display:grid;gap:18px;padding:28px;border-radius:var(--r3);background:radial-gradient(120% 100% at 0% 0%,#24262B,#131417);border:1px solid var(--line2)}
+.dlc>div b{display:block;font-family:var(--f-d);font-size:32px;text-transform:uppercase;line-height:1}
+.dlc>div span{color:var(--mute);font-size:14px}
+.btn.big{min-height:56px;font-size:16px;padding:0 26px;justify-self:start}
+.dlc .note{color:var(--mute);font-size:13.5px;margin:0}
+.dlc .note a{color:var(--fg)}
+.dlf{list-style:none;margin:0;padding:0;display:grid;border-top:1px solid var(--line)}
+.dlf li{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid var(--line)}
+.dlf b{font-size:17px}.dlf span{color:var(--mute);font-size:14.5px}
+.note{color:var(--mute);font-size:13.5px}
+@media (max-width:860px){.dlw{grid-template-columns:1fr}}

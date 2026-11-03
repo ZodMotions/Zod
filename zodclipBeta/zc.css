@@ -201,3 +201,6 @@ label.inl input{width:78px;padding:5px 8px}
   #btn-cover,#btn-new{display:none}
   .bar{padding:0 8px}
 }
+
+/* uygulama içinde */
+html.in-app .brand,html.in-app #btn-out{display:none}

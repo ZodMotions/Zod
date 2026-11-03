@@ -1,4 +1,6 @@
 /* ZodMotions ortak site katmanı: üst menü, alt bilgi, canlı küçük önizlemeler, modal pencereler, kota */
+// Uygulama içinde (ZodMotions masaüstü / /app/) açıldıysa site menüsünü ve alt bilgiyi gizle
+(()=>{try{if(window.self!==window.top&&window.top.location.pathname.startsWith('/app')){document.documentElement.classList.add('in-app');const st=document.createElement('style');st.textContent='html.in-app #zh,html.in-app #zf{display:none!important}html.in-app body{padding-top:0!important}';document.head.appendChild(st)}}catch(e){}})();
 (()=>{
 const Z=window.ZM;
 const $=id=>document.getElementById(id);

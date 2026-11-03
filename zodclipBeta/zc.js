@@ -523,11 +523,12 @@ $('#m-q').addEventListener('input',()=>{clearTimeout(mFilter.t);mFilter.t=setTim
 $('#m-sector').addEventListener('change',mFilter);$('#m-cat').addEventListener('change',mFilter);$('#m-more').addEventListener('click',mMore);
 $('#m-grid').addEventListener('click',e=>{const b=e.target.closest('.mcard');if(!b)return;const t=TPL.get(b.dataset.tpl);if(!t)return;
   hist();const at=insertAt();const it=insertItem({type:'motion',tpl:t.id,f:{...t.def},dur:t.dur,off:0,photo:null,tr:{type:at?'fade':'none',d:.4}},at);afterChange();select('item',it.id,false);seek(it.t0+.6);toast('Motion eklendi: '+t.name+'. Yazılarını Düzenle sekmesinden değiştir.',3500);$('#tab-edit').hidden=false});
-$('#m-clips').addEventListener('click',async e=>{const b=e.target.closest('.mcard');if(!b)return;const k=b.dataset.mot;const m=ZM.MOT.find(x=>x.k===k);const url=`/zodmotionsBeta/m/${k}.mp4`;
+$('#m-clips').addEventListener('click',e=>{const b=e.target.closest('.mcard');if(b)addMotClip(b.dataset.mot)});
+async function addMotClip(k){const m=ZM.MOT.find(x=>x.k===k);if(!m)return;const url=`/zodmotionsBeta/m/${k}.mp4`;
   let s=S.sources.find(x=>x.url===url);
   try{if(!s)s=await makeSource({kind:'video',name:'Motion · '+m.ad,url,thumb:`/zodmotionsBeta/m/${k}.jpg`,hidden:true});
     hist();const at=insertAt();const it=insertItem({type:'video',src:s.id,in:0,out:r2(s.dur),tr:{type:at?'fade':'none',d:.3}},at);afterChange();select('item',it.id,false);seek(it.t0+.01);toast('Motion klibi eklendi')}
-  catch(err){toast('Motion klibi yüklenemedi')}});
+  catch(err){toast('Motion klibi yüklenemedi')}}
 
 /* ================= yazı ================= */
 const TPRE=[
@@ -847,6 +848,12 @@ function start(){
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&P.exporting)toast('Video kaydı sürerken sekmede kal, yoksa video takılabilir.',5000)});
   fitTL();updTools();
   dbOpen().then(tryResume);
+  // uygulama (ZodMotions masaüstü) içinden gelen komutlar
+  const TABS=['medya','motion','yazi','altyazi','ses','klip','gorunum'];
+  const route=h=>{h=String(h||'').replace('#','');if(TABS.includes(h))openTab(h)};route(location.hash);
+  window.addEventListener('hashchange',()=>route(location.hash));
+  window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||!e.data.zc)return;const d=e.data;if(d.zc==='tab')route(d.name);else if(d.zc==='mot'){openTab('motion');addMotClip(d.k)}});
+  try{if(window.self!==window.top&&window.top.location.pathname.startsWith('/app'))document.documentElement.classList.add('in-app')}catch(e){}
 }
 window.ZC={S,P,addFiles,play,pause,seek,speechRanges,capsFromWords,select,doSplit,doUndo,doRedo,useClip,layout,afterChange,get total(){return total},get contentDur(){return contentDur},get clipRes(){return clipRes},get sel(){return SEL}};
 gate();

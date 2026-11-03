@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ZodMotions</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B0C0E">
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="views">
+  <section class="view on" id="v-home" aria-label="Ana sayfa">
+    <div class="home">
+      <header class="hh">
+        <div class="hb"><img src="/logo-z.png" alt="" width="40" height="40"><div><b lang="en">ZodMotions</b><small>Motion · ZodClip · AI Stüdyo</small></div></div>
+        <div class="acct" id="acct"><a class="btn pri sm" href="#hesap" data-go="hesap">Giriş yap</a></div>
+      </header>
+
+      <h1 id="hi">Bugün ne üretiyoruz?</h1>
+
+      <div class="actions">
+        <button class="act big" data-go="clip" type="button"><i>＋</i><b>Yeni video</b><span>Videolarını yükle, kes, yazı ve müzik ekle</span></button>
+        <button class="act" data-go="clip" data-tab="klip" type="button"><i>✂</i><b>Klip çıkar</b><span>Uzun videodan en iyi anları bul</span></button>
+        <button class="act" data-go="clip" data-tab="altyazi" type="button"><i>≡</i><b>Otomatik altyazı</b><span>Türkçe konuşmayı yazıya çevir</span></button>
+        <button class="act" data-go="motion" type="button"><i>✦</i><b><span lang="en">Motion</span> şablonu</b><span>15.000+ hazır şablonu markana uyarla</span></button>
+        <button class="act" data-go="ai" type="button"><i>◎</i><b>AI reklam</b><span>Ürün fotoğrafından reklam videosu</span></button>
+      </div>
+
+      <section class="blk" id="last" hidden>
+        <div class="sh"><h2>Son proje</h2></div>
+        <button class="lastp" data-go="clip" type="button"><span class="lt" id="last-t"></span><span class="btn sm">Devam et</span></button>
+      </section>
+
+      <section class="blk">
+        <div class="sh"><h2><span lang="en">Motion</span> klipleri</h2><span class="muted">Dokun, ZodClip’te videona eklensin</span></div>
+        <div class="mots" id="mots"></div>
+      </section>
+
+      <section class="blk">
+        <div class="sh"><h2>Şablon kategorileri</h2><button class="lnk" data-go="motion" type="button">Tümü</button></div>
+        <div class="cats" id="cats"></div>
+      </section>
+
+      <p class="foot">Zodiac Web Design · <a href="mailto:info@zodiacwebdesign.com">info@zodiacwebdesign.com</a> · <span id="ver"></span></p>
+    </div>
+  </section>
+  <section class="view" id="v-motion" aria-label="Motionlar"></section>
+  <section class="view" id="v-clip" aria-label="ZodClip"></section>
+  <section class="view" id="v-ai" aria-label="AI Stüdyo"></section>
+  <section class="view" id="v-hesap" aria-label="Hesap"></section>
+</main>
+
+<nav class="tabbar" aria-label="Uygulama menüsü">
+  <button data-go="home" aria-current="page" type="button"><i>⌂</i>Ana sayfa</button>
+  <button data-go="motion" type="button"><i>✦</i><span><span lang="en">Motion</span>lar</span></button>
+  <button data-go="clip" type="button" class="mid"><i>▶</i><span lang="en">ZodClip</span></button>
+  <button data-go="ai" type="button"><i>◎</i>AI Stüdyo</button>
+  <button data-go="hesap" type="button"><i>☺</i>Hesap</button>
+</nav>
+
+<div class="offline" id="offline" hidden>İnternet bağlantısı yok. Bağlantı gelince kaldığın yerden devam edebilirsin.</div>
+
+<script src="/zodmotionsBeta/supabase.js"></script>
+<script src="/zodmotionsBeta/zm-config.js"></script>
+<script src="/zodmotionsBeta/zm-auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
