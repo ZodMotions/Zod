@@ -867,7 +867,7 @@ async function exportVideo(opt={}){
   const mots=S.items.filter(it=>it.type==='motion');
   for(const it of mots){try{const r=await ZMA.useMotion();it._wm=!r.ok||!!r.wm}catch(e){it._wm=true}}
   if(mots.some(it=>it._wm))toast('Bazı motionlar filigranlı çıkacak: filigransız motion hakkın bitti.',4500);
-  $('#exp-t').textContent=opt.title||'Dışa aktarılıyor';$('#exp-msg').textContent='Video hazırlanıyor…';$('#exp-dl').hidden=true;$('#exp-cancel').textContent='Vazgeç';setExpProgress(0);$('#exp').hidden=false;
+  $('#exp-t').textContent=opt.title||'Dışa aktarılıyor';$('#exp-msg').textContent=`MP4 · ${W}×${H} · 30 fps · ${fmtT(total)} — video hazırlanıyor…`;$('#exp-dl').hidden=true;$('#exp-cancel').textContent='Vazgeç';setExpProgress(0);$('#exp').hidden=false;
   fastCancel=false;fastRunning=true;P.exporting=true;const t0=performance.now();
   try{const blob=await exportFast(opt,(p,m)=>{setExpProgress(p);$('#exp-msg').textContent=m});fastRunning=false;P.exporting=false;dirty=true;
     if(!blob){$('#exp').hidden=true;return null}
