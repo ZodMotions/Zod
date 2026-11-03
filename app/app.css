@@ -99,3 +99,6 @@ h1,h2{margin:0}
   .start{grid-template-columns:1fr}.newp{min-height:130px}
   .tools{grid-template-columns:1fr 1fr}
 }
+
+body.nosub .newp,body.nosub .fmts button,body.nosub .tools button[data-go=clip]{position:relative}
+body.nosub .newp::after,body.nosub .fmts button::after,body.nosub .tools button[data-go=clip]::after{content:"Abonelikle";position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;color:#FFD84D;border:1px solid rgba(255,216,77,.4);background:rgba(255,216,77,.08);border-radius:99px;padding:1px 8px}

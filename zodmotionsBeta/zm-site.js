@@ -1,6 +1,6 @@
 /* ZodMotions ortak site katmanı: üst menü, alt bilgi, canlı küçük önizlemeler, modal pencereler, kota */
 // Uygulama içinde (ZodMotions masaüstü / /app/) açıldıysa site menüsünü ve alt bilgiyi gizle
-(()=>{try{if(window.self!==window.top&&window.top.location.pathname.startsWith('/app')){document.documentElement.classList.add('in-app');const st=document.createElement('style');st.textContent='html.in-app #zh,html.in-app #zf{display:none!important}html.in-app body{padding-top:0!important}';document.head.appendChild(st)}}catch(e){}})();
+(()=>{try{if(window.self!==window.top&&window.top.location.pathname.startsWith('/app')){document.documentElement.classList.add('in-app');const st=document.createElement('style');st.textContent='html.in-app #zh,html.in-app #zf,html.in-app .tc-ruler,html.in-app #ruler{display:none!important}html.in-app{--bg:#111113;--s1:#1c1c1f;--s2:#232327;--s3:#2c2c31;--line:#2A2A2F;--line2:#3A3A41;--fg:#ECECEF;--mute:#8E8E96;--acc:#4BA3FF;--acc-hi:#6DB6FF;--acc-soft:rgba(75,163,255,.14);--f-body:Inter,system-ui,sans-serif}html.in-app body{padding-top:0!important;font-size:14.5px;background:#111113}html.in-app main h1{font-size:clamp(28px,3.2vw,40px)!important;line-height:1!important;letter-spacing:0!important}html.in-app main{padding-top:14px}html.in-app .big-n,html.in-app .eyebrow{display:none!important}html.in-app .page-h{margin-bottom:8px}';document.head.appendChild(st)}}catch(e){}})();
 (()=>{
 const Z=window.ZM;
 const $=id=>document.getElementById(id);

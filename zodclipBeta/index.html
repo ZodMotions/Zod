@@ -79,6 +79,7 @@
     </div>
     <div class="bar-r">
       <span class="fmtchip" id="fmtchip" title="Görünüm sekmesinden değiştir">9:16 · 1080×1920</span>
+      <button class="ic" id="btn-help" type="button" title="Kısayollar ve yardım (?)" aria-label="Yardım"><b style="font-size:15px">?</b></button>
       <button class="ic" id="btn-new" type="button" title="Yeni proje" aria-label="Yeni proje"><svg><use href="#i-new"/></svg></button>
       <button class="ic" id="btn-cover" type="button" title="O anki kareyi kapak olarak indir" aria-label="Kapak indir"><svg><use href="#i-photo"/></svg></button>
       <button class="btn pri" id="btn-export" type="button"><svg class="si"><use href="#i-download"/></svg>Dışa aktar</button>
@@ -132,9 +133,9 @@
     <div class="pane" data-pane="altyazi" hidden>
       <div class="ph"><h2>Altyazı</h2></div>
       <button class="btn pri wide" id="btn-asr" type="button"><svg class="si"><use href="#i-cc"/></svg>Otomatik altyazı oluştur</button>
-      <div class="row"><select id="asr-model" aria-label="Doğruluk"><option value="onnx-community/whisper-base_timestamped">Hızlı</option><option value="onnx-community/whisper-small_timestamped">Daha doğru</option></select><select id="asr-lang" aria-label="Dil"><option value="turkish">Türkçe</option><option value="english">İngilizce</option><option value="arabic">Arapça</option><option value="german">Almanca</option></select></div>
+      <div class="row"><select id="asr-model" aria-label="Doğruluk"><option value="onnx-community/whisper-small_timestamped" selected>Doğru (önerilen)</option><option value="onnx-community/whisper-base_timestamped">Hızlı</option></select><select id="asr-lang" aria-label="Dil"><option value="turkish">Türkçe</option><option value="english">İngilizce</option><option value="arabic">Arapça</option><option value="german">Almanca</option></select></div>
       <div class="prog" id="asr-prog" hidden><i></i><span></span></div>
-      <p class="note">İlk seferde yapay zekâ modeli iner (Hızlı ~80 MB, Daha doğru ~250 MB), sonra hazır kalır.</p>
+      <p class="note">İlk seferde yapay zekâ modeli bir kez iner (Doğru ~250 MB, Hızlı ~80 MB), sonra hazır kalır.</p>
       <h3>Stil</h3>
       <div class="chips" id="cap-styles"><button data-v="vurgu">Vurgu</button><button data-v="klasik">Klasik</button><button data-v="kutu">Kutu</button><button data-v="zarif">Zarif</button><button data-v="neon">Neon</button></div>
       <div class="grid2"><label>Boyut<input type="range" id="cap-size" min="0.6" max="1.6" step="0.05"></label><label>Yükseklik<input type="range" id="cap-pos" min="0.15" max="0.9" step="0.01"></label></div>
@@ -199,7 +200,7 @@
     <div class="mon-h"><span>Program</span><span class="muted" id="mon-info"></span></div>
     <div class="screen" id="screen">
       <canvas id="cv" width="1080" height="1920"></canvas>
-      <label class="drop" id="drop" for="f-media"><svg><use href="#i-plus"/></svg><b>Videolarını buraya bırak</b><span>ya da tıkla ve seç</span></label>
+      <label class="drop" id="drop" for="f-media"><svg><use href="#i-plus"/></svg><b>Videolarını buraya bırak</b><span>ya da tıkla ve seç</span><ol class="steps"><li><b>1</b>Video ve fotoğraf ekle</li><li><b>2</b>Kes, yazı, motion ve müzik ekle</li><li><b>3</b>Dışa aktar, Instagram’a yükle</li></ol></label>
     </div>
     <div class="transport">
       <span class="tc big" id="tc">00:00:00:00</span>
@@ -243,6 +244,7 @@
       <div class="tl-heads" id="tl-heads">
         <div class="th-ruler"></div>
         <div class="th" data-tr="text"><b>T1</b><span>Yazı</span></div>
+        <div class="th" data-tr="ov"><b>V2</b><span>Katman</span></div>
         <div class="th main" data-tr="main"><b>V1</b><span>Video</span><svg class="hic"><use href="#i-eye"/></svg></div>
         <div class="th sm" data-tr="cap"><b>C1</b><span>Altyazı</span></div>
         <div class="th sm" data-tr="music"><b>A1</b><span>Müzik</span><svg class="hic"><use href="#i-vol"/></svg></div>
@@ -251,6 +253,7 @@
         <div class="tl-in" id="tl-in">
           <div class="ruler" id="ruler"></div>
           <div class="track" data-tr="text"><div class="lane" id="lane-text"></div></div>
+          <div class="track" data-tr="ov"><div class="lane" id="lane-ov"></div></div>
           <div class="track main" data-tr="main"><div class="lane" id="lane-main"></div></div>
           <div class="track sm" data-tr="cap"><div class="lane" id="lane-cap"></div></div>
           <div class="track sm" data-tr="music"><div class="lane" id="lane-music"></div></div>
@@ -268,6 +271,23 @@
     <p id="exp-msg">Video hazırlanıyor.</p>
     <div class="prog"><i id="exp-bar"></i><span id="exp-pct">0%</span></div>
     <div class="row end"><button class="btn ghost" id="exp-cancel" type="button">Vazgeç</button><a class="btn pri" id="exp-dl" hidden>İndir</a></div>
+  </div>
+</div>
+
+<div class="modal" id="help" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="help-t">
+    <h2 id="help-t">Kısayollar</h2>
+    <div class="keys">
+      <span><kbd>Boşluk</kbd>Oynat / durdur</span><span><kbd>S</kbd>Oynatma çizgisinden böl</span>
+      <span><kbd>C</kbd>Jilet aracı</span><span><kbd>V</kbd>Seçim aracı</span>
+      <span><kbd>N</kbd>Mıknatıs aç / kapat</span><span><kbd>Delete</kbd>Seçili parçayı sil</span>
+      <span><kbd>Ctrl Z</kbd>Geri al</span><span><kbd>Ctrl Shift Z</kbd>Yinele</span>
+      <span><kbd>Ctrl D</kbd>Kopyala</span><span><kbd>← →</kbd>Bir kare geri / ileri</span>
+      <span><kbd>Shift ← →</kbd>Bir saniye geri / ileri</span><span><kbd>+ −</kbd>Zaman çizgisini yakınlaştır</span>
+      <span><kbd>Home End</kbd>Başa / sona git</span><span><kbd>Tekerlek</kbd>Seçili yazı veya katmanı büyüt</span>
+    </div>
+    <p>İpucu: Fotoğrafı videonun üstüne koymak için Medya’daki fotoğrafın <b>+V2</b> etiketine tıkla.</p>
+    <div class="row end"><button class="btn pri" id="help-x" type="button">Tamam</button></div>
   </div>
 </div>
 

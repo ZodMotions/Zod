@@ -64,8 +64,8 @@ $('#cats').addEventListener('click',e=>{const b=e.target.closest('button');if(b)
 function user(){for(const f of Object.values(frames)){try{const z=f.contentWindow.ZMA;if(z&&z.user&&z.user())return{u:z.user(),z}}catch(e){}}try{if(window.ZMA&&ZMA.user())return{u:ZMA.user(),z:ZMA}}catch(e){}return null}
 function renderAcct(){
   const r=user();const box=$('#acct');
-  if(!r){box.innerHTML='<button class="btn pri" data-go="hesap" type="button">Giriş yap</button>';$('#hello').textContent='Hoş geldin';return}
-  const p=r.u.profile||{};const act=r.z.isActive?r.z.isActive(r.u):false;const P=(r.z.PLANS||{})[p.plan]||{n:'Ücretsiz'};
+  if(!r){document.body.classList.add('nosub');box.innerHTML='<button class="btn pri" data-go="hesap" type="button">Giriş yap</button>';$('#hello').textContent='Hoş geldin';return}
+  const p=r.u.profile||{};const act=r.z.isActive?r.z.isActive(r.u):false;document.body.classList.toggle('nosub',!act);const P=(r.z.PLANS||{})[p.plan]||{n:'Ücretsiz'};
   const first=(p.ad||'').split(' ')[0];$('#hello').textContent=first?`Merhaba ${first}`:'Hoş geldin';
   box.innerHTML=`<span class="chip${act?' on':''}"><i></i>${act?esc(P.n)+' paketi aktif':'Abonelik yok'}</span>${act?'':'<a class="btn pri" href="/zodmotionsBeta/fiyatlar.html" data-go="hesap">Paketleri gör</a>'}`;
 }
