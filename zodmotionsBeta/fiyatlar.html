@@ -110,13 +110,16 @@ const PLANS=[
 const P={cur:'try',per:0};const money=v=>P.cur==='try'?'₺'+v.toLocaleString('tr-TR'):'$'+v.toLocaleString('en-US');
 function build(){const box=$('plans');box.innerHTML='';PLANS.forEach(pl=>{const v=pl[P.cur][P.per],m=pl[P.cur][0];const d=document.createElement('div');d.className='plan'+(pl.hot?' hot':'');
   const note=v===0?'Kart gerekmez':P.per?`Aylık ${money(Math.round(v/12))} · ${money(m*12-v)} tasarruf`:'Aylık faturalanır';
-  d.innerHTML=`${pl.hot?'<span class="tag">EN ÇOK SEÇİLEN</span>':''}<h3>${pl.n}</h3><div class="pr">${money(v)} <small>${v===0?'':P.per?'/ yıl':'/ ay'}</small></div><p class="nt">${note}</p><ul>${pl.items.map(i=>`<li>${i}</li>`).join('')}</ul><a class="btn ${pl.hot?'pri':''}" href="${pl.u}"${pl.k?` data-plan="${pl.k}"`:''}>${pl.btn}</a>${v?'<p class="note" style="text-align:center">Ödeme yakında açılıyor.</p>':''}`;box.appendChild(d)})}
+  d.innerHTML=`${pl.hot?'<span class="tag">EN ÇOK SEÇİLEN</span>':''}<h3>${pl.n}</h3><div class="pr">${money(v)} <small>${v===0?'':P.per?'/ yıl':'/ ay'}</small></div><p class="nt">${note}</p><ul>${pl.items.map(i=>`<li>${i}</li>`).join('')}</ul><a class="btn ${pl.hot?'pri':''}" href="${pl.u}"${pl.k?` data-plan="${pl.k}"`:''}>${pl.btn}</a>${v?'<p class="note" style="text-align:center">Online ödeme yakında; şimdilik talebini gönder, paketini en kısa sürede açalım.</p>':''}`;box.appendChild(d)})}
 [['curTry','curUsd',v=>P.cur=v?'usd':'try'],['perM','perY',v=>P.per=v]].forEach(([a,b,set])=>[a,b].forEach((id,i)=>$(id).onclick=()=>{set(i);$(a).setAttribute('aria-pressed',String(i===0));$(b).setAttribute('aria-pressed',String(i===1));build()}));
 build();
 document.addEventListener('click',async e=>{const a=e.target.closest('[data-plan]');if(!a)return;e.preventDefault();const k=a.dataset.plan;
  if(!ZMA.user()){ZMA.requireLogin('fiyatlar.html');return}
  if(ZMA.mode==='preview'&&k!=='ek'){const r=await ZMA.demoSetPlan(k);ZMS.toast(r.ok?'Önizleme: paket açıldı. Ödeme adımı ödeme sistemi bağlanınca gelecek.':r.error);if(r.ok)setTimeout(()=>location.href='hesap.html',900);return}
- ZMS.toast('Online ödeme çok yakında açılıyor. Şimdilik Instagram @zodiacmedya üzerinden yazabilirsin.')});
+ const pl=PLANS.find(x=>x.k===k)||{n:k};const u=ZMA.user();const per=P.per?'Yıllık':'Aylık';
+ const sub=encodeURIComponent(`ZodMotions ${pl.n} paketi talebi`);const body=encodeURIComponent(`Merhaba,\n\n${pl.n} paketini (${per}) almak istiyorum.\n\nHesap e-postam: ${u.email}\nAd soyad: ${(u.profile&&u.profile.ad)||''}\nFirma: ${(u.profile&&u.profile.firma)||''}\n\nTeşekkürler.`);
+ location.href=`mailto:info@zodiacwebdesign.com?subject=${sub}&body=${body}`;
+ ZMS.toast('Paket talebin için e-posta hazırlandı. Gönderdiğinde paketini en kısa sürede açıp sana haber veriyoruz.')});
 })();
 </script>
 </body></html>
