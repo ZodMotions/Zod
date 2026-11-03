@@ -64,12 +64,12 @@ if(ZMA.mode==='preview'){$('prevNote').hidden=false;$('demoPlans').hidden=false;
 function render(u){if(!u)return;const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;$('acct').hidden=false;
  const first=(p.ad||'').split(' ')[0];$('hi').textContent=first?'Merhaba, '+first:'Hesabın';
  $('pk').textContent=P.n;$('sKredi').textContent=fmt(p.kredi);
- const free=p.plan==='free'||p.plan==='deneme';
- $('sMotion').textContent=fmt(p.motion_left);$('sMotionL').textContent=free?'ücretsiz motion':'motion hakkı bu ay';
- $('sClean').textContent=free?fmt(p.clean_left):'Hepsi';$('sCleanL').textContent='damgasız video';
- if(free&&p.kredi===0){$('mLbl').textContent='Ücretsiz motion kullanımı';$('mVal').textContent=(3-p.motion_left)+' / 3';$('meter').style.width=((3-p.motion_left)/3*100)+'%'}
+ const act=ZMA.isActive(u),free=!act;if(!act)$('pk').textContent=p.plan==='free'?'Ücretsiz':P.n+' · süresi doldu';
+ $('sMotion').textContent=fmt(p.motion_left);$('sMotionL').textContent=free?'filigranlı motion':'filigransız motion bu ay';if(free)$('sMotion').textContent='∞';
+ $('sClean').textContent=free?'Yok':'Açık';$('sCleanL').textContent='ZodClip erişimi';
+ if(free&&p.kredi===0){$('mLbl').textContent='Abonelik';$('mVal').textContent='Yok';$('meter').style.width='0%'}
  else{const tot=Math.max(P.kredi,p.kredi);$('mLbl').textContent='Kalan AI kredisi';$('mVal').textContent=fmt(p.kredi)+' / '+fmt(tot);$('meter').style.width=(tot?p.kredi/tot*100:0)+'%'}
- $('renew').textContent=p.period_end?'Paketin '+new Date(p.period_end).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})+' tarihinde yenilenir; krediler o gün yeniden yüklenir.':free?'AI üretimi için ₺299 deneme paketi ya da aylık bir paket seç.':'';
+ $('renew').textContent=p.period_end?'Paketin '+new Date(p.period_end).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})+' tarihinde yenilenir; krediler o gün yeniden yüklenir.':free?'Filigransız motion, AI kredisi ve ZodClip için aylık bir paket seç.':'';
  $('upg').textContent=p.plan==='ajans'?'Paketleri gör':'Paketi yükselt';
  if(document.activeElement!==$('ad'))$('ad').value=p.ad||'';if(document.activeElement!==$('firma'))$('firma').value=p.firma||'';$('em').value=u.email;
  const db=$('dpBtns');db.innerHTML='';[['deneme','+ Deneme paketi (50 kredi)'],['baslangic','Başlangıç'],['pro','Pro'],['ajans','Ajans']].forEach(([k,n])=>{const b=document.createElement('button');b.className='btn sm';b.type='button';b.textContent=n;if(p.plan===k)b.setAttribute('aria-pressed','true');b.onclick=async()=>{const r=await ZMA.demoSetPlan(k);ZMS.toast(r.ok?n+' açıldı (önizleme).':r.error)};db.appendChild(b)})}

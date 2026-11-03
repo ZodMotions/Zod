@@ -3,38 +3,47 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ZodClip Beta · Tarayıcıda Reels kurgu stüdyosu</title>
-<meta name="description" content="ZodClip Beta: videolarını yükle, sessizlikleri kes, Türkçe altyazı ekle, müzik koy ve Reels olarak indir. Hepsi tarayıcında.">
+<title>ZodClip · Reels kurgu stüdyosu</title>
+<meta name="description" content="ZodClip: videolarını kes, motion ekle, yazı ve Türkçe altyazı koy, müzikle birleştir ve Reels olarak indir. Hepsi tarayıcında.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0B0C0E">
 <link rel="icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500;1,700&family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="zc.css">
 </head>
 <body>
 <div id="gate" class="gate" aria-live="polite">
   <div class="gate-box">
     <img src="/logo-z.png" alt="" width="56" height="56">
-    <h1 lang="en">ZodClip <span>Beta</span></h1>
+    <h1 lang="en">ZodClip</h1>
     <p id="gate-msg">Hesabın kontrol ediliyor…</p>
-    <a id="gate-btn" class="btn pri" href="/zodmotionsBeta/giris.html?next=/zodclipBeta/" hidden>Giriş yap</a>
+    <div class="row center">
+      <a id="gate-login" class="btn pri" href="/zodmotionsBeta/giris.html?next=/zodclipBeta/" hidden>Giriş yap</a>
+      <a id="gate-plans" class="btn pri" href="/zodmotionsBeta/fiyatlar.html" hidden>Paketleri gör</a>
+      <a id="gate-acct" class="btn" href="/zodmotionsBeta/hesap.html" hidden>Hesabım</a>
+    </div>
     <a class="gate-back" href="/zodclip/">ZodClip hakkında</a>
   </div>
 </div>
 
 <div id="app" class="app" hidden>
   <header class="bar">
-    <a class="brand" href="/zodclip/" aria-label="ZodClip"><img src="/logo-z.png" alt="" width="28" height="28"><b lang="en">ZodClip</b><i>Beta</i></a>
+    <a class="brand" href="/zodclip/" aria-label="ZodClip"><img src="/logo-z.png" alt="" width="28" height="28"><b lang="en">ZodClip</b></a>
+    <div class="bar-c">
+      <button class="ic" id="btn-undo" type="button" title="Geri al (Ctrl+Z)" aria-label="Geri al">↶</button>
+      <button class="ic" id="btn-redo" type="button" title="Yinele (Ctrl+Shift+Z)" aria-label="Yinele">↷</button>
+      <span class="saved" id="saved" aria-live="polite"></span>
+    </div>
     <div class="bar-r">
-      <span id="who" class="who"></span>
+      <button class="btn ghost sm" id="btn-new" type="button" title="Yeni proje">Yeni</button>
       <button class="btn sm" id="btn-cover" type="button" title="O anki kareyi kapak olarak indir">Kapak</button>
       <button class="btn pri sm" id="btn-export" type="button">Videoyu indir</button>
-      <button class="btn ghost sm" id="btn-out" type="button">Çıkış</button>
+      <button class="ic" id="btn-out" type="button" title="Çıkış" aria-label="Çıkış">⎋</button>
     </div>
   </header>
 
-  <main class="work">
+  <div class="work">
     <section class="stage" aria-label="Önizleme">
       <div class="screen" id="screen">
         <canvas id="cv" width="1080" height="1920"></canvas>
@@ -44,20 +53,23 @@
         </label>
       </div>
       <div class="transport">
+        <button class="ic" id="btn-back" type="button" aria-label="Başa dön">⏮</button>
         <button class="play" id="btn-play" type="button" aria-label="Oynat">▶</button>
-        <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Zaman çizgisi">
-        <span class="tc" id="tc">0:00 / 0:00</span>
+        <span class="tc" id="tc">0:00.0 / 0:00.0</span>
+        <button class="ic" id="btn-full" type="button" aria-label="Tam ekran önizleme" title="Tam ekran">⤢</button>
       </div>
-      <p class="hint" id="hint">İpucu: Sekmeyi açık tut; video indirme sırasında baştan sona bir kez oynatılır.</p>
     </section>
 
     <section class="panel">
-      <nav class="tabs" role="tablist">
-        <button role="tab" aria-selected="true" data-tab="medya">Medya</button>
-        <button role="tab" data-tab="altyazi">Altyazı</button>
-        <button role="tab" data-tab="yazi">Yazılar</button>
-        <button role="tab" data-tab="ses">Ses</button>
-        <button role="tab" data-tab="gorunum">Görünüm</button>
+      <nav class="tabs" role="tablist" id="tabs">
+        <button role="tab" aria-selected="true" data-tab="medya"><i>＋</i>Medya</button>
+        <button role="tab" data-tab="motion"><i>✦</i>Motion</button>
+        <button role="tab" data-tab="yazi"><i>T</i>Yazı</button>
+        <button role="tab" data-tab="altyazi"><i>≡</i>Altyazı</button>
+        <button role="tab" data-tab="ses"><i>♪</i>Ses</button>
+        <button role="tab" data-tab="klip"><i>✂</i>Klip çıkar</button>
+        <button role="tab" data-tab="gorunum"><i>◐</i>Görünüm</button>
+        <button role="tab" data-tab="duzenle" id="tab-edit" hidden><i>✎</i>Düzenle</button>
       </nav>
 
       <div class="pane" data-pane="medya">
@@ -66,9 +78,34 @@
           <input id="f-media" type="file" accept="video/*,image/*,audio/*" multiple hidden>
           <button class="btn" id="btn-silence" type="button">Sessizlikleri kes</button>
         </div>
-        <p class="note">Parçalar videoda bu sırayla oynar. Başlangıç ve bitişi saniye olarak düzenle ya da oynatma çizgisini koyup “Buradan başla / bitir” de.</p>
-        <ol class="segs" id="segs"></ol>
-        <p class="empty" id="segs-empty">Henüz dosya yok.</p>
+        <p class="note">Eklediğin dosyalar zaman çizgisine sırayla dizilir. Parçaya dokunup kesebilir, hızını ve geçişini değiştirebilirsin. Sürükleyerek sırasını değiştir.</p>
+        <h3>Yüklenenler</h3>
+        <div class="lib" id="lib"></div>
+        <p class="empty" id="lib-empty">Henüz dosya yok.</p>
+      </div>
+
+      <div class="pane" data-pane="motion" hidden>
+        <div class="row">
+          <input type="search" id="m-q" placeholder="Motion ara: indirim, villa, açılış…" aria-label="Motion ara">
+        </div>
+        <div class="row">
+          <select id="m-sector" aria-label="Sektör"><option value="">Tüm sektörler</option></select>
+          <select id="m-cat" aria-label="Tür"><option value="">Tüm türler</option></select>
+        </div>
+        <p class="note" id="m-info"></p>
+        <h3>Motion klipleri</h3>
+        <div class="mgrid" id="m-clips"></div>
+        <h3>Şablonlar</h3>
+        <div class="mgrid" id="m-grid"></div>
+        <div class="row center"><button class="btn" id="m-more" type="button" hidden>Daha fazla göster</button></div>
+      </div>
+
+      <div class="pane" data-pane="yazi" hidden>
+        <p class="note" style="margin-top:0">Bir yazı stili seç; oynatma çizgisinin olduğu yere eklenir. Önizlemede sürükleyerek yerini değiştir.</p>
+        <div class="tpresets" id="t-presets"></div>
+        <h3>Yazı katmanları</h3>
+        <ol class="caps" id="t-list"></ol>
+        <p class="empty" id="t-empty">Henüz yazı yok.</p>
       </div>
 
       <div class="pane" data-pane="altyazi" hidden>
@@ -86,7 +123,7 @@
         <p class="note">İlk seferde yapay zekâ modeli tarayıcına iner (Hızlı: ~80 MB, Daha doğru: ~250 MB). Sonra hazır kalır.</p>
         <h3>Altyazı stili</h3>
         <div class="chips" id="cap-styles">
-          <button data-v="vurgu">Vurgu</button><button data-v="klasik">Klasik</button><button data-v="kutu">Kutu</button><button data-v="zarif">Zarif</button>
+          <button data-v="vurgu">Vurgu</button><button data-v="klasik">Klasik</button><button data-v="kutu">Kutu</button><button data-v="zarif">Zarif</button><button data-v="neon">Neon</button>
         </div>
         <div class="grid2">
           <label>Boyut<input type="range" id="cap-size" min="0.6" max="1.6" step="0.05"></label>
@@ -98,39 +135,43 @@
         <p class="empty" id="caps-empty">Altyazı yok. “Otomatik altyazı”ya bas ya da elle ekle.</p>
       </div>
 
-      <div class="pane" data-pane="yazi" hidden>
-        <h3>Açılış yazısı (kanca)</h3>
-        <label class="chk"><input type="checkbox" id="hook-on"> İlk saniyelerde göster</label>
-        <textarea id="hook-text" rows="2" placeholder="Örn: 3 dakikada villa turu"></textarea>
-        <label>Süre (sn)<input type="number" id="hook-dur" min="1" max="6" step="0.5"></label>
-        <h3>Kapanış kartı</h3>
-        <label class="chk"><input type="checkbox" id="end-on"> Videonun sonuna ekle</label>
-        <input type="text" id="end-text" placeholder="Firma adı">
-        <input type="text" id="end-sub" placeholder="@instagram · telefon">
-        <label>Süre (sn)<input type="number" id="end-dur" min="1" max="6" step="0.5"></label>
-        <h3>Logo</h3>
-        <div class="row">
-          <label class="btn" for="f-logo">Logo yükle</label><input id="f-logo" type="file" accept="image/*" hidden>
-          <button class="btn ghost" id="btn-logo-x" type="button" hidden>Kaldır</button>
-          <img id="logo-prev" class="logo-prev" alt="" hidden>
-        </div>
-        <label class="chk"><input type="checkbox" id="wm-on"> Video boyunca köşede göster</label>
-        <p class="note">Logo kapanış kartında da kullanılır. Şeffaf PNG en iyi sonucu verir.</p>
-      </div>
-
       <div class="pane" data-pane="ses" hidden>
         <h3>Video sesi</h3>
-        <label>Ses seviyesi<input type="range" id="clip-vol" min="0" max="1.5" step="0.05"></label>
+        <label>Tüm videoların ses seviyesi<input type="range" id="clip-vol" min="0" max="1.5" step="0.05"></label>
         <h3>Müzik</h3>
         <div class="row">
           <label class="btn" for="f-music">Müzik seç</label><input id="f-music" type="file" accept="audio/*" hidden>
           <span id="music-name" class="muted">Seçilmedi</span>
           <button class="btn ghost sm" id="btn-music-x" type="button" hidden>Kaldır</button>
         </div>
+        <div id="music-part" hidden>
+          <h3>Müziğin hangi kısmı çalsın?</h3>
+          <div class="wave"><canvas id="wave" width="800" height="90" aria-label="Müzik dalgası; dokunarak başlangıç seç"></canvas></div>
+          <div class="row">
+            <button class="btn sm" id="btn-music-best" type="button">En hareketli kısmı bul</button>
+            <button class="btn ghost sm" id="btn-music-listen" type="button">Dinle</button>
+            <label class="inl">Başlangıç <input type="number" id="music-start" min="0" step="0.5"> sn</label>
+          </div>
+          <p class="note">Dalgaya dokunarak başlangıcı seç. Açık renkli alan videoda çalacak kısım.</p>
+        </div>
         <label>Müzik seviyesi<input type="range" id="music-vol" min="0" max="1" step="0.05"></label>
         <label class="chk"><input type="checkbox" id="music-duck"> Konuşurken müziği kıs</label>
         <label class="chk"><input type="checkbox" id="music-fade"> Başta ve sonda yumuşak geçiş</label>
         <p class="note">Telif sorunu yaşamamak için kullanım hakkın olan müziği seç.</p>
+      </div>
+
+      <div class="pane" data-pane="klip" hidden>
+        <p class="note" style="margin-top:0">Uzun bir video yükle; ZodClip konuşmayı, sesi ve hareketi inceleyip en iyi anları kısa klip olarak çıkarsın.</p>
+        <label>Video<select id="clip-src"></select></label>
+        <h3>Klip uzunluğu</h3>
+        <div class="chips" id="clip-lens"><button data-v="15">15 sn</button><button data-v="30">30 sn</button><button data-v="45">45 sn</button><button data-v="60">60 sn</button></div>
+        <h3>Kaç klip?</h3>
+        <div class="chips" id="clip-counts"><button data-v="3">3</button><button data-v="5">5</button><button data-v="8">8</button></div>
+        <label class="chk"><input type="checkbox" id="clip-asr" checked> Konuşmayı da dinle (daha iyi seçim + hazır altyazı)</label>
+        <div class="row" style="margin-top:12px"><button class="btn pri" id="btn-clips" type="button">Klipleri bul</button></div>
+        <div class="prog" id="clip-prog" hidden><i></i><span></span></div>
+        <ol class="clips" id="clips"></ol>
+        <div class="row" id="clips-all" hidden style="margin-top:12px"><button class="btn" id="btn-clips-dl" type="button">Hepsini sırayla indir</button></div>
       </div>
 
       <div class="pane" data-pane="gorunum" hidden>
@@ -150,9 +191,48 @@
         <div class="chips" id="filters">
           <button data-v="none">Doğal</button><button data-v="sicak">Sıcak</button><button data-v="soguk">Soğuk</button><button data-v="canli">Canlı</button><button data-v="sinema">Sinema</button><button data-v="sb">Siyah-beyaz</button>
         </div>
+        <h3>Logo</h3>
+        <div class="row">
+          <label class="btn" for="f-logo">Logo yükle</label><input id="f-logo" type="file" accept="image/*" hidden>
+          <button class="btn ghost" id="btn-logo-x" type="button" hidden>Kaldır</button>
+          <img id="logo-prev" class="logo-prev" alt="" hidden>
+        </div>
+        <label class="chk"><input type="checkbox" id="wm-on"> Video boyunca köşede göster</label>
+        <p class="note">Logo kapanış kartında ve motionlarda da kullanılır. Şeffaf PNG en iyi sonucu verir.</p>
+        <h3>Kapanış kartı</h3>
+        <label class="chk"><input type="checkbox" id="end-on"> Videonun sonuna ekle</label>
+        <input type="text" id="end-text" placeholder="Firma adı">
+        <input type="text" id="end-sub" placeholder="@instagram · telefon">
+        <label>Süre (sn)<input type="number" id="end-dur" min="1" max="6" step="0.5"></label>
+      </div>
+
+      <div class="pane" data-pane="duzenle" hidden>
+        <div id="insp"></div>
       </div>
     </section>
-  </main>
+  </div>
+
+  <section class="tl" aria-label="Zaman çizgisi">
+    <div class="tl-bar">
+      <button class="tbtn" id="tl-split" type="button" title="Oynatma çizgisinden böl (S)">✂ Böl</button>
+      <button class="tbtn" id="tl-dup" type="button" title="Kopyala">⧉ Kopyala</button>
+      <button class="tbtn" id="tl-del" type="button" title="Sil (Delete)">🗑 Sil</button>
+      <span class="sp"></span>
+      <button class="tbtn" id="tl-zout" type="button" aria-label="Uzaklaş">−</button>
+      <button class="tbtn" id="tl-fit" type="button" title="Sığdır">Sığdır</button>
+      <button class="tbtn" id="tl-zin" type="button" aria-label="Yakınlaş">＋</button>
+    </div>
+    <div class="tl-scroll" id="tl-scroll">
+      <div class="tl-in" id="tl-in">
+        <div class="ruler" id="ruler"></div>
+        <div class="track" data-tr="main"><span class="tl-lab">Video</span><div class="lane" id="lane-main"></div></div>
+        <div class="track" data-tr="text"><span class="tl-lab">Yazı</span><div class="lane" id="lane-text"></div></div>
+        <div class="track sm" data-tr="cap"><span class="tl-lab">Altyazı</span><div class="lane" id="lane-cap"></div></div>
+        <div class="track sm" data-tr="music"><span class="tl-lab">Müzik</span><div class="lane" id="lane-music"></div></div>
+        <div class="phead" id="phead"><i></i></div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <div class="modal" id="exp" hidden>
@@ -164,12 +244,19 @@
   </div>
 </div>
 
+<div class="banner" id="resume" hidden>
+  <span id="resume-t">Son projen kayıtlı.</span>
+  <button class="btn pri sm" id="resume-yes" type="button">Devam et</button>
+  <button class="btn ghost sm" id="resume-no" type="button">Yeni proje</button>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="media-pool" hidden></div>
 
 <script src="/zodmotionsBeta/supabase.js"></script>
 <script src="/zodmotionsBeta/zm-config.js"></script>
 <script src="/zodmotionsBeta/zm-auth.js"></script>
+<script src="/zodmotionsBeta/zm-engine.js"></script>
 <script src="zc.js"></script>
 </body>
 </html>

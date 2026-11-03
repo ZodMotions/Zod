@@ -12,6 +12,9 @@ const PLANS={
   pro:{n:'Pro',kredi:250,motion:200,premium:true},
   ajans:{n:'Ajans',kredi:700,motion:null,premium:true}
 };
+const OWNER='info@zodiacwebdesign.com';
+/* aktif abonelik: Başlangıç/Pro/Ajans ve süresi dolmamış (sahip hesabı her zaman aktif) */
+function isActive(p){if(!p)return false;if(String(p.email||'').toLowerCase()===OWNER)return true;return ['baslangic','pro','ajans'].includes(p.plan)&&!!p.period_end&&new Date(p.period_end)>new Date()}
 const listeners=new Set();let current=null;
 const emit=()=>listeners.forEach(f=>{try{f(current)}catch(e){}});
 const err=m=>({ok:false,error:m});
@@ -48,8 +51,8 @@ const local={
   async updateProfile({ad,firma}){if(!current)return err('Önce giriş yap.');if(!ad||ad.trim().length<2)return err('Adını yaz.');const p={...current.profile,ad:ad.trim(),firma:(firma||'').trim()};local.save(p);return okr()},
   async deleteAccount(){if(!current)return err('Önce giriş yap.');const us=LS.get('users',{});delete us[current.email];LS.set('users',us);LS.del('session');current=null;emit();return okr()},
   async useMotion(){if(!current)return err('login');const p={...current.profile};
-    if(p.motion_left!==null&&p.motion_left<=0)return err(p.plan==='free'||p.plan==='deneme'?'Ücretsiz 3 motion hakkın bitti. Devam etmek için bir paket seç.':'Bu ayki motion hakkın bitti. Bir üst pakete geçebilirsin.');
-    const free=p.plan==='free'||p.plan==='deneme';const wm=free&&p.clean_left<=0;if(p.motion_left!==null)p.motion_left--;if(free)p.clean_left=Math.max(0,p.clean_left-1);local.save(p);return okr({wm})},
+    if(isActive(p)&&(p.motion_left===null||p.motion_left>0)){if(p.motion_left!==null)p.motion_left--;local.save(p);return okr({wm:false})}
+    return okr({wm:true,reason:isActive(p)?'Bu ayki damgasız motion hakkın bitti; video filigranlı oluşur.':'Aktif aboneliğin yok; motion videoların filigranlı oluşur.'})},
   async useCredits(n,premium){if(!current)return err('login');const p={...current.profile};
     if(premium&&!PLANS[p.plan].premium)return err('Premium model (Kling 3.0 Pro) Pro ve Ajans paketlerinde açık.');
     if(p.kredi<n)return err(`Bakiyen yetmiyor: ${n} kredi gerekli, ${p.kredi} kredin var.`);p.kredi-=n;local.save(p);return okr({kredi:p.kredi})},
@@ -88,7 +91,12 @@ window.ZMA={mode:LIVE?'live':'preview',PLANS,ready,
   onChange(f){listeners.add(f);ready.then(()=>f(current));return()=>listeners.delete(f)},
   signUp:a=>B.signUp(a),signIn:a=>B.signIn(a),google:()=>B.google(),signOut:()=>B.signOut(),
   resetPassword:e=>B.resetPassword(e),changePassword:(o,n)=>B.changePassword(o,n),updateProfile:a=>B.updateProfile(a),deleteAccount:()=>B.deleteAccount(),
-  useMotion:()=>B.useMotion(),useCredits:(n,p)=>B.useCredits(n,p),demoSetPlan:p=>B.demoSetPlan(p),
+  useMotion:()=>B.useMotion(),
+  isActive:u=>isActive(u&&u.profile),
+  // ZodClip erişimi: sadece aktif abonelik
+  async zodclipAccess(){if(!current)return{ok:false,reason:'login'};if(isActive(current.profile))return{ok:true};
+    if(LIVE&&sb){try{const {data,error}=await sb.rpc('zodclip_access');if(!error&&data)return data}catch(e){}}
+    return{ok:false,reason:'plan'}},useCredits:(n,p)=>B.useCredits(n,p),demoSetPlan:p=>B.demoSetPlan(p),
   initials(u){const s=(u&&u.profile&&u.profile.ad)||(u&&u.email)||'?';return s.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toLocaleUpperCase('tr')).join('')},
   // giriş gerekiyorsa kayıt sayfasına yönlendirir; geri dönülecek sayfayı hatırlar
   requireLogin(next){if(current)return true;location.href='giris.html?mode=kayit&next='+encodeURIComponent(next||location.pathname.split('/').pop()+location.hash);return false}

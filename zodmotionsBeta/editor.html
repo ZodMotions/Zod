@@ -159,16 +159,16 @@ function buildTL(){const tl=$('tl');const d=S.tpl.dur;let ticks='';for(let s=0;s
   hit.onpointerdown=e=>{drag=true;try{hit.setPointerCapture(e.pointerId)}catch(_){}seek(e)};hit.onpointermove=e=>{if(drag)seek(e)};hit.onpointerup=()=>drag=false}
 const sctx=$('stage').getContext('2d');
 const fmt=t=>{const fr=Math.floor(t*30);return `00:${String(Math.floor(fr/30)).padStart(2,'0')}:${String(fr%30).padStart(2,'0')}`};
-function drawStage(){Z.renderFrame(sctx,S.tpl,S.t,S.f,S.A,S.plan==='free'&&S.clean<=0);$('tc').textContent=fmt(S.t)+' / '+fmt(S.tpl.dur);const ph=$('ph');if(ph)ph.style.left=(S.t/S.tpl.dur*100)+'%'}
+function drawStage(){Z.renderFrame(sctx,S.tpl,S.t,S.f,S.A,S.wm);$('tc').textContent=fmt(S.t)+' / '+fmt(S.tpl.dur);const ph=$('ph');if(ph)ph.style.left=(S.t/S.tpl.dur*100)+'%'}
 function setPlay(v){S.playing=v;$('playBtn').setAttribute('aria-label',v?'Duraklat':'Oynat');$('playIco').innerHTML=v?'<rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/>':'<path d="M4 2.5v11l9-5.5z" fill="currentColor"/>'}
 $('playBtn').onclick=()=>setPlay(!S.playing);
-function fromAcct(u){if(u){const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;S.plan=(p.plan==='free'||p.plan==='deneme')?'free':'pro';S.left=p.motion_left;S.clean=p.clean_left;$('planName').textContent=P.n}else{S.plan='free';S.left=3;S.clean=1;$('planName').textContent='Hesap yok'}S.acct=!!u;updQ();drawStage()}
+function fromAcct(u){if(u){const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;S.active=ZMA.isActive(u);S.left=p.motion_left;$('planName').textContent=S.active?P.n:'Abonelik yok'}else{S.active=false;S.left=0;$('planName').textContent='Hesap yok'}S.acct=!!u;S.wm=!(S.active&&(S.left===null||S.left>0));updQ();drawStage()}
 ZMA.onChange(fromAcct);
-function updQ(){$('kvWm').textContent=S.plan==='free'&&S.clean<=0?'Var':'Yok';$('msg').className='msg';
-  if(!S.acct){$('quota').textContent='3 / 3';$('renderBtn').disabled=false;$('renderBtn').textContent='Ücretsiz hesap aç ve oluştur';$('msg').textContent='Videoyu indirmek için ücretsiz hesap aç. Kart gerekmez; ilk 3 motion videon ücretsiz.';return}
-  $('renderBtn').textContent='Videoyu oluştur';
-  if(S.plan==='pro'){$('quota').textContent=S.left===null?'Sınırsız':S.left+' kaldı';$('renderBtn').disabled=S.left!==null&&S.left<=0;$('msg').textContent=S.left!==null&&S.left<=0?'Bu ayki motion hakkın bitti. Bir üst pakete geçebilirsin.':'Paketinde videolar damgasız oluşur.'}
-  else{$('quota').textContent=S.left+' / 3';$('renderBtn').disabled=S.left<=0;$('msg').textContent=S.left<=0?'Ücretsiz deneme hakkın bitti. Devam etmek için bir paket seç.':S.clean>0?'İlk videon damgasız. Sonraki iki ücretsiz video ZodMotions damgalı çıkar.':'Kalan ücretsiz videoların ZodMotions damgalı. Damgasız devam etmek için bir paket seç.'}}
+function updQ(){$('kvWm').textContent=S.wm?'Var':'Yok';$('msg').className='msg';
+  if(!S.acct){$('quota').textContent='Filigranlı';$('renderBtn').disabled=false;$('renderBtn').textContent='Hesap aç ve oluştur';$('msg').textContent='Videoyu indirmek için hesap aç. Abonelik olmadan motionlar filigranlı oluşur.';return}
+  $('renderBtn').textContent='Videoyu oluştur';$('renderBtn').disabled=false;
+  if(S.active){$('quota').textContent=S.left===null?'Sınırsız':S.left+' kaldı';$('msg').textContent=S.left!==null&&S.left<=0?'Bu ayki damgasız motion hakkın bitti; videolar filigranlı oluşur. Bir üst pakete geçebilirsin.':'Aboneliğinde videolar filigransız oluşur.'}
+  else{$('quota').textContent='Filigranlı';$('msg').textContent='Aktif aboneliğin yok: tüm motionları filigranlı kullanabilirsin. Filigransız ve AI kredili kullanım için bir paket seç.'}}
 let rendering=false;
 $('renderBtn').onclick=async()=>{if(rendering)return;
   if(!ZMA.user()){ZMA.requireLogin('editor.html#'+S.tpl.id);return}
