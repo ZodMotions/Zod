@@ -70,10 +70,11 @@ function openMotion(m){const d=dialog('motDlg',`<div class="mdlg" lang="tr"><div
   const cb=d.querySelector('[data-copy]');cb.onclick=()=>copy(m.k,()=>cb.textContent='Kopyalandı: '+m.k,()=>cb.textContent=m.k)}
 const vPlay=v=>{if(!v.src)v.src=v.dataset.src;const p=v.play();if(p&&p.catch)p.catch(()=>{});v.classList.add('on')};
 const vStop=v=>{if(!v.src)return;v.pause();v.classList.remove('on')};
-const vio='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');if(!v)return;if(e.isIntersecting&&e.intersectionRatio>.5&&!reduce&&(!hoverCap||e.target.dataset.auto))vPlay(v);else vStop(v)}),{threshold:[0,.5]}):null;
-function motionCard(m,auto){const b=document.createElement('button');b.type='button';b.className='tc-card';b.setAttribute('aria-label',`${m.ad} motionunu büyüt`);if(auto)b.dataset.auto='1';
+const vio='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');if(!v)return;if(e.isIntersecting&&e.intersectionRatio>.5&&!reduce&&e.target.dataset.auto)vPlay(v);else vStop(v)}),{threshold:[0,.5]}):null;
+let MCN=0;
+function motionCard(m,auto){auto=(auto||!hoverCap)&&(MCN++)%2===0;const b=document.createElement('button');b.type='button';b.className='tc-card';b.setAttribute('aria-label',`${m.ad} motionunu büyüt`);if(auto)b.dataset.auto='1';
   b.innerHTML=`<div class="fr"><img src="m/${m.k}.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="m/${m.k}.mp4"></video><span class="badge dark">${m.k}</span>${m.set==='pro'?'<span class="badge r">PRO</span>':''}</div><div class="meta"><b>${esc(m.ad)}</b><span>${m.d.toFixed(1)} sn</span></div><div class="sub">${Z.MCAT[m.k[0]]} · ZodClip</div>`;
-  const v=b.querySelector('video');if(hoverCap&&!reduce&&!auto){b.onmouseenter=()=>vPlay(v);b.onmouseleave=()=>{vStop(v);v.currentTime=0}}
+  const v=b.querySelector('video');if(!reduce&&!auto){b.onmouseenter=()=>vPlay(v);b.onmouseleave=()=>{vStop(v);v.currentTime=0}}
   b.onclick=()=>openMotion(m);if(vio)vio.observe(b);return b}
 
 /* --- şablon grupları: aynı sektör + aynı reklam türü = tek şablon, farklı stilleri --- */
@@ -83,7 +84,7 @@ const groupOf=t=>GMAP[GK(t)];
 /* --- canlı şablon önizlemeleri --- */
 const TH=[];const vis=new Set();const FR=[];
 const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?vis.add(e.target):vis.delete(e.target)),{rootMargin:'80px'}):null;
-function thumb(cv,tpl,o={}){const th={cv,ctx:cv.getContext('2d'),tpl,f:o.f||tpl.def,A:o.A||sampleFor(tpl),t:o.t!=null?o.t:tpl.dur*.55,hover:false,still:!!o.still};TH.push(th);if(io)io.observe(cv);else vis.add(cv);
+function thumb(cv,tpl,o={}){const th={cv,ctx:cv.getContext('2d'),tpl,f:o.f||tpl.def,A:o.A||sampleFor(tpl),t:o.t!=null?o.t:tpl.dur*.55,hover:false,still:o.still!=null?!!o.still:(TH.length%2===1)};TH.push(th);if(io)io.observe(cv);else vis.add(cv);
   draw(th);return th}
 function draw(th){try{Z.renderFrame(th.ctx,th.tpl,th.t,th.f,th.A,false)}catch(e){}}
 function tplCard(tpl,o={}){const V=o.variants||[tpl];let cur=tpl;const a=document.createElement('a');a.className='tc-card';a.href='editor.html#'+tpl.id;a.setAttribute('aria-label',tpl.cat+' şablonunu editörde aç');

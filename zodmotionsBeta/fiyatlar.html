@@ -56,7 +56,7 @@ tr:last-child th,tr:last-child td{border-bottom:0}
         <tr><th scope="row">AI modelleri</th><td class="n">Yok</td><td>Standart (MiniMax H3)</td><td class="hl">Standart + Premium (Kling 3.0 Pro)</td><td>Standart + Premium</td></tr>
         <tr><th scope="row">AI seslendirme</th><td class="n">Yok</td><td class="y">Var</td><td class="y hl">Var</td><td class="y">Var</td></tr>
         <tr><th scope="row">Motion video</th><td>Sınırsız (filigranlı)</td><td>50 / ay</td><td class="hl">200 / ay</td><td>Sınırsız</td></tr>
-        <tr><th scope="row">ZodClip kurgu stüdyosu</th><td class="n">Yok</td><td class="y">Var</td><td class="y hl">Var</td><td class="y">Var</td></tr>
+        <tr><th scope="row">ZodClip kurgu stüdyosu</th><td class="y">Filigranlı</td><td class="y">Var</td><td class="y hl">Var</td><td class="y">Var</td></tr>
         <tr><th scope="row">Filigransız video</th><td class="n">Yok</td><td class="y">Hepsi</td><td class="y hl">Hepsi</td><td class="y">Hepsi</td></tr>
         <tr><th scope="row">Marka kiti</th><td class="n">Yok</td><td>1</td><td class="hl">3</td><td>10</td></tr>
         <tr><th scope="row">Ticari kullanım</th><td class="n">Yok</td><td class="y">Var</td><td class="y hl">Var</td><td class="y">Var</td></tr>
@@ -88,7 +88,7 @@ tr:last-child th,tr:last-child td{border-bottom:0}
   <section class="sec">
     <div class="sh"><div><span class="eyebrow">Ödeme</span><h2>Ödeme ve iptal</h2></div></div>
     <div class="faq">
-      <details><summary>Ücretsiz planda kart gerekiyor mu?</summary><p>Hayır. Ücretsiz hesap açarsın, kart istemeyiz. Tüm motion şablonlarını sınırsız kullanırsın; videolar ZodMotions filigranlı çıkar. Filigransız video, AI kredisi ve ZodClip aboneliğe dahildir. Abonelik biterse motionları filigranlı kullanmaya devam edersin.</p></details>
+      <details><summary>Ücretsiz planda kart gerekiyor mu?</summary><p>Hayır. Ücretsiz hesap açarsın, kart istemeyiz. Tüm motion şablonlarını sınırsız kullanırsın; videolar ZodMotions filigranlı çıkar. ZodClip kurgu stüdyosunu da ücretsiz kullanırsın; dışa aktardığın videolar filigranlı çıkar. Filigransız video ve AI kredisi aboneliğe dahildir. Abonelik biterse filigranlı kullanmaya devam edersin.</p></details>
       <details><summary>AI videoyu ücretsiz deneyebilir miyim?</summary><p>AI üretiminin her saniyesi gerçek maliyet oluşturduğu için ücretsiz planda yok. Örnek AI reklamlarını AI Stüdyo sayfasında izleyebilir, ₺299 tutarındaki deneme paketiyle 3 reklam üretebilirsin.</p></details>
       <details><summary>Aboneliği iptal edersem ne olur?</summary><p>Ödediğin dönemin sonuna kadar kullanmaya devam edersin. Daha önce oluşturduğun videolar senin kalır.</p></details>
       <details><summary>Yıllık ödemede ne kazanırım?</summary><p>Yıllık ödemede 12 ay yerine 10 ay ödersin; 2 ay hediye.</p></details>
@@ -103,7 +103,7 @@ tr:last-child th,tr:last-child td{border-bottom:0}
 <script>
 (()=>{const $=ZMS.$;
 const PLANS=[
- {n:'Ücretsiz',try:[0,0],usd:[0,0],items:['Tüm motionlar sınırsız, filigranlı','Tüm şablonları dene','AI üretimi ve ZodClip yok','Ücretsiz hesap, kart gerekmez'],btn:'Ücretsiz hesap aç',u:'giris.html?mode=kayit'},
+ {n:'Ücretsiz',try:[0,0],usd:[0,0],items:['Tüm motionlar sınırsız, filigranlı','Tüm şablonları dene','ZodClip kurgu, filigranlı dışa aktarma','AI üretimi yok','Ücretsiz hesap, kart gerekmez'],btn:'Ücretsiz hesap aç',u:'giris.html?mode=kayit'},
  {n:'Başlangıç',try:[499,4990],usd:[19,190],items:['80 AI kredisi / ay (≈ 5 adet 15 sn reklam)','Standart AI modeli + AI seslendirme','50 motion video, filigransız','ZodClip kurgu stüdyosu dahil','1 marka kiti · ticari kullanım'],btn:'Paketi seç',k:'baslangic',u:'#'},
  {n:'Pro',hot:true,try:[1299,12990],usd:[49,490],items:['250 AI kredisi / ay (≈ 16 adet 15 sn reklam)','Premium model: Kling 3.0 Pro 1080p','200 motion video, 3 marka kiti','ZodClip kurgu stüdyosu dahil','Öncelikli üretim kuyruğu'],btn:'Paketi seç',k:'pro',u:'#'},
  {n:'Ajans',try:[3499,34990],usd:[129,1290],items:['700 AI kredisi / ay (≈ 46 adet 15 sn reklam)','Sınırsız motion video, 10 marka kiti','ZodClip kurgu stüdyosu dahil','5 ekip üyesi, müşteri alanları','Firmaya özel şablon talebi'],btn:'Paketi seç',k:'ajans',u:'#'}];

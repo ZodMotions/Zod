@@ -175,22 +175,34 @@ $('playBtn').onclick=()=>setPlay(!S.playing);
 function fromAcct(u){if(u){const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;S.active=ZMA.isActive(u);S.left=p.motion_left;$('planName').textContent=S.active?P.n:'Abonelik yok'}else{S.active=false;S.left=0;$('planName').textContent='Hesap yok'}S.acct=!!u;S.wm=!(S.active&&(S.left===null||S.left>0));updQ();drawStage()}
 ZMA.onChange(fromAcct);
 function updQ(){$('kvWm').textContent=S.wm?'Var':'Yok';$('msg').className='msg';
-  if(!S.acct){$('quota').textContent='Filigranlı';$('renderBtn').disabled=false;$('renderBtn').textContent='Hesap aç ve oluştur';$('msg').textContent='Videoyu indirmek için hesap aç. Abonelik olmadan motionlar filigranlı oluşur.';return}
+  if(!S.acct){$('quota').textContent='Filigranlı';$('renderBtn').disabled=false;$('renderBtn').textContent='Videoyu oluştur';$('msg').textContent='Hesapsız ve aboneliksiz de indirebilirsin; video filigranlı oluşur. Filigransız için bir paket seç.';return}
   $('renderBtn').textContent='Videoyu oluştur';$('renderBtn').disabled=false;
   if(S.active){$('quota').textContent=S.left===null?'Sınırsız':S.left+' kaldı';$('msg').textContent=S.left!==null&&S.left<=0?'Bu ayki damgasız motion hakkın bitti; videolar filigranlı oluşur. Bir üst pakete geçebilirsin.':'Aboneliğinde videolar filigransız oluşur.'}
   else{$('quota').textContent='Filigranlı';$('msg').textContent='Aktif aboneliğin yok: tüm motionları filigranlı kullanabilirsin. Filigransız ve AI kredili kullanım için bir paket seç.'}}
 let rendering=false;
+const VBR=16e6;
+// kare kare kodlama: gerçek zamanlıdan hızlı ve takılmasız, yüksek bit hızı
+async function fastExport(cv,cx,tpl,f,A,wm){
+  if(!('VideoEncoder' in window))return null;if(A.photo&&A.photo.tagName==='VIDEO')return null;
+  const mb=await import('/zodclipBeta/vendor/mediabunny.min.mjs');
+  const codec=await mb.getFirstEncodableVideoCodec(['avc','vp9'],{width:1080,height:1920,bitrate:VBR});if(!codec)return null;
+  const out=new mb.Output({format:new mb.Mp4OutputFormat({fastStart:'in-memory'}),target:new mb.BufferTarget()});
+  const src=new mb.CanvasSource(cv,{codec,bitrate:VBR,keyFrameInterval:2,bitrateMode:'variable',latencyMode:'quality'});out.addVideoTrack(src,{frameRate:30});await out.start();
+  const N=Math.round(tpl.dur*30);for(let i=0;i<=N;i++){const t=Math.min(i/30,tpl.dur);Z.renderFrame(cx,tpl,t,f,A,wm);await src.add(i/30,1/30);if(i%5===0){$('prog').style.width=(i/N*100).toFixed(1)+'%';await new Promise(r=>setTimeout(r,0))}}
+  src.close();await out.finalize();return new Blob([out.target.buffer],{type:'video/mp4'})}
+function showOut(blob,tpl){const mp4=blob.type.includes('mp4');const url=URL.createObjectURL(blob);$('outV').src=url;const dl=$('dl');dl.href=url;dl.download=`zodmotions-${tpl.id}.${mp4?'mp4':'webm'}`;dl.hidden=false;$('out').hidden=false;rendering=false;updQ();$('msg').className='msg ok';
+  $('msg').textContent=`Hazır: ${(blob.size/1048576).toFixed(1)} MB · ${tpl.dur} sn ${mp4?'MP4':'WebM'}${S.wm?' · filigranlı':''}. “Videoyu indir” ile kaydet.`;$('prog').style.width='100%'}
 $('renderBtn').onclick=async()=>{if(rendering)return;
-  if(!ZMA.user()){ZMA.requireLogin('editor.html#'+S.tpl.id);return}
-  if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){$('msg').textContent='Bu tarayıcı videoyu burada oluşturamıyor. Chrome, Edge veya güncel Safari ile dene.';return}
-  rendering=true;$('renderBtn').disabled=true;const use=await ZMA.useMotion();if(!use.ok){rendering=false;updQ();$('msg').className='msg err';$('msg').textContent=use.error;return}
+  rendering=true;$('renderBtn').disabled=true;let wm=true;
+  if(ZMA.user()){const use=await ZMA.useMotion();if(!use.ok){rendering=false;updQ();$('msg').className='msg err';$('msg').textContent=use.error;return}wm=!!use.wm}
   $('out').hidden=true;$('dl').hidden=true;$('msg').className='msg';$('msg').textContent='Video oluşturuluyor…';
-  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const cx=cv.getContext('2d');const tpl=TT(),f={...S.f},A={...S.A},wm=!!use.wm;Z.renderFrame(cx,tpl,0,f,A,wm);
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const cx=cv.getContext('2d');cx.imageSmoothingQuality='high';const tpl=TT(),f={...S.f},A={...S.A};Z.renderFrame(cx,tpl,0,f,A,wm);
+  try{const b=await fastExport(cv,cx,tpl,f,A,wm);if(b){showOut(b,tpl);return}}catch(e){console.warn('hızlı dışa aktarma olmadı',e)}
+  if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){$('msg').textContent='Bu tarayıcı videoyu burada oluşturamıyor. Chrome, Edge veya güncel Safari ile dene.';rendering=false;updQ();return}
   const types=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'];const mime=types.find(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||'';
-  let rec;try{rec=new MediaRecorder(cv.captureStream(30),mime?{mimeType:mime,videoBitsPerSecond:8e6}:undefined)}catch(err){$('msg').textContent='Kayıt başlatılamadı: '+err.message;rendering=false;updQ();return}
+  let rec;try{rec=new MediaRecorder(cv.captureStream(30),mime?{mimeType:mime,videoBitsPerSecond:VBR}:undefined)}catch(err){$('msg').textContent='Kayıt başlatılamadı: '+err.message;rendering=false;updQ();return}
   const ch=[];rec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};
-  rec.onstop=()=>{const blob=new Blob(ch,{type:mime||'video/webm'});const url=URL.createObjectURL(blob);$('outV').src=url;const dl=$('dl');dl.href=url;dl.download=`zodmotions-${tpl.id}.${mime.includes('mp4')?'mp4':'webm'}`;dl.hidden=false;$('out').hidden=false;rendering=false;updQ();$('msg').className='msg ok';
-    $('msg').textContent=`Hazır: ${(blob.size/1048576).toFixed(1)} MB · ${tpl.dur} sn ${mime.includes('mp4')?'MP4':'WebM'}. “Videoyu indir” ile kaydet.`;$('prog').style.width='100%'};
+  rec.onstop=()=>showOut(new Blob(ch,{type:mime||'video/webm'}),tpl);
   if(A.photo&&A.photo.tagName==='VIDEO'){A.photo.currentTime=0;const pv=A.photo.play();if(pv&&pv.catch)pv.catch(()=>{})}rec.start(250);const t0=performance.now();const st=()=>{const t=(performance.now()-t0)/1000;if(t>=tpl.dur){Z.renderFrame(cx,tpl,tpl.dur,f,A,wm);rec.stop();return}Z.renderFrame(cx,tpl,t,f,A,wm);$('prog').style.width=(t/tpl.dur*100).toFixed(1)+'%';requestAnimationFrame(st)};requestAnimationFrame(st)};
 Ss.onFrame(dt=>{if(S.playing){S.t=(S.t+dt)%S.tpl.dur;drawStage()}});
 addEventListener('hashchange',()=>{const t=T.find(x=>x.id===location.hash.slice(1));if(t&&t!==S.tpl)selectTpl(t)});

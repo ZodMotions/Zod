@@ -69,7 +69,7 @@ p{margin:0}
 /* ürünler */
 .uni{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .prod{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 168px;gap:22px;align-items:end;padding:clamp(22px,3vw,34px);background:var(--s1);border:1px solid var(--line);border-radius:var(--r3);text-decoration:none;overflow:hidden;transition:border-color .25s,transform .25s}
-.prod:hover{border-color:var(--line2);transform:translateY(-2px)}
+.prod:hover{border-color:var(--line2)}
 .prod .pt{display:grid;gap:14px;align-content:start;height:100%}
 .prod .logo{display:flex;align-items:center;gap:12px}
 .prod .logo img{width:44px;height:44px}

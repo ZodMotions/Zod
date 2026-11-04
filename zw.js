@@ -17,7 +17,15 @@
       if (e.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
       else v.pause();
     }), { rootMargin: '120px' });
-    vs.forEach(v => io.observe(v));
+    // sakinlik için: sırayla biri kendiliğinden oynar, diğeri durur (üstüne gelince ya da dokununca oynar)
+    vs.forEach((v, i) => {
+      if (i % 2 === 0) { io.observe(v); return; }
+      const on = () => { if (v.preload === 'none') v.preload = 'auto'; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      const off = () => { v.pause(); };
+      const box = v.closest('.v') || v;
+      box.addEventListener('mouseenter', on); box.addEventListener('mouseleave', off);
+      box.addEventListener('touchstart', () => v.paused ? on() : off(), { passive: true });
+    });
   }
 
   // sesli izle düğmeleri
