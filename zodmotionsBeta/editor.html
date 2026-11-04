@@ -71,6 +71,7 @@
 .tl .ph::before{content:"";position:absolute;top:-2px;left:-5px;border:6px solid transparent;border-top-color:var(--rec)}
 @media (max-width:1180px){.app{grid-template-columns:320px minmax(0,1fr);grid-template-areas:"side stage" "exp exp" "tl tl"}}
 @media (max-width:760px){.trans .mono{display:none}.app{grid-template-columns:minmax(0,1fr);grid-template-areas:"stage" "side" "exp" "tl"}.side{max-height:none}.tl .rul,.tl .row{grid-template-columns:64px 1fr}.tl .hit{left:76px}}
+.chips.st .btn[aria-pressed=true]{background:var(--acc);color:#fff;border-color:transparent}
 </style></head>
 <body data-page="editor">
 <header id="zh" style="height:79px"></header>
@@ -85,6 +86,7 @@
         <button role="tab" data-tab="metin" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M5 6h14M12 6v13M8 19h8"/></svg>Metin</button>
         <button role="tab" data-tab="renk" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>Renk</button>
         <button role="tab" data-tab="medya" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 16l5-5 4 4 3-3 4 4"/></svg>Medya</button>
+        <button role="tab" data-tab="tasarim" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3"/></svg>Tasarım</button>
         <button role="tab" data-tab="sablon" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Şablon</button>
       </div>
       <div class="pnl" id="pnl" role="tabpanel"></div>
@@ -118,10 +120,17 @@
 (()=>{const Z=ZM,Ss=ZMS,$=Ss.$,T=Z.TEMPLATES,clamp=Z.clamp;
 const q=Ss.get('q',{left:3,clean:1});
 const want=decodeURIComponent(location.hash.slice(1))||Ss.sget('tpl');const first=T.find(t=>t.id===want)||T.find(t=>t.sector==='Restoran & Kafe')||T[0];
-const S={tpl:first,f:{...first.def},A:{photo:null,logo:null},plan:'free',left:q.left,clean:q.clean,playing:!Ss.reduce,t:Ss.reduce?first.dur*.6:0,tab:'metin',userColors:null,psec:null};
+const S={tpl:first,f:{...first.def},A:{photo:null,logo:null},plan:'free',left:q.left,clean:q.clean,playing:!Ss.reduce,t:Ss.reduce?first.dur*.6:0,tab:'metin',userColors:null,psec:null,st:{}};
 const PALS=[['Gece mavisi','#1F3A5F','#F2A33A'],['Terrakota','#9A3412','#FDE68A'],['Orman','#1F3D33','#E8B04B'],['Antrasit','#1F2328','#38BDF8'],['Kum','#7A6A55','#FBF3E4'],['Mürdüm','#3B1D3F','#FF8FA3'],['Gece','#0E1430','#7C87FF']];
 const esc=Ss.esc;
+const STO={bg:[['mesh','Ağ'],['split','Bölünmüş'],['rings','Halkalar'],['photo','Fotoğraf'],['solid','Düz'],['dots','Noktalı'],['stripes','Çizgili'],['grid','Izgara']],anim:[['mask','Maske'],['slide','Kay'],['scale','Büyü'],['letter','Harf harf'],['blur','Netleş'],['type','Daktilo']],align:[['left','Sola'],['center','Ortaya']],deco:[[-1,'Yok'],[1,'Süs 1'],[2,'Süs 2'],[4,'Süs 3']],pair:[[0,'Yazı tipi 1'],[1,'Yazı tipi 2'],[2,'Yazı tipi 3'],[3,'Yazı tipi 4']],card:[['false','Tam ekran'],['true','Kart']]};
+const STN={bg:'Arka plan',anim:'Yazı animasyonu',align:'Hizalama',deco:'Süsleme',pair:'Yazı tipi',card:'Yerleşim'};
 function panel(){const p=$('pnl');p.innerHTML='';
+  if(S.tab==='tasarim'){if(!S.tpl.st){p.insertAdjacentHTML('beforeend','<h3>Tasarım</h3><p class="hint">Bu şablonun tasarımı sabit. Metin, renk ve görselleri değiştirebilirsin; tasarım seçenekleri olan bir şablon için “Şablon” sekmesinden başka bir şablon seç.</p>');}
+    else{const st=Object.assign({},S.tpl.st,S.st||{});let h='';for(const k of Object.keys(STO)){h+=`<h3>${STN[k]}</h3><div class="chips st" data-k="${k}">${STO[k].map(([v,n])=>`<button type="button" class="btn sm" data-v="${v}" aria-pressed="${String(v)===String(k==='card'?!!st.card:st[k])}">${n}</button>`).join('')}</div>`}
+      h+='<button class="btn sm" id="stReset" style="margin-top:14px">Şablonun kendi tasarımı</button><p class="hint">Arka plan, animasyon, hizalama ve yazı tipini değiştir; önizlemede anında görünür.</p>';p.insertAdjacentHTML('beforeend',h);
+      p.querySelectorAll('.chips.st button').forEach(b=>b.onclick=()=>{const k=b.parentElement.dataset.k,v=b.dataset.v;S.st=S.st||{};S.st[k]=k==='deco'||k==='pair'?parseInt(v):k==='card'?v==='true':v;panel();if(!S.playing)drawStage()});
+      $('stReset').onclick=()=>{S.st={};panel();drawStage()}}}
   if(S.tab==='metin'){p.insertAdjacentHTML('beforeend','<h3>Metinler</h3>');Object.entries(S.tpl.labels).forEach(([k,lab])=>{const id='f_'+k;const max=(S.tpl.max&&S.tpl.max[k])||(k==='title'?48:40);
     const d=document.createElement('div');d.className='fld';d.innerHTML=`<label for="${id}">${esc(lab)}</label>`;const inp=max>60?document.createElement('textarea'):document.createElement('input');if(inp.tagName==='INPUT')inp.type='text';else inp.rows=3;inp.id=id;inp.maxLength=max;inp.value=S.f[k]||'';
     inp.oninput=()=>{S.f[k]=inp.value;if(!S.playing)drawStage()};d.appendChild(inp);p.appendChild(d)});p.insertAdjacentHTML('beforeend','<p class="hint">Örnek metinleri kendi bilgilerinle değiştir. Değişiklikler önizlemede anında görünür.</p>')}
@@ -150,7 +159,7 @@ function loadImg(file,cb){if(!file)return;if(file.size>15*1048576){$('msg').text
 function styles(){const G=Ss.groupOf(S.tpl);const box=$('sty');box.parentElement.hidden=G.length<2;box.innerHTML=G.map((v,i)=>`<button type="button" aria-label="Stil ${i+1}" aria-pressed="${v===S.tpl}" style="--c1:${v.def.p};--c2:${v.def.a}"></button>`).join('');box.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>selectTpl(G[i],true))}
 function head(){styles();const sec=Z.secOf(S.tpl);$('crSec').textContent=sec;$('crSec').href='sablonlar.html'+(sec==='Genel'?'':'#'+Ss.slug(sec));$('crCat').textContent=S.tpl.cat;$('tName').textContent=S.tpl.cat+(S.tpl.sector?' · '+S.tpl.sector:'');document.title='ZodMotions Editör';
   try{history.replaceState(null,'','#'+S.tpl.id)}catch(e){}Ss.sset('tpl',S.tpl.id)}
-function selectTpl(tpl,keep){const old=S.f;S.tpl=tpl;S.f={...tpl.def};if(keep)Object.keys(S.f).forEach(k=>{if(k!=='p'&&k!=='a'&&old[k]!=null)S.f[k]=old[k]});if(S.userColors){S.f.p=S.userColors.p;S.f.a=S.userColors.a}S.t=0;$('kvDur').textContent=tpl.dur+' sn';$('out').hidden=true;$('dl').hidden=true;$('prog').style.width='0';head();buildTL();if(S.tab!=='sablon')panel();drawStage()}
+function selectTpl(tpl,keep){const old=S.f;S.tpl=tpl;if(!keep)S.st={};S.f={...tpl.def};if(keep)Object.keys(S.f).forEach(k=>{if(k!=='p'&&k!=='a'&&old[k]!=null)S.f[k]=old[k]});if(S.userColors){S.f.p=S.userColors.p;S.f.a=S.userColors.a}S.t=0;$('kvDur').textContent=tpl.dur+' sn';$('out').hidden=true;$('dl').hidden=true;$('prog').style.width='0';head();buildTL();if(S.tab!=='sablon')panel();drawStage()}
 const step=d=>{const L=Ss.GROUPS.filter(G=>Z.secOf(G[0])===Z.secOf(S.tpl));const i=L.indexOf(Ss.groupOf(S.tpl));selectTpl(L[(i+d+L.length)%L.length][0]);if(S.tab==='sablon')panel()};
 $('prev').onclick=()=>step(-1);$('next').onclick=()=>step(1);$('rnd').onclick=()=>{selectTpl(T[Math.floor(Math.random()*T.length)]);if(S.tab==='sablon'){S.psec=null;panel()}};
 function buildTL(){const tl=$('tl');const d=S.tpl.dur;let ticks='';for(let s=0;s<=d;s++)ticks+=`<span style="left:${s/d*100}%">${s}s</span>`;
@@ -159,7 +168,8 @@ function buildTL(){const tl=$('tl');const d=S.tpl.dur;let ticks='';for(let s=0;s
   hit.onpointerdown=e=>{drag=true;try{hit.setPointerCapture(e.pointerId)}catch(_){}seek(e)};hit.onpointermove=e=>{if(drag)seek(e)};hit.onpointerup=()=>drag=false}
 const sctx=$('stage').getContext('2d');
 const fmt=t=>{const fr=Math.floor(t*30);return `00:${String(Math.floor(fr/30)).padStart(2,'0')}:${String(fr%30).padStart(2,'0')}`};
-function drawStage(){Z.renderFrame(sctx,S.tpl,S.t,S.f,S.A,S.wm);$('tc').textContent=fmt(S.t)+' / '+fmt(S.tpl.dur);const ph=$('ph');if(ph)ph.style.left=(S.t/S.tpl.dur*100)+'%'}
+const TT=()=>S.st&&S.tpl.st&&Object.keys(S.st).length?Object.assign(Object.create(S.tpl),{st:Object.assign({},S.tpl.st,S.st)}):S.tpl;
+function drawStage(){Z.renderFrame(sctx,TT(),S.t,S.f,S.A,S.wm);$('tc').textContent=fmt(S.t)+' / '+fmt(S.tpl.dur);const ph=$('ph');if(ph)ph.style.left=(S.t/S.tpl.dur*100)+'%'}
 function setPlay(v){S.playing=v;$('playBtn').setAttribute('aria-label',v?'Duraklat':'Oynat');$('playIco').innerHTML=v?'<rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/>':'<path d="M4 2.5v11l9-5.5z" fill="currentColor"/>'}
 $('playBtn').onclick=()=>setPlay(!S.playing);
 function fromAcct(u){if(u){const p=u.profile,P=ZMA.PLANS[p.plan]||ZMA.PLANS.free;S.active=ZMA.isActive(u);S.left=p.motion_left;$('planName').textContent=S.active?P.n:'Abonelik yok'}else{S.active=false;S.left=0;$('planName').textContent='Hesap yok'}S.acct=!!u;S.wm=!(S.active&&(S.left===null||S.left>0));updQ();drawStage()}
@@ -175,7 +185,7 @@ $('renderBtn').onclick=async()=>{if(rendering)return;
   if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){$('msg').textContent='Bu tarayıcı videoyu burada oluşturamıyor. Chrome, Edge veya güncel Safari ile dene.';return}
   rendering=true;$('renderBtn').disabled=true;const use=await ZMA.useMotion();if(!use.ok){rendering=false;updQ();$('msg').className='msg err';$('msg').textContent=use.error;return}
   $('out').hidden=true;$('dl').hidden=true;$('msg').className='msg';$('msg').textContent='Video oluşturuluyor…';
-  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const cx=cv.getContext('2d');const tpl=S.tpl,f={...S.f},A={...S.A},wm=!!use.wm;Z.renderFrame(cx,tpl,0,f,A,wm);
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const cx=cv.getContext('2d');const tpl=TT(),f={...S.f},A={...S.A},wm=!!use.wm;Z.renderFrame(cx,tpl,0,f,A,wm);
   const types=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'];const mime=types.find(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||'';
   let rec;try{rec=new MediaRecorder(cv.captureStream(30),mime?{mimeType:mime,videoBitsPerSecond:8e6}:undefined)}catch(err){$('msg').textContent='Kayıt başlatılamadı: '+err.message;rendering=false;updQ();return}
   const ch=[];rec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};

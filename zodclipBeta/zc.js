@@ -79,8 +79,9 @@ function drawContain(m,mw,mh,z=1){const sc=Math.min(W/mw,H/mh)*z,dw=mw*sc,dh=mh*
 function mediaOf(it,local){
   if(it.type==='video'){if(FO){const f=FO.get(it.id);return f?{m:f.m,w:f.w,h:f.h}:null}const e=it.el;return e&&e.videoWidth?{m:e,w:e.videoWidth,h:e.videoHeight}:null}
   if(it.type==='image'){const s=srcById(it.src);return s&&s.img?{m:s.img,w:s.img.naturalWidth,h:s.img.naturalHeight}:null}
-  if(it.type==='motion'){const tpl=TPL.get(it.tpl);if(!tpl||!ZM)return null;const ph=it.photo?srcById(it.photo):null;
-    const lt=clamp((it.off||0)+local,0,tpl.dur-.001);
+  if(it.type==='motion'){const tpl0=TPL.get(it.tpl);if(!tpl0||!ZM)return null;const ph=it.photo?srcById(it.photo):null;
+    const tpl=it.st&&tpl0.st?Object.assign(Object.create(tpl0),{st:Object.assign({},tpl0.st,it.st)}):tpl0;
+    const lt=clamp((it.off||0)+local*(it.ms||1),0,tpl.dur-.001);
     try{ZM.renderFrame(mctx,tpl,lt,it.f,{photo:ph?ph.img:null,logo:S.logo},P.exporting?!!it._wm:ACCESS.motionWm)}catch(e){}
     return{m:mcv,w:1080,h:1920,motion:true}}
   return null}
@@ -482,6 +483,19 @@ cv.addEventListener('pointerup',cend);
 cv.addEventListener('wheel',e=>{const o=selObj();if(!o||!(SEL.kind==='ov'||SEL.kind==='text'))return;e.preventDefault();if(SEL.kind==='ov')o.w=clamp(o.w*(e.deltaY<0?1.06:1/1.06),.05,1.2);else o.size=clamp(o.size*(e.deltaY<0?1.05:1/1.05),.3,2.5);dirty=true;clearTimeout(cv._wt);cv._wt=setTimeout(()=>{renderInsp();scheduleSave()},300)},{passive:false});cv.addEventListener('pointercancel',cend);
 
 /* ================= düzenle paneli ================= */
+const ST_OPT={bg:[['mesh','Ağ'],['split','Bölünmüş'],['rings','Halkalar'],['photo','Fotoğraf'],['solid','Düz'],['dots','Noktalı'],['stripes','Çizgili'],['grid','Izgara']],
+  anim:[['mask','Maske'],['slide','Kay'],['scale','Büyü'],['letter','Harf harf'],['blur','Netleş'],['type','Daktilo']],align:[['left','Sola'],['center','Ortaya']],
+  deco:[[-1,'Yok'],[1,'Süs 1'],[2,'Süs 2'],[4,'Süs 3']],pair:[[0,'Yazı tipi 1'],[1,'Yazı tipi 2'],[2,'Yazı tipi 3'],[3,'Yazı tipi 4']],card:[['false','Tam ekran'],['true','Kart']]};
+let PALS=null;function palettes(){if(PALS)return PALS;const seen=new Set();PALS=[];if(ZM)for(const sc of ZM.SECTORS){const k=sc.p.join();if(!seen.has(k)){seen.add(k);PALS.push(sc.p)}}return PALS}
+function motionDesignHTML(it,tpl){
+  const sib=ZM?ZM.TEMPLATES.filter(t=>t.grp&&t.grp===tpl.grp):[];const st=Object.assign({},tpl.st||{},it.st||{});let h='';
+  if(sib.length>1)h+=`<h3>Stil</h3>${chipsHTML('tplv',sib.map(t=>[t.id,t.style||t.name]),it.tpl)}`;
+  h+=`<h3>Renk paleti</h3><div class="pals">${palettes().slice(0,24).map(([a,b])=>`<button type="button" data-pal="${a}|${b}" title="${a} · ${b}" style="background:linear-gradient(135deg,${a} 50%,${b} 50%)"></button>`).join('')}</div>`;
+  h+=`<h3>Hız</h3>${chipsHTML('ms',[[.5,'0.5x'],[.75,'0.75x'],[1,'1x'],[1.25,'1.25x'],[1.5,'1.5x'],[2,'2x']],it.ms||1)}`;
+  if(tpl.st){h+=`</div><div class="sect"><h3>Tasarım</h3><label>Arka plan</label>${chipsHTML('st-bg',ST_OPT.bg,st.bg)}<label>Yazı animasyonu</label>${chipsHTML('st-anim',ST_OPT.anim,st.anim)}
+    <label>Hizalama</label>${chipsHTML('st-align',ST_OPT.align,st.align)}<label>Süsleme</label>${chipsHTML('st-deco',ST_OPT.deco,st.deco)}<label>Yazı tipi</label>${chipsHTML('st-pair',ST_OPT.pair,st.pair)}<label>Yerleşim</label>${chipsHTML('st-card',ST_OPT.card,String(!!st.card))}
+    ${it.st&&Object.keys(it.st).length?'<button class="lnk" data-a="streset" type="button" style="margin-top:8px">Tasarımı sıfırla</button>':''}${st.bg==='photo'&&!it.photo?'<p class="note">Fotoğraflı arka plan için aşağıdan bir fotoğraf seç.</p>':''}`}
+  return h}
 const chipsHTML=(k,list,cur)=>`<div class="chips" data-chips="${k}">${list.map(([v,n])=>`<button type="button" data-v="${v}" class="${String(v)===String(cur)?'on':''}">${n}</button>`).join('')}</div>`;
 const swHTML=(k,cur)=>`<div class="sw" data-sw="${k}">${COLORS.map(c=>`<button type="button" data-v="${c}" class="${c.toLowerCase()===String(cur).toLowerCase()?'on':''}" style="background:${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-k="${k}" value="${cur||'#ffffff'}" aria-label="Özel renk"></div>`;
 function renderInsp(){
@@ -501,6 +515,7 @@ function renderInsp(){
     if(it.type==='motion'&&tpl){const lb=tpl.labels||{};
       h+=`</div><div class="sect"><h3><span lang="en">Motion</span> yazıları</h3><div class="fields">${Object.keys(lb).map(k=>`<label>${esc(lb[k])}<input type="text" data-f="${k}" value="${esc(it.f[k]||'')}"></label>`).join('')}</div>
       <div class="grid2"><label>Ana renk<input type="color" data-f="p" value="${it.f.p||'#111111'}"></label><label>Vurgu rengi<input type="color" data-f="a" value="${it.f.a||'#ffcc00'}"></label></div>
+      ${motionDesignHTML(it,tpl)}
       <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${it.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
       <p class="note">Logoyu Görünüm sekmesinden yüklersen motionda da görünür.${ACCESS.motionWm?' Bu ayki filigransız motion hakkın bittiği için motionlar filigranlı çıkar.':''}</p>`}
     h+=`</div><div class="sect"><h3>Girişteki geçiş</h3>${first?'<p class="note">İlk parçada geçiş olmaz.</p>':chipsHTML('tr',TRANS,(it.tr||{}).type||'none')+`<label>Geçiş süresi<input type="range" min="0.2" max="1.5" step="0.1" data-k="trd" value="${(it.tr||{}).d||.5}"></label>`}`;
@@ -539,7 +554,7 @@ function inspApply(el,val){
   if(SEL.kind==='item'){const it=o;
     if(k==='in'){const v=parseFloat(val);if(!isNaN(v))it.in=clamp(v,0,it.out-.2)}
     else if(k==='out'){const v=parseFloat(val),s=srcById(it.src);if(!isNaN(v))it.out=clamp(v,it.in+.2,s.dur)}
-    else if(k==='dur'){const v=parseFloat(val);if(!isNaN(v)){const max=it.type==='motion'?(TPL.get(it.tpl)?.dur||8)-(it.off||0):60;it.dur=clamp(v,.4,max)}}
+    else if(k==='dur'){const v=parseFloat(val);if(!isNaN(v)){const max=it.type==='motion'?((TPL.get(it.tpl)?.dur||8)-(it.off||0))/(it.ms||1):60;it.dur=clamp(v,.4,max)}}
     else if(k==='vol'){it.vol=parseFloat(val);if(it.el&&it.el._g)it.el._g.gain.value=it.vol}
     else if(k==='trd'){it.tr=it.tr||{type:'fade'};it.tr.d=parseFloat(val)}
     else if(k==='kb')it.kb=val;
@@ -564,13 +579,19 @@ $('#insp').addEventListener('click',e=>{
   const o=selObj();if(!o)return;
   const chip=e.target.closest('[data-chips] button'),sw=e.target.closest('[data-sw] button'),act=e.target.closest('[data-a]');
   if(chip){hist();const k=chip.parentElement.dataset.chips,v=chip.dataset.v;
-    if(k==='speed')o.speed=parseFloat(v);else if(k==='tr')o.tr={type:v,d:(o.tr&&o.tr.d)||.5};else o[k]=v;
+    if(k==='speed')o.speed=parseFloat(v);else if(k==='tr')o.tr={type:v,d:(o.tr&&o.tr.d)||.5};
+    else if(k==='ms'){o.ms=parseFloat(v);const tp=TPL.get(o.tpl);if(tp)o.dur=Math.min(o.dur,(tp.dur-(o.off||0))/o.ms)}
+    else if(k==='tplv'){o.tpl=v;mThumbsDirty()}
+    else if(k.startsWith('st-')){const key=k.slice(3);o.st=o.st||{};o.st[key]=key==='deco'||key==='pair'?parseInt(v):key==='card'?v==='true':v}
+    else o[k]=v;
     afterChange();renderInsp();showFrame();if(k==='tr'&&v!=='none')seek(o.t0);return}
   if(sw){hist();o[sw.parentElement.dataset.sw]=sw.dataset.v;dirty=true;renderInsp();scheduleSave();return}
+  const pal=e.target.closest('[data-pal]');if(pal&&o.f){hist();const [a,b]=pal.dataset.pal.split('|');o.f.p=a;o.f.a=b;dirty=true;renderInsp();scheduleSave();return}
   if(act){const a=act.dataset.a;
     if(a==='del')doDel();else if(a==='dup')doDup();
     else if(a==='split'){if(SEL.kind==='item')P.t=clamp(P.t,o.t0+.2,o.t0+idur(o)-.2);doSplit()}
     else if(a==='center'){hist();o.x=.5;if(SEL.kind==='ov')o.y=.5;dirty=true;scheduleSave()}
+    else if(a==='streset'){hist();o.st={};dirty=true;renderInsp();scheduleSave()}
     else if(a==='adjreset'){hist();o.adj={b:0,c:0,s:0,w:0};dirty=true;renderInsp();scheduleSave()}
     else if(a==='left'||a==='right'){hist();const i=S.items.indexOf(o);S.items.splice(i,1);if(a==='left')S.items.unshift(o);else S.items.push(o);S.items[0].tr={type:'none',d:.5};afterChange();renderInsp();seek(o.t0)}}
 });
@@ -628,14 +649,31 @@ function renderTList(){$('#t-empty').hidden=!!S.texts.length;$('#t-list').innerH
 $('#t-list').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const id=+b.closest('.cap').dataset.id;if(b.dataset.a==='del'){SEL={kind:'text',id};doDel()}else{const L=S.texts.find(x=>x.id===id);select('text',id);seek(L.t0+.05)}});
 
 /* ================= ses analizi ================= */
+// Büyük dosyalar için: sesi parça parça okuyup 16 kHz tek kanala indirir (dosyanın tamamı belleğe alınmaz)
+const mbInput=(mb,s)=>new mb.Input({source:s.blob?new mb.BlobSource(s.blob):new mb.UrlSource(s.url),formats:mb.ALL_FORMATS});
+async function pcmStream(s){
+  const mb=await loadMB();const input=mbInput(mb,s);
+  try{const tr=await input.getPrimaryAudioTrack();if(!tr)return null;if(!(await tr.canDecode()))throw new Error('cozulemiyor');
+    const dur=await input.computeDuration();const out=new Float32Array(Math.ceil(dur*16000)+1600);let maxK=0;
+    const sink=new mb.AudioSampleSink(tr);
+    for await(const sm of sink.samples()){const n=sm.numberOfFrames,ch=Math.min(2,sm.numberOfChannels),sr=sm.sampleRate,ts=sm.timestamp;
+      const a=new Float32Array(n),b=ch>1?new Float32Array(n):null;sm.copyTo(a,{planeIndex:0,format:'f32-planar'});if(b)sm.copyTo(b,{planeIndex:1,format:'f32-planar'});sm.close();
+      const r=sr/16000,k0=Math.max(0,Math.ceil(ts*16000)),k1=Math.min(out.length-1,Math.floor((ts+n/sr)*16000));
+      for(let k=k0;k<=k1;k++){const c=(k/16000-ts)*sr,i0=Math.max(0,Math.floor(c-r/2)),i1=Math.min(n-1,Math.ceil(c+r/2));let sum=0,cnt=0;for(let i=i0;i<=i1;i++){sum+=b?(a[i]+b[i])*.5:a[i];cnt++}out[k]=cnt?sum/cnt:0}
+      if(k1>maxK)maxK=k1}
+    return out.subarray(0,maxK+1)}
+  finally{try{input.dispose&&input.dispose()}catch(e){}}}
 async function pcmOf(s){
   if(s.pcm!==undefined)return s.pcm;
+  if(s._pcmP)return s._pcmP;
+  s._pcmP=(async()=>{try{s.pcm=await pcmStream(s);return s.pcm}catch(e){console.warn('ses akışla okunamadı, klasik yönteme geçiliyor',e)}
   ensureAudio();
+  if(s.blob&&s.blob.size>400*1048576){s.pcm=null;return null}
   try{const ab=s.blob?await s.blob.arrayBuffer():await (await fetch(s.url)).arrayBuffer();const dec=await AC.decodeAudioData(ab);
     const off=new OfflineAudioContext(1,Math.max(1,Math.ceil(dec.duration*16000)),16000);const n=off.createBufferSource();n.buffer=dec;n.connect(off.destination);n.start();
     s.pcm=(await off.startRendering()).getChannelData(0)}
   catch(e){s.pcm=null}
-  return s.pcm}
+  return s.pcm})();return s._pcmP}
 function frameDB(pcm,a,b,F=320){const i0=Math.floor(a*16000/F),i1=Math.floor(b*16000/F),db=[];for(let i=i0;i<i1;i++){let sum=0;const o=i*F;for(let k=0;k<F;k++){const v=pcm[o+k]||0;sum+=v*v}db.push(10*Math.log10(sum/F+1e-10))}return db}
 function speechRanges(pcm,a,b){
   const db=frameDB(pcm,a,b);if(!db.length)return[[a,b]];
@@ -817,12 +855,18 @@ const stamp=()=>{const d=new Date(),z=n=>String(n).padStart(2,'0');return `${d.g
 /* ---- hızlı dışa aktarma (Mediabunny + WebCodecs): video, süresinden çok daha kısa sürede hazırlanır ---- */
 let MB=null,FO=null,fastCancel=false,fastRunning=false;
 async function loadMB(){if(!MB)MB=await import('./vendor/mediabunny.min.mjs');return MB}
-async function fullAudioOf(s){if(s.abuf!==undefined)return s.abuf;ensureAudio();try{const ab=s.blob?await s.blob.arrayBuffer():await (await fetch(s.url)).arrayBuffer();s.abuf=await AC.decodeAudioData(ab)}catch(e){s.abuf=null}return s.abuf}
+async function fullAudioOf(s){if(s.abuf!==undefined)return s.abuf;ensureAudio();if(s.blob&&s.blob.size>400*1048576){s.abuf=null;return null}try{const ab=s.blob?await s.blob.arrayBuffer():await (await fetch(s.url)).arrayBuffer();s.abuf=await AC.decodeAudioData(ab)}catch(e){s.abuf=null}return s.abuf}
 async function mixAudio(){
   const SR=48000,len=Math.max(1,Math.ceil(total*SR));const oac=new OfflineAudioContext(2,len,SR);
-  for(const it of S.items){if(it.type!=='video')continue;const s=srcById(it.src);const ab=await fullAudioOf(s);if(!ab)continue;
-    const n=oac.createBufferSource();n.buffer=ab;n.playbackRate.value=it.speed||1;const g=oac.createGain();g.gain.value=(it.vol??1)*S.cfg.clipVol;n.connect(g);g.connect(oac.destination);
-    n.start(it.t0,it.in,Math.max(.01,it.out-it.in))}
+  const mb=await loadMB();
+  for(const it of S.items){if(it.type!=='video')continue;const s=srcById(it.src);const sp=it.speed||1;
+    const g=oac.createGain();g.gain.value=(it.vol??1)*S.cfg.clipVol;g.connect(oac.destination);
+    let ok=false;const input=mbInput(mb,s);
+    try{const tr=await input.getPrimaryAudioTrack();if(tr&&await tr.canDecode()){const sink=new mb.AudioBufferSink(tr);
+      for await(const wb of sink.buffers(Math.max(0,it.in-.1),it.out)){const st=Math.max(it.in,wb.timestamp),en=Math.min(it.out,wb.timestamp+wb.duration);if(en<=st)continue;
+        const n=oac.createBufferSource();n.buffer=wb.buffer;n.playbackRate.value=sp;n.connect(g);n.start(it.t0+(st-it.in)/sp,st-wb.timestamp,en-st)}ok=true}else if(!tr)ok=true}
+    catch(e){console.warn('ses aralığı okunamadı',e)}finally{try{input.dispose&&input.dispose()}catch(e){}}
+    if(!ok){const ab=await fullAudioOf(s);if(ab){const n=oac.createBufferSource();n.buffer=ab;n.playbackRate.value=sp;n.connect(g);n.start(it.t0,it.in,Math.max(.01,it.out-it.in))}}}
   if(S.music){const n=oac.createBufferSource();n.buffer=S.music.buf;n.loop=true;const g=oac.createGain();n.connect(g);g.connect(oac.destination);
     const regs=duckRegions();g.gain.setValueAtTime(musicVol(0,regs),0);const pts=new Set([1.2,total-1.6,total]);for(const [a,b] of regs){pts.add(a-.25);pts.add(a);pts.add(b);pts.add(b+.4)}
     [...pts].filter(x=>x>0&&x<=total).sort((a,b)=>a-b).forEach(x=>g.gain.linearRampToValueAtTime(musicVol(x,regs),x));
@@ -832,6 +876,7 @@ async function exportFast(opt,onP){
   const mb=await loadMB();
   if(!('VideoEncoder' in window))throw new Error('webcodecs-yok');
   const vcodec=await mb.getFirstEncodableVideoCodec(['avc','vp9','av1'],{width:W,height:H});if(!vcodec)throw new Error('codec-yok');
+  if(!(await mb.canEncodeAudio('aac',{numberOfChannels:2,sampleRate:48000}))){try{const aac=await import('./vendor/mediabunny-aac-encoder.min.mjs');aac.registerAacEncoder()}catch(e){console.warn('AAC kodlayıcı yüklenemedi',e)}}
   const acodec=await mb.getFirstEncodableAudioCodec(['aac','opus'],{numberOfChannels:2,sampleRate:48000});
   const output=new mb.Output({format:new mb.Mp4OutputFormat({fastStart:'in-memory'}),target:new mb.BufferTarget()});
   const vsrc=new mb.CanvasSource(cv,{codec:vcodec,bitrate:mb.QUALITY_HIGH,keyFrameInterval:2});output.addVideoTrack(vsrc,{frameRate:30});
