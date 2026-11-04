@@ -1,0 +1,31 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>ZodMotions</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html,body{margin:0;background:var(--bg);overflow:hidden}html{height:100%}
+:root{--bg:#111113;--fg:#E8E8EA;--mute:#8E8E96;--acc:#4BA3FF;--line:#2A2A2F;--h:34px}
+body{height:var(--h);-webkit-app-region:drag;user-select:none;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;
+  font:600 12.5px/1 "Segoe UI Variable Text","Segoe UI",Inter,system-ui,sans-serif;color:var(--fg);box-shadow:inset 0 -1px 0 var(--line)}
+.n{letter-spacing:.01em}.p{color:var(--mute);font-weight:500}.p::before{content:"·";margin:0 7px;opacity:.7}
+.z{width:16px;height:16px;border-radius:4.5px;display:grid;place-items:center;background:var(--chrome,linear-gradient(180deg,#fff,#a2a8b1));color:var(--ink,#111);font:800 10.5px/1 Inter,system-ui,sans-serif}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.pill{display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 11px;border-radius:99px;background:color-mix(in srgb,var(--fg) 7%,transparent);border:1px solid color-mix(in srgb,var(--fg) 10%,transparent)}
+body.s4 .n{font-size:10.5px;letter-spacing:.42em;text-transform:uppercase;font-weight:700;margin-right:-.42em}
+body.s4{box-shadow:none}body.s4::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc) 30%,var(--acc) 70%,transparent);opacity:.7}
+body:not(.s2) .z,body:not(.s3) .p,body:not(.s5) .dot{display:none}
+body:not(.s5) .pill{display:contents}
+</style></head>
+<body class="s1"><span class="pill"><span class="dot"></span><span class="z">Z</span><span class="n" lang="en">ZodMotions</span></span><span class="p" id="p">Ana sayfa</span>
+<script>
+// stil ve renkler: masaüstü uygulaması apply() çağırır; sitedeki önizleme ?s=1..5&t=tema ile açar
+const TH={grafit:['#111113','#ECECEF','#8E8E96','#4BA3FF','#2A2A2F','linear-gradient(180deg,#FFFFFF,#DCE0E5 48%,#A2A8B1)','#111'],
+ ejderha:['#150C0B','#F5EAE2','#B39A8F','#F0523A','#4C2B25','linear-gradient(180deg,#FFF0C2,#E8B55A 45%,#A86E1F)','#1F0E04'],
+ 'beyaz-altin':['#FBF8F2','#1E1A14','#6A6052','#B8892F','#D2C5AE','linear-gradient(180deg,#F9E7AE,#D9AE52 50%,#A67A22)','#1E1A14'],
+ 'siyah-altin':['#11100E','#F3EEE3','#A89F8C','#D9B44A','#3D362A','linear-gradient(180deg,#FFF1BE,#E0B94E 48%,#9C7420)','#140F04'],
+ 'mor-siyah':['#120F1A','#EFEBF8','#A097B8','#A47BFF','#3A3050','linear-gradient(180deg,#F3ECFF,#C2A6FF 48%,#7E55E6)','#12091F'],
+ zumrut:['#0C1612','#E8F3ED','#93AC9F','#3DD9A0','#2B4136','linear-gradient(180deg,#E6FFF4,#7DE8BE 48%,#1F9E73)','#04140D']};
+function apply(o){o=o||{};const t=TH[o.theme]||TH.grafit,r=document.documentElement.style;
+  ['--bg','--fg','--mute','--acc','--line','--chrome','--ink'].forEach((k,i)=>r.setProperty(k,t[i]));
+  const s=Math.min(5,Math.max(1,parseInt(o.style)||1));document.body.className='s'+s;
+  if(o.page)document.getElementById('p').textContent=String(o.page).slice(0,40)}
+const q=new URLSearchParams(location.search);apply({theme:q.get('t'),style:q.get('s'),page:q.get('p')});
+</script></body></html>

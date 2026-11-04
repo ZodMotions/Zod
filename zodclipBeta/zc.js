@@ -32,6 +32,7 @@ async function gate(){
   const bo=$('#btn-out');if(bo&&!u)bo.hidden=true;
   $('#gate').hidden=true;$('#app').hidden=false;start();
 }
+$('#btn-theme').addEventListener('click',()=>window.ZodTheme&&ZodTheme.open());
 $('#btn-out').addEventListener('click',async()=>{if(!confirm('Çıkış yapılsın mı? Projen bu cihazda kayıtlı kalır.'))return;try{await ZMA.signOut()}catch(e){}location.reload()});
 
 /* ================= durum ================= */

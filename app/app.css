@@ -20,7 +20,7 @@ h1,h2{margin:0}
 .lnk svg{width:15px;height:15px}.lnk:hover{color:var(--fg)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 13px;border-radius:8px;border:1px solid var(--line2);background:var(--p3);cursor:pointer;text-decoration:none;font-weight:600;font-size:12.5px;white-space:nowrap}
 .btn:hover{background:var(--p4)}
-.btn.pri{background:var(--chrome);color:#111;border-color:transparent}
+.btn.pri{background:var(--chrome);color:var(--chrome-ink,#111);border-color:transparent}
 
 /* sol menü */
 .nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav);background:var(--p0);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:12px 8px;z-index:20}
@@ -28,7 +28,7 @@ h1,h2{margin:0}
 .logo b{font:700 10px/1 var(--f-d);text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
 .nav button{border:0;background:transparent;border-radius:10px;cursor:pointer;color:var(--mute);display:grid;justify-items:center;gap:4px;padding:10px 2px;font-size:10.5px;font-weight:600;white-space:nowrap}
 .nav button:hover{color:var(--fg);background:var(--p2)}
-.nav button[aria-current=page]{color:#fff;background:var(--p3)}
+.nav button[aria-current=page]{color:var(--fg);background:var(--p3)}
 .nav button[aria-current=page] svg{color:var(--acc)}
 .nav .grow{flex:1}
 
@@ -49,16 +49,16 @@ h1,h2{margin:0}
 .chip.on{color:var(--fg)}.chip.on i{background:#3DDC84;box-shadow:0 0 8px #3DDC84}
 
 .start{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:14px}
-.newp{display:grid;align-content:end;justify-items:start;gap:4px;min-height:190px;padding:20px;border-radius:14px;border:1px solid var(--line2);background:radial-gradient(120% 120% at 0% 0%,#2a2d34,#18181b);cursor:pointer;text-align:left;transition:border-color .15s,transform .1s}
+.newp{display:grid;align-content:end;justify-items:start;gap:4px;min-height:190px;padding:20px;border-radius:14px;border:1px solid var(--line2);background:radial-gradient(120% 120% at 0% 0%,var(--p3),var(--p0));cursor:pointer;text-align:left;transition:border-color .15s,transform .1s}
 .newp:hover{border-color:var(--acc)}.newp:active{transform:scale(.99)}
-.newp .pl{width:52px;height:52px;border-radius:14px;background:var(--chrome);color:#111;display:grid;place-items:center;margin-bottom:auto}
+.newp .pl{width:52px;height:52px;border-radius:14px;background:var(--chrome);color:var(--chrome-ink,#111);display:grid;place-items:center;margin-bottom:auto}
 .newp .pl svg{width:26px;height:26px}
 .newp b{font:700 24px/1 var(--f-d);text-transform:uppercase}
 .newp small{color:var(--mute);font-size:12.5px}
 .fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .fmts button{display:grid;align-content:end;justify-items:start;gap:2px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--p1);cursor:pointer;text-align:left;min-height:190px;position:relative}
 .fmts button:hover{border-color:var(--acc);background:var(--p2)}
-.fmts i{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);border:2px solid var(--line2);border-radius:5px;background:linear-gradient(160deg,#2c2c31,#1f1f23)}
+.fmts i{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);border:2px solid var(--line2);border-radius:5px;background:linear-gradient(160deg,var(--p3),var(--p2))}
 .fmts button:hover i{border-color:var(--acc)}
 .r916{width:46px;height:82px}.r45{width:62px;height:78px}.r11{width:72px;height:72px}.r169{width:100px;height:56px}
 .fmts b{font-size:13px}.fmts small{color:var(--mute);font-size:11.5px}
@@ -101,4 +101,12 @@ h1,h2{margin:0}
 }
 
 body.nosub .newp,body.nosub .fmts button,body.nosub .tools button[data-go=clip]{position:relative}
-body.nosub .newp::after,body.nosub .fmts button::after,body.nosub .tools button[data-go=clip]::after{content:"Filigranlı";position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;color:#C9C9CF;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);border-radius:99px;padding:1px 8px}
+body.nosub .newp::after,body.nosub .fmts button::after,body.nosub .tools button[data-go=clip]::after{content:"Filigranlı";position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;color:var(--mute);border:1px solid var(--line2);background:var(--p2);border-radius:99px;padding:1px 8px}
+
+/* tipografi kalitesi: optik boyut, dengeli başlık satırları, düzgün paragraf sonu, sabit genişlikli rakamlar */
+html{text-rendering:optimizeLegibility;font-optical-sizing:auto;font-kerning:normal;-webkit-text-size-adjust:100%;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4{text-wrap:balance}
+p,li,dd,figcaption{text-wrap:pretty}
+button,input,select,textarea,optgroup{font-family:inherit}
+table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-nums}
+::selection{background:var(--sel,rgba(120,160,255,.35))}

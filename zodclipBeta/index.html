@@ -9,7 +9,8 @@
 <meta name="theme-color" content="#161618">
 <link rel="icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500;1,700&family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="preload" href="/fonts/Inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/ui.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@700;800;900&family=Unbounded:wght@500;700&family=Manrope:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="/theme/theme.css"><script src="/theme/theme.js"></script>
 <link rel="stylesheet" href="zc.css">
 </head>
 <body>
@@ -80,6 +81,7 @@
     </div>
     <div class="bar-r">
       <span class="fmtchip" id="fmtchip" title="Görünüm sekmesinden değiştir">9:16 · 1080×1920</span>
+      <button class="ic" id="btn-theme" type="button" title="Tema" aria-label="Tema"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4.5l5 5-8 8-5-5z"/><path d="M6.5 12.5c-2 0-3.5 1.5-3.5 3.5 0 1.6-.6 2.6-1.5 3.5 4 .5 7.5-1 7.5-4.5"/></g></svg></button>
       <button class="ic" id="btn-help" type="button" title="Kısayollar ve yardım (?)" aria-label="Yardım"><b style="font-size:15px">?</b></button>
       <button class="ic" id="btn-new" type="button" title="Yeni proje" aria-label="Yeni proje"><svg><use href="#i-new"/></svg></button>
       <button class="ic" id="btn-cover" type="button" title="O anki kareyi kapak olarak indir" aria-label="Kapak indir"><svg><use href="#i-photo"/></svg></button>

@@ -307,3 +307,11 @@ p{margin:0}
 .dlf b{font-size:17px}.dlf span{color:var(--mute);font-size:14.5px}
 .note{color:var(--mute);font-size:13.5px}
 @media (max-width:860px){.dlw{grid-template-columns:1fr}}
+
+/* tipografi kalitesi: optik boyut, dengeli başlık satırları, düzgün paragraf sonu, sabit genişlikli rakamlar */
+html{text-rendering:optimizeLegibility;font-optical-sizing:auto;font-kerning:normal;-webkit-text-size-adjust:100%;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4{text-wrap:balance}
+p,li,dd,figcaption{text-wrap:pretty}
+button,input,select,textarea,optgroup{font-family:inherit}
+table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-nums}
+::selection{background:var(--sel,rgba(120,160,255,.35))}

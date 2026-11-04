@@ -1,0 +1,107 @@
+/* ZodMotions uygulama temaları — uygulamadan değiştirilir (Hesap > Görünüm ya da sol menüdeki fırça).
+   Her tema iki değişken sözlüğünü de doldurur: uygulama/ZodClip (--p0..p4, --accbg) ve ZodMotions sayfaları (--s1..s3, --acc-soft). */
+:root[data-theme]{--s1:var(--p1);--s2:var(--p2);--s3:var(--p3);--acc-soft:var(--accbg);--acc-hi:var(--acc2);--acc-ink:var(--chrome-ink)}
+:root[data-theme="grafit"]{--bg:#111113;--p0:#161618;--p1:#1c1c1f;--p2:#232327;--p3:#2c2c31;--p4:#36363c;--fg:#ECECEF;--mute:#A0A0A8;--dim:#95959C;--line:#2A2A2F;--line2:#3A3A41;
+  --acc:#4BA3FF;--acc2:#6DB6FF;--accbg:rgba(75,163,255,.13);--chrome:linear-gradient(180deg,#FFFFFF 0%,#DCE0E5 48%,#A2A8B1 100%);--chrome-ink:#111;--orn:transparent;--sel:rgba(75,163,255,.35);color-scheme:dark}
+:root[data-theme="ejderha"]{--bg:#0E0808;--p0:#150C0B;--p1:#1C100F;--p2:#251513;--p3:#301B18;--p4:#3D221E;--fg:#F5EAE2;--mute:#B39A8F;--dim:#9A867F;--line:#2F1C19;--line2:#4C2B25;
+  --acc:#F0523A;--acc2:#FF7A55;--accbg:rgba(240,82,58,.15);--chrome:linear-gradient(180deg,#FFF0C2 0%,#E8B55A 45%,#A86E1F 100%);--chrome-ink:#1F0E04;--orn:#D9A24A;--sel:rgba(240,82,58,.4);color-scheme:dark}
+:root[data-theme="beyaz-altin"]{--bg:#F6F2EA;--p0:#FFFFFF;--p1:#FBF8F2;--p2:#F0EAE0;--p3:#E7DFD1;--p4:#DCD1BF;--fg:#1E1A14;--mute:#5E5446;--dim:#6A6154;--line:#E4DCCD;--line2:#D2C5AE;
+  --acc:#9A6F1E;--acc2:#B8892F;--accbg:rgba(184,137,47,.14);--chrome:linear-gradient(180deg,#F9E7AE 0%,#D9AE52 50%,#A67A22 100%);--chrome-ink:#1E1A14;--orn:#B8892F;--sel:rgba(184,137,47,.3);
+  --tint1:rgba(0,0,0,.02);--tint2:rgba(0,0,0,.05);color-scheme:light}
+:root[data-theme="siyah-altin"]{--bg:#0A0A09;--p0:#11100E;--p1:#171613;--p2:#1F1D19;--p3:#292620;--p4:#343028;--fg:#F3EEE3;--mute:#A89F8C;--dim:#978F7E;--line:#27231D;--line2:#3D362A;
+  --acc:#D9B44A;--acc2:#F0CF6B;--accbg:rgba(217,180,74,.13);--chrome:linear-gradient(180deg,#FFF1BE 0%,#E0B94E 48%,#9C7420 100%);--chrome-ink:#140F04;--orn:#C9A443;--sel:rgba(217,180,74,.32);color-scheme:dark}
+:root[data-theme="mor-siyah"]{--bg:#0C0A12;--p0:#120F1A;--p1:#181422;--p2:#1F1A2C;--p3:#282237;--p4:#332B45;--fg:#EFEBF8;--mute:#A097B8;--dim:#928BA5;--line:#251F35;--line2:#3A3050;
+  --acc:#A47BFF;--acc2:#BE9DFF;--accbg:rgba(164,123,255,.15);--chrome:linear-gradient(180deg,#F3ECFF 0%,#C2A6FF 48%,#7E55E6 100%);--chrome-ink:#12091F;--orn:#8F68F0;--sel:rgba(164,123,255,.38);color-scheme:dark}
+:root[data-theme="zumrut"]{--bg:#08100D;--p0:#0C1612;--p1:#111D18;--p2:#17261F;--p3:#1E3028;--p4:#273B32;--fg:#E8F3ED;--mute:#93AC9F;--dim:#839A8E;--line:#1A2A22;--line2:#2B4136;
+  --acc:#3DD9A0;--acc2:#6EE7B7;--accbg:rgba(61,217,160,.13);--chrome:linear-gradient(180deg,#E6FFF4 0%,#7DE8BE 48%,#1F9E73 100%);--chrome-ink:#04140D;--orn:#3DBF8E;--sel:rgba(61,217,160,.32);color-scheme:dark}
+
+/* ---------- ayrıntılar ---------- */
+/* ejderha: menüde ejderha pulu deseni, kırmızı-altın çizgiler; ileride ejderha resmi için yer (--dragon-art) */
+:root[data-theme="ejderha"] .nav{background:url(/theme/pul.svg) 0 0/28px 16px,linear-gradient(180deg,#1A0E0C,#120A09)}
+:root[data-theme="ejderha"] .nav,:root[data-theme="ejderha"] .bar{border-color:#5A2A1E}
+:root[data-theme="ejderha"] .nav .logo b,:root[data-theme="ejderha"] .home h1{background:linear-gradient(180deg,#FFE6A6,#E3A445 55%,#B4561F);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root[data-theme="ejderha"] .home{background:var(--dragon-art,none) right -40px top -10px/min(720px,62%) auto no-repeat}
+:root[data-theme="ejderha"] .gate,:root[data-theme="ejderha"] .stage{background-image:radial-gradient(70% 55% at 50% 45%,rgba(240,82,58,.08),transparent 70%)}
+/* altın temalar: altın yaldız başlıklar, ince altın çizgiler, köşe süsleri */
+:root[data-theme$="altin"] .nav .logo b,:root[data-theme$="altin"] .home h1,:root[data-theme$="altin"].in-app main h1{background:linear-gradient(180deg,#F7E3A2,#C99A3A 55%,#8C6418);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root[data-theme="beyaz-altin"] .nav .logo b,:root[data-theme="beyaz-altin"] .home h1,:root[data-theme="beyaz-altin"].in-app main h1{background:linear-gradient(180deg,#B8892F,#8A6216);-webkit-background-clip:text;background-clip:text}
+:root[data-theme$="altin"] .nav{box-shadow:inset -1px 0 0 0 color-mix(in srgb,var(--orn) 55%,transparent)}
+:root[data-theme$="altin"] .bar{box-shadow:inset 0 -1px 0 0 color-mix(in srgb,var(--orn) 50%,transparent)}
+:root[data-theme$="altin"] .home{position:relative}
+:root[data-theme$="altin"] .home::before,:root[data-theme$="altin"] .home::after{content:"";position:absolute;width:72px;height:72px;background:var(--orn);-webkit-mask:url(/theme/kose.svg) 0 0/100% 100%;mask:url(/theme/kose.svg) 0 0/100% 100%;opacity:.55;pointer-events:none}
+:root[data-theme$="altin"] .home::before{top:14px;left:-34px}
+:root[data-theme$="altin"] .home::after{top:14px;right:-34px;transform:scaleX(-1)}
+:root[data-theme$="altin"] .newp,:root[data-theme$="altin"] .fmts button,:root[data-theme$="altin"] .tools button{border-color:color-mix(in srgb,var(--orn) 35%,var(--line))}
+/* mor ve zümrüt: arka planda yumuşak ışık */
+:root[data-theme="mor-siyah"] .views,:root[data-theme="mor-siyah"].in-app body{background:radial-gradient(60% 45% at 85% 0%,rgba(164,123,255,.12),transparent 70%),radial-gradient(50% 40% at 0% 100%,rgba(110,70,220,.10),transparent 70%),var(--bg)}
+:root[data-theme="zumrut"] .views,:root[data-theme="zumrut"].in-app body{background:radial-gradient(60% 45% at 85% 0%,rgba(61,217,160,.10),transparent 70%),var(--bg)}
+/* açık tema düzeltmeleri */
+:root[data-theme="beyaz-altin"] img,:root[data-theme="beyaz-altin"] video{color-scheme:normal}
+:root[data-theme="beyaz-altin"] .stage{background:#E9E3D7}
+
+/* tema seçici */
+.zt-panel{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+.zt-box{width:min(760px,calc(100% - 32px));max-height:calc(100% - 40px);overflow:auto;background:var(--p1);color:var(--fg);border:1px solid var(--line2);border-radius:16px;padding:22px 22px 18px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.zt-box h2{margin:0 0 4px;font:700 22px/1.1 var(--f-d,inherit)}.zt-box p{margin:0 0 16px;color:var(--mute);font-size:13px}
+.zt-box h3{margin:18px 0 10px;font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.zt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.zt-t{display:grid;gap:8px;padding:8px;border-radius:12px;border:1.5px solid var(--line2);background:var(--p0);color:var(--fg);cursor:pointer;text-align:left;font:inherit}
+.zt-t[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.zt-t b{font-size:13px}.zt-t small{color:var(--mute);font-size:11.5px}
+.zt-sw{height:74px;border-radius:8px;display:grid;grid-template-columns:22% 1fr;overflow:hidden;border:1px solid rgba(128,128,128,.25)}
+.zt-sw i{display:block}.zt-sw span{display:grid;align-content:center;gap:6px;padding:0 10px}
+.zt-sw em{display:block;height:7px;border-radius:4px}
+.zt-bars{display:grid;gap:8px}
+.zt-b{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:12px;padding:6px 8px;border-radius:10px;border:1.5px solid var(--line2);background:var(--p0);color:var(--fg);cursor:pointer;font:inherit;text-align:left}
+.zt-b[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.zt-b b{font-size:12.5px}
+.zt-b iframe{width:100%;height:34px;border:0;border-radius:6px;pointer-events:none;background:var(--bg)}
+.zt-f{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px}
+.zt-f small{color:var(--mute);font-size:12px}
+@media (max-width:620px){.zt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zt-b{grid-template-columns:1fr}}
+:root[data-theme$="altin"] .view{overflow-x:hidden}
+
+/* ---------- ejderha arka planı (kullanıcının ejderha görseli) ---------- */
+:root[data-theme="ejderha"]:not(.zt-framed) body{background:linear-gradient(90deg,rgba(9,4,4,.93) 0%,rgba(9,4,4,.80) 34%,rgba(9,4,4,.35) 68%,rgba(9,4,4,.12) 100%),linear-gradient(0deg,rgba(9,4,4,.55),transparent 40%),image-set(url(/theme/ejderha-bg.webp) type("image/webp"),url(/theme/ejderha-bg.jpg) type("image/jpeg")) right center/cover no-repeat fixed,#0A0505}
+/* uygulama içindeki sayfalar saydam: tek, kesintisiz ejderha arka planı görünür */
+:root[data-theme="ejderha"].zt-framed,:root[data-theme="ejderha"].zt-framed body{background:transparent!important}
+:root[data-theme="ejderha"] .view iframe,:root[data-theme="ejderha"] .views{background:transparent}
+:root[data-theme="ejderha"]{--p0:rgba(21,10,9,.84);--p1:rgba(28,13,12,.80);--p2:rgba(40,18,16,.78);--p3:rgba(55,25,21,.86);--p4:rgba(70,32,26,.9);--line:rgba(217,162,74,.16);--line2:rgba(217,162,74,.28);
+  --acc:#F2583C;--acc2:#FF8A5C;--chrome:linear-gradient(180deg,#FFEDB8 0%,#E7B65C 42%,#B07524 78%,#8A5414 100%)}
+:root[data-theme="ejderha"] .nav{background:url(/theme/pul.svg) 0 0/28px 16px,linear-gradient(180deg,rgba(26,12,10,.92),rgba(14,7,6,.92));backdrop-filter:blur(6px)}
+:root[data-theme="ejderha"] .newp,:root[data-theme="ejderha"] .fmts button,:root[data-theme="ejderha"] .tools button,:root[data-theme="ejderha"] .lastp{backdrop-filter:blur(3px);border-color:rgba(217,162,74,.22)}
+:root[data-theme="ejderha"] .newp{background:linear-gradient(135deg,rgba(90,26,18,.75),rgba(24,10,9,.8))}
+:root[data-theme="ejderha"] .stage{background:rgba(8,4,4,.35)}
+:root[data-theme="ejderha"] .gate{background:transparent}
+:root[data-theme="ejderha"] .bar,:root[data-theme="ejderha"] .rail{backdrop-filter:blur(6px)}
+:root[data-theme="ejderha"] .home h1{filter:drop-shadow(0 2px 10px rgba(0,0,0,.6))}
+
+/* ---------- kaydırma çubukları: her temada temaya göre ----------
+   Not: Chromium ":root[...] ::-webkit-scrollbar-thumb:vertical" seçicisini uygulamıyor; bu yüzden "html[...]" kullanılır.
+   Her kural hem sayfanın kendi çubuğunu (html[...]::) hem içteki kutuları (html[...] ::) kapsar. */
+html[data-theme] .strip,html[data-theme] .gal{scrollbar-width:auto;scrollbar-color:auto}
+html[data-theme]::-webkit-scrollbar,html[data-theme] ::-webkit-scrollbar{width:12px;height:12px}
+html[data-theme]::-webkit-scrollbar-track,html[data-theme] ::-webkit-scrollbar-track{background:var(--p0);box-shadow:inset 1px 0 0 var(--line)}
+html[data-theme]::-webkit-scrollbar-thumb,html[data-theme] ::-webkit-scrollbar-thumb{border-radius:10px;border:3px solid transparent;background-clip:padding-box;background-color:color-mix(in srgb,var(--acc) 60%,var(--p4))}
+html[data-theme]::-webkit-scrollbar-thumb:hover,html[data-theme] ::-webkit-scrollbar-thumb:hover{border-width:2px;background-color:var(--acc)}
+html[data-theme]::-webkit-scrollbar-corner,html[data-theme] ::-webkit-scrollbar-corner{background:var(--p0)}
+html[data-theme="grafit"]::-webkit-scrollbar-thumb,html[data-theme="grafit"] ::-webkit-scrollbar-thumb{background-color:#4A4A52}
+html[data-theme="grafit"]::-webkit-scrollbar-thumb:hover,html[data-theme="grafit"] ::-webkit-scrollbar-thumb:hover{background-color:#686871}
+html[data-theme$="altin"]::-webkit-scrollbar-thumb:vertical,html[data-theme$="altin"] ::-webkit-scrollbar-thumb:vertical{background-image:linear-gradient(90deg,#8C6418,#F2D48A 50%,#8C6418)}
+html[data-theme$="altin"]::-webkit-scrollbar-thumb:horizontal,html[data-theme$="altin"] ::-webkit-scrollbar-thumb:horizontal{background-image:linear-gradient(180deg,#8C6418,#F2D48A 50%,#8C6418)}
+html[data-theme="beyaz-altin"]::-webkit-scrollbar-track,html[data-theme="beyaz-altin"] ::-webkit-scrollbar-track{background:#EFE8DB}
+html[data-theme="mor-siyah"]::-webkit-scrollbar-thumb,html[data-theme="mor-siyah"] ::-webkit-scrollbar-thumb{background-image:linear-gradient(135deg,#7E55E6,#C2A6FF 50%,#7E55E6)}
+html[data-theme="zumrut"]::-webkit-scrollbar-thumb,html[data-theme="zumrut"] ::-webkit-scrollbar-thumb{background-image:linear-gradient(135deg,#1F9E73,#7DE8BE 50%,#1F9E73)}
+/* ejderha: tutamaç kıvrılan altın ejderhanın kendisi; ray koyu kızıl, uçlarda inci düğmeler */
+html[data-theme="ejderha"]::-webkit-scrollbar,html[data-theme="ejderha"] ::-webkit-scrollbar{width:16px;height:16px}
+html[data-theme="ejderha"]::-webkit-scrollbar-track,html[data-theme="ejderha"] ::-webkit-scrollbar-track{background:linear-gradient(90deg,#0E0505,#1F0A08 50%,#0E0505);box-shadow:inset 1px 0 0 rgba(217,162,74,.2)}
+html[data-theme="ejderha"]::-webkit-scrollbar-track:horizontal,html[data-theme="ejderha"] ::-webkit-scrollbar-track:horizontal{background:linear-gradient(180deg,#0E0505,#1F0A08 50%,#0E0505);box-shadow:inset 0 1px 0 rgba(217,162,74,.2)}
+html[data-theme="ejderha"]::-webkit-scrollbar-thumb,html[data-theme="ejderha"] ::-webkit-scrollbar-thumb{border:3px solid transparent;border-radius:10px;background-clip:padding-box}
+html[data-theme="ejderha"]::-webkit-scrollbar-thumb,html[data-theme="ejderha"] ::-webkit-scrollbar-thumb{background-color:#D9A24A}
+html[data-theme="ejderha"]::-webkit-scrollbar-thumb:hover,html[data-theme="ejderha"] ::-webkit-scrollbar-thumb:hover{background-color:#F0C46A}
+html[data-theme="ejderha"]::-webkit-scrollbar-button:single-button,html[data-theme="ejderha"] ::-webkit-scrollbar-button:single-button{display:block;width:16px;height:16px;background:#0E0505 center/13px 13px no-repeat}
+html[data-theme="ejderha"]::-webkit-scrollbar-button:single-button:vertical:decrement,html[data-theme="ejderha"] ::-webkit-scrollbar-button:single-button:vertical:decrement{background-image:url(/theme/ok-up.svg)}
+html[data-theme="ejderha"]::-webkit-scrollbar-button:single-button:vertical:increment,html[data-theme="ejderha"] ::-webkit-scrollbar-button:single-button:vertical:increment{background-image:url(/theme/ok-down.svg)}
+html[data-theme="ejderha"]::-webkit-scrollbar-button:single-button:horizontal:decrement,html[data-theme="ejderha"] ::-webkit-scrollbar-button:single-button:horizontal:decrement{background-image:url(/theme/ok-left.svg)}
+html[data-theme="ejderha"]::-webkit-scrollbar-button:single-button:horizontal:increment,html[data-theme="ejderha"] ::-webkit-scrollbar-button:single-button:horizontal:increment{background-image:url(/theme/ok-right.svg)}
+html[data-theme="ejderha"]::-webkit-scrollbar-corner,html[data-theme="ejderha"] ::-webkit-scrollbar-corner{background:#0E0505}

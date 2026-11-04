@@ -28,6 +28,7 @@ function frame(v,url){
   box.appendChild(f);frames[v]=f;return f}
 function go(v,opt={}){
   if(!(v in VIEWS))v='home';cur=v;
+  try{window.ZodTheme&&ZodTheme.setPage({home:'Ana sayfa',clip:'ZodClip',motion:'Motionlar',ai:'AI Stüdyo',hesap:'Hesap'}[v])}catch(e){}
   $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
   $$('.nav button').forEach(b=>{if(b.dataset.go===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   if(v!=='home'){const f=frame(v,opt.url);if(opt.tab||opt.mot||opt.fmt){const send=()=>{try{const w=f.contentWindow;if(opt.fmt)w.postMessage({zc:'fmt',v:opt.fmt},location.origin);if(opt.mot)w.postMessage({zc:'mot',k:opt.mot},location.origin);else if(opt.tab)w.postMessage({zc:'tab',name:opt.tab},location.origin)}catch(e){}};
@@ -84,4 +85,5 @@ if(window.ZMA&&ZMA.onChange)ZMA.onChange(()=>{if(cur==='home')renderAcct()});
 window.addEventListener('storage',()=>{if(cur==='home')renderAcct()});
 const start=(location.hash||'').slice(1);go(start in VIEWS?start:'home');
 window.ZAPP={go};
+document.getElementById('btn-theme').addEventListener('click',()=>window.ZodTheme&&ZodTheme.open());
 })();

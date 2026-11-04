@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@400;500;600;700&display=swap");
+
 /* Layout: kurgu odası — her sayfa bir monitör ve zaman çizelgesi gibi; üstte sayfa ilerlemesini gösteren timecode cetveli.
    Tek tema, bilinçli olarak koyu (sinema perdesi). */
 :root{
@@ -636,3 +636,11 @@ h2.gold,.gold{background:linear-gradient(180deg,#FFFFFF 0%,#D5D9DF 55%,#9097A1 1
 .danger{color:#FF8A8E !important}
 @media (max-width:900px){.acct{grid-template-columns:1fr}}
 @media (max-width:520px){.stat{grid-template-columns:1fr 1fr 1fr}.qa{grid-template-columns:1fr}}
+
+/* tipografi kalitesi: optik boyut, dengeli başlık satırları, düzgün paragraf sonu, sabit genişlikli rakamlar */
+html{text-rendering:optimizeLegibility;font-optical-sizing:auto;font-kerning:normal;-webkit-text-size-adjust:100%;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4{text-wrap:balance}
+p,li,dd,figcaption{text-wrap:pretty}
+button,input,select,textarea,optgroup{font-family:inherit}
+table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-nums}
+::selection{background:var(--sel,rgba(120,160,255,.35))}
