@@ -7,10 +7,10 @@ const CFG=window.ZM_CONFIG||{};
 const LIVE=!!(CFG.supabaseUrl&&CFG.supabaseAnonKey);
 const PLANS={
   free:{n:'Ücretsiz',kredi:0,motion:3,premium:false},
-  deneme:{n:'Deneme',kredi:50,motion:3,premium:false},
-  baslangic:{n:'Başlangıç',kredi:80,motion:50,premium:false},
-  pro:{n:'Pro',kredi:250,motion:200,premium:true},
-  ajans:{n:'Ajans',kredi:700,motion:null,premium:true}
+  deneme:{n:'Deneme',kredi:40,motion:3,premium:false},
+  baslangic:{n:'Başlangıç',kredi:60,motion:30,premium:false},
+  pro:{n:'Pro',kredi:160,motion:120,premium:true},
+  ajans:{n:'Ajans',kredi:450,motion:null,premium:true}
 };
 const OWNER='info@zodiacwebdesign.com';
 /* aktif abonelik: Başlangıç/Pro/Ajans ve süresi dolmamış (sahip hesabı her zaman aktif) */

@@ -3,14 +3,17 @@
 // İstek: POST { action:'start', model:'std'|'pre', duration, prompt, image(dataURI) }  veya  { action:'status', id }
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+const h3 = (res: string) => (prompt: string, img: string, d: number) => ({ prompt, image_url: img, duration: d, resolution: res, prompt_expansion_mode: "balanced" });
+const kling = (prompt: string, img: string, d: number) => ({ prompt, start_image_url: img, duration: String(d), generate_audio: false, negative_prompt: "blur, distort, low quality, text, watermark" });
+// kredi / saniye: önizleme 1, standart 2, premium 720p 3, premium 1080p 4
 const MODELS: Record<string, { endpoint: string; rate: number; premium: boolean; body: (p: string, img: string, d: number) => Record<string, unknown> }> = {
-  std: {
-    endpoint: "minimax/h3-max/image-to-video", rate: 1, premium: false,
-    body: (prompt, img, d) => ({ prompt, image_url: img, duration: d, resolution: "768P", prompt_expansion_mode: "balanced" }),
-  },
+  prev: { endpoint: "minimax/h3-max/image-to-video", rate: 1, premium: false, body: h3("480P") },
+  std: { endpoint: "minimax/h3-max/image-to-video", rate: 2, premium: false, body: h3("768P") },
+  pre720: { endpoint: "fal-ai/kling-video/v3/standard/image-to-video", rate: 3, premium: true, body: kling },
+  pre1080: { endpoint: "fal-ai/kling-video/v3/pro/image-to-video", rate: 4, premium: true, body: kling },
+  // eski ad (geriye uyumluluk)
   pre: {
-    endpoint: "fal-ai/kling-video/v3/pro/image-to-video", rate: 3, premium: true,
-    body: (prompt, img, d) => ({ prompt, start_image_url: img, duration: String(d), generate_audio: false, negative_prompt: "blur, distort, low quality, text, watermark" }),
+    endpoint: "fal-ai/kling-video/v3/pro/image-to-video", rate: 4, premium: true, body: kling,
   },
 };
 const DURS = [5, 10, 15];

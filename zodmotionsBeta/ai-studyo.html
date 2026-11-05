@@ -40,14 +40,16 @@
         <div class="chips" id="ideas" aria-label="Hazır sahne fikirleri"></div></div>
       <div class="fld" id="model"><label>Model</label>
         <div class="opts" id="mods">
-          <button type="button" class="opt" data-m="std" aria-pressed="true"><b>Standart · MiniMax H3</b><span>768p · gerçekçi · 1 kredi / sn</span></button>
-          <button type="button" class="opt" data-m="pre" aria-pressed="false"><b>Premium · Kling 3.0 Pro</b><span>1080p · Pro ve Ajans · 3 kredi / sn</span></button>
-        </div></div>
-      <div class="fld"><label>Süre</label><div class="seg" role="group" aria-label="Süre" id="durs"><button data-d="5" aria-pressed="false">5 sn</button><button data-d="10" aria-pressed="true">10 sn</button><button data-d="15" aria-pressed="false">15 sn</button></div></div>
+          <button type="button" class="opt" data-m="prev" aria-pressed="false"><b>Hızlı önizleme</b><span>MiniMax H3 · 480p · 1 kredi / sn</span></button>
+          <button type="button" class="opt" data-m="std" aria-pressed="true"><b>Standart</b><span>MiniMax H3 · 768p · 2 kredi / sn</span></button>
+          <button type="button" class="opt" data-m="pre720" aria-pressed="false"><b>Premium</b><span>Kling 3.0 · 720p · 3 kredi / sn</span></button>
+          <button type="button" class="opt" data-m="pre1080" aria-pressed="false"><b>Premium HD</b><span>Kling 3.0 Pro · 1080p · 4 kredi / sn</span></button>
+        </div><p class="note" style="margin:8px 0 0">İpucu: sahneni önce hızlı önizlemeyle dene, beğenince standart ya da premium üret.</p></div>
+      <div class="fld"><label>Süre</label><div class="seg" role="group" aria-label="Süre" id="durs"><button data-d="5" aria-pressed="true">5 sn</button><button data-d="10" aria-pressed="false">10 sn</button><button data-d="15" aria-pressed="false">15 sn</button></div></div>
       <div class="fld"><label for="firm">Firma adı</label><input id="firm" placeholder="Örn. Zodiac Burger" maxlength="28"></div>
       <div class="fld"><label for="camp">Kampanya veya fiyat yazısı</label><input id="camp" placeholder="Örn. Menü 249 ₺ · Hemen sipariş ver" maxlength="40"></div>
       <div class="fld"><label for="end">Kapanış motionı</label><select id="end"></select></div>
-      <div class="fld" id="ses"><label for="vo">Seslendirme metni (isteğe bağlı)</label><textarea id="vo" placeholder="Örn. Bu akşam açlığa son. Zodiac Burger'de menü sadece 249 lira."></textarea>
+      <div class="fld" id="ses"><label for="vo">Seslendirme metni <span class="note">(yakında)</span></label><textarea id="vo" disabled placeholder="Örn. Bu akşam açlığa son. Zodiac Burger'de menü sadece 249 lira."></textarea>
         <div class="seg" role="group" aria-label="Ses" id="voices"><button aria-pressed="true">Sıcak kadın</button><button aria-pressed="false">Güven veren erkek</button><button aria-pressed="false">Genç enerjik</button></div></div>
       <div class="cost"><div><span class="mono" style="color:var(--mute)">Bu üretim</span><br><b id="cost">10</b> <span style="color:var(--mute)">kredi</span></div><div style="text-align:right"><span class="mono" style="color:var(--mute)">Bakiye (deneme)</span><br><b id="bal">50</b></div></div>
       <button class="btn pri" id="go" type="button">Reklamı üret</button>
@@ -70,8 +72,8 @@
   <section class="sec" style="margin-top:56px">
     <div class="sh"><div><span class="eyebrow">Modeller</span><h2>Hangi model <span class="acc">ne için?</span></h2></div><a class="btn" href="fiyatlar.html">Kredi paketleri</a></div>
     <div class="models">
-      <div class="panel"><span class="eyebrow">Standart</span><b>MiniMax H3</b><p class="msg">Bağımsız kalite sıralamalarında en üst grupta. Gerçekçi insan, yemek ve mekân sahneleri için varsayılan seçim. 768p, 1 kredi / saniye.</p></div>
-      <div class="panel"><span class="eyebrow">Premium</span><b>Kling 3.0 Pro</b><p class="msg">1080p, akıcı kamera hareketleri. Ürün yakın çekimleri ve vitrin işleri için. 3 kredi / saniye.</p></div>
+      <div class="panel"><span class="eyebrow">Standart</span><b>MiniMax H3</b><p class="msg">Bağımsız kalite sıralamalarında en üst grupta. Gerçekçi insan, yemek ve mekân sahneleri için varsayılan seçim. 480p hızlı önizleme 1 kredi / sn, 768p standart 2 kredi / sn.</p></div>
+      <div class="panel"><span class="eyebrow">Premium</span><b>Kling 3.0</b><p class="msg">Akıcı kamera hareketleri; ürün yakın çekimleri ve vitrin işleri için. 720p 3 kredi / sn, 1080p 4 kredi / sn. Reels için 720p çoğu zaman yeterli.</p></div>
       <div class="panel"><span class="eyebrow">Her pakette</span><b>ZodClip motionları</b><p class="msg">99+ motion ile logo, fiyat, madde listesi, geçiş ve son kart. Kredi harcamaz.</p></div>
     </div>
   </section>
@@ -89,8 +91,8 @@
   <section class="sec">
     <div class="sh"><div><span class="eyebrow">Sık sorulanlar</span><h2>AI stüdyosu</h2></div></div>
     <div class="faq">
-      <details><summary>Bir reklam kaç kredi harcar?</summary><p>Standart modelle 15 saniyelik bir reklam 15 kredi harcar. Premium modelle 45 kredi. Başarısız üretimde kredi iade edilir.</p></details>
-      <details><summary>Ücretsiz planda AI var mı?</summary><p>Hayır. Ücretsiz planda motionları filigranlı kullanırsın. AI denemek için ₺299'luk 50 kredilik deneme paketi var.</p></details>
+      <details><summary>Bir reklam kaç kredi harcar?</summary><p>Hızlı önizleme saniyesi 1 kredi, standart 2 kredi, premium 720p 3 kredi, premium 1080p 4 kredi. 5 saniyelik standart video 10 kredi harcar. Başarısız üretimde kredi iade edilir.</p></details>
+      <details><summary>Ücretsiz planda AI var mı?</summary><p>Hayır. Ücretsiz planda motionları filigranlı kullanırsın. AI denemek için ₺149'luk 40 kredilik deneme paketi var.</p></details>
       <details><summary>Videolar kimin?</summary><p>Ücretli paketlerde ürettiğin videolar senindir; reklamlarında ve müşteri işlerinde kullanabilirsin.</p></details>
     </div>
   </section>
@@ -104,13 +106,14 @@ const IDEAS=['Kamera yavaşça yaklaşıyor, sıcak akşam ışığı','Ürün d
 Z.SECTORS.forEach(s=>{const o=document.createElement('option');o.textContent=s.n;$('sek').appendChild(o)});
 IDEAS.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.onclick=()=>{const a=$('scn');a.value=(a.value?a.value+', ':'')+t.toLocaleLowerCase('tr')};$('ideas').appendChild(b)});
 const ends=Z.MOT.filter(m=>'SAY'.includes(m.k[0]));ends.forEach(m=>{const o=document.createElement('option');o.value=m.k;o.textContent=`${m.k} · ${m.ad}`;$('end').appendChild(o)});
-const st={m:'std',d:10,bal:0};
+const st={m:'std',d:5,bal:0};
+const MD={prev:{r:1,n:'MiniMax H3 · 480p',p:false},std:{r:2,n:'MiniMax H3 · 768p',p:false},pre720:{r:3,n:'Kling 3.0 · 720p',p:true},pre1080:{r:4,n:'Kling 3.0 Pro · 1080p',p:true}};
 ZMA.onChange(u=>{st.bal=u?u.profile.kredi:0;$('go').textContent=u?'Reklamı üret':'Ücretsiz hesap aç';cost()});
 function setEnd(){const k=$('end').value;$('pv').src=`m/${k}.mp4`;$('pv').poster=`m/${k}.jpg`;const m=Z.MOT.find(x=>x.k===k);$('kvE').textContent=m?m.ad:'—';$('kvE2').textContent=m?m.ad:'—';const p=$('pv').play();if(p&&p.catch)p.catch(()=>{})}
 $('end').onchange=setEnd;setEnd();
 let pth=null;function setScene(){const sec=$('sek').value;const L=Z.TEMPLATES.filter(t=>t.sector===sec&&t.imza);const tp=L[0]||Z.TEMPLATES.find(t=>t.sector===sec)||Z.TEMPLATES[0];if(pth){pth.tpl=tp;pth.f=tp.def;pth.A=S.sampleFor(tp);S.draw(pth)}else pth=S.thumb($('pc'),tp,{})}
 $('sek').onchange=setScene;setScene();
-function cost(){const c=st.d*(st.m==='pre'?3:1);$('cost').textContent=c;$('bal').textContent=st.bal;$('kvM').textContent=st.m==='pre'?'Kling 3.0 Pro':'MiniMax H3';return c}
+function cost(){const c=st.d*MD[st.m].r;$('cost').textContent=c;$('bal').textContent=st.bal;$('kvM').textContent=MD[st.m].n;return c}
 $('mods').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{st.m=b.dataset.m;$('mods').querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cost()});
 $('durs').querySelectorAll('button').forEach(b=>b.onclick=()=>{st.d=+b.dataset.d;$('durs').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cost()});
 $('voices').querySelectorAll('button').forEach(b=>b.onclick=()=>$('voices').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))));
@@ -127,7 +130,7 @@ $('go').onclick=async()=>{const c=cost();const msg=$('msg');msg.className='msg';
   if(!ZMA.user()){ZMA.requireLogin('ai-studyo.html');return}
   if(!curFile){msg.className='msg err';msg.textContent='Önce ürün veya mekân fotoğrafını yükle.';$('drop').focus();return}
   if(!$('scn').value.trim()){msg.className='msg err';msg.textContent='Sahneyi bir cümleyle anlat.';$('scn').focus();return}
-  if(st.m==='pre'&&!ZMA.PLANS[ZMA.user().profile.plan].premium){msg.className='msg err';msg.innerHTML='Premium model (Kling 3.0 Pro) Pro ve Ajans paketlerinde açık. Standart modelle devam edebilir ya da <a class="link" href="fiyatlar.html">paketini yükseltebilirsin</a>.';return}
+  if(MD[st.m].p&&!(ZMA.PLANS[ZMA.user().profile.plan]||{}).premium){msg.className='msg err';msg.innerHTML='Premium modeller (Kling 3.0) Pro ve Ajans paketlerinde açık. Standart modelle devam edebilir ya da <a class="link" href="fiyatlar.html">paketini yükseltebilirsin</a>.';return}
   if(st.bal<c){msg.className='msg err';msg.innerHTML=`Bakiyen yetmiyor: ${c} kredi gerekli, ${st.bal} kredin var. <a class="link" href="fiyatlar.html">Kredi paketlerine bak</a>.`;return}
   $('aiv').hidden=true;$('aiact').hidden=true;busy(true,'Hazırlanıyor','Fotoğraf yükleniyor',6);
   let img;try{img=await shrink(curFile)}catch(e){busy(false);msg.className='msg err';msg.textContent=e.message;return}
