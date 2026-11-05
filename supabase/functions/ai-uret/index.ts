@@ -25,7 +25,7 @@ const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ ok: false, error: "Yalnızca POST." }, 405);
-  const FAL = Deno.env.get("FAL_KEY");
+  const FAL = Deno.env.get("FAL_KEY") || Deno.env.get("fal_key");
   const URL_ = Deno.env.get("SUPABASE_URL")!, ANON = Deno.env.get("SUPABASE_ANON_KEY")!, SRV = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   if (!FAL) return json({ ok: false, error: "AI servisi henüz ayarlanmadı (FAL_KEY eksik)." }, 503);
   const auth = req.headers.get("Authorization") || "";
