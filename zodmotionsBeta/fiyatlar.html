@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fiyatlar · ZodMotions</title>
+<link rel="canonical" href="https://zodiacwebdesign.com/zodmotionsBeta/fiyatlar.html">
 <meta name="description" content="Ücretsiz başla, ₺149 deneme paketiyle AI reklamını üret. Aylık paketler ₺299’dan başlar, KDV dahil.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="ZodMotions"><meta property="og:title" content="Fiyatlar · ZodMotions"><meta property="og:description" content="Ücretsiz başla, ₺149 deneme paketiyle AI reklamını üret. Aylık paketler ₺299’dan başlar."><meta property="og:image" content="og.jpg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E0F11"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
@@ -76,7 +77,6 @@ tr:last-child th,tr:last-child td{border-bottom:0}
         <tr><th scope="row">Standart AI video (MiniMax H3, 768p)</th><td>2 / saniye</td><td>5 sn sahne = 10 kredi</td></tr>
         <tr><th scope="row">Premium AI video (Kling 3.0, 720p)</th><td>3 / saniye</td><td>5 sn sahne = 15 kredi</td></tr>
         <tr><th scope="row">Premium AI video (Kling 3.0 Pro, 1080p)</th><td>4 / saniye</td><td>5 sn sahne = 20 kredi</td></tr>
-        <tr><th scope="row">Sahne görseli (anahtar kare)</th><td>Dahil</td><td>Her sahnede otomatik</td></tr>
         <tr><th scope="row">AI seslendirme</th><td>Yakında</td><td>Paketlere dahil olacak</td></tr>
         <tr><th scope="row">Motion şablonu ile video</th><td>0</td><td>Paketteki motion hakkından düşer</td></tr>
       </tbody>
@@ -106,9 +106,9 @@ tr:last-child th,tr:last-child td{border-bottom:0}
 (()=>{const $=ZMS.$;
 const PLANS=[
  {n:'Ücretsiz',try:[0,0],usd:[0,0],items:['Tüm motionlar sınırsız, filigranlı','Tüm şablonları dene','ZodClip kurgu, filigranlı dışa aktarma','AI üretimi yok','Ücretsiz hesap, kart gerekmez'],btn:'Ücretsiz hesap aç',u:'giris.html?mode=kayit'},
- {n:'Başlangıç',try:[299,2990],usd:[9,90],items:['60 AI kredisi / ay (≈ 6 adet 5 sn AI video)','Standart AI modeli + hızlı önizleme','30 motion video, filigransız','ZodClip kurgu stüdyosu dahil','1 marka kiti · ticari kullanım'],btn:'Paketi seç',k:'baslangic',u:'#'},
- {n:'Pro',hot:true,try:[699,6990],usd:[19,190],items:['160 AI kredisi / ay (≈ 16 adet 5 sn AI video)','Premium model: Kling 3.0 (720p / 1080p)','120 motion video, 3 marka kiti','ZodClip kurgu stüdyosu dahil','Öncelikli üretim kuyruğu'],btn:'Paketi seç',k:'pro',u:'#'},
- {n:'Ajans',try:[1799,17990],usd:[49,490],items:['450 AI kredisi / ay (≈ 45 adet 5 sn AI video)','Sınırsız motion video, 10 marka kiti','ZodClip kurgu stüdyosu dahil','5 ekip üyesi, müşteri alanları','Firmaya özel şablon talebi'],btn:'Paketi seç',k:'ajans',u:'#'}];
+ {n:'Başlangıç',try:[299,2990],usd:[9,90],items:['60 AI kredisi / ay (≈ 6 adet 5 sn AI video)','Standart AI modeli + hızlı önizleme','30 motion video, filigransız','ZodClip kurgu stüdyosu dahil','Ticari kullanım hakkı'],btn:'Paketi seç',k:'baslangic',u:'#'},
+ {n:'Pro',hot:true,try:[699,6990],usd:[19,190],items:['160 AI kredisi / ay (≈ 16 adet 5 sn AI video)','Premium model: Kling 3.0 (720p / 1080p)','120 motion video, filigransız','ZodClip kurgu stüdyosu dahil','Öncelikli üretim kuyruğu'],btn:'Paketi seç',k:'pro',u:'#'},
+ {n:'Ajans',try:[1799,17990],usd:[49,490],items:['450 AI kredisi / ay (≈ 45 adet 5 sn AI video)','Sınırsız motion video, filigransız','ZodClip kurgu stüdyosu dahil','Ajans müşterileri için ticari kullanım','Firmaya özel şablon talebi'],btn:'Paketi seç',k:'ajans',u:'#'}];
 const P={cur:'try',per:0};const money=v=>P.cur==='try'?'₺'+v.toLocaleString('tr-TR'):'$'+v.toLocaleString('en-US');
 function build(){const box=$('plans');box.innerHTML='';PLANS.forEach(pl=>{const v=pl[P.cur][P.per],m=pl[P.cur][0];const d=document.createElement('div');d.className='plan'+(pl.hot?' hot':'');
   const note=v===0?'Kart gerekmez':P.per?`Aylık ${money(Math.round(v/12))} · ${money(m*12-v)} tasarruf`:'Aylık faturalanır';
