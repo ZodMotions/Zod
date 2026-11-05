@@ -8,7 +8,7 @@
 <link rel="preload" href="/fonts/Inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/ui.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="zm.css">
 <style>
-.ovl{position:absolute;inset:auto 14px 18px 14px;z-index:3;display:grid;gap:6px;text-align:center;pointer-events:none}
+.aiact{display:flex;gap:10px;justify-content:center;margin:12px 0 4px}.ovl{position:absolute;inset:auto 14px 18px 14px;z-index:3;display:grid;gap:6px;text-align:center;pointer-events:none}
 .ovl b{font-family:var(--f-disp);font-weight:800;font-size:24px;text-transform:uppercase;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.6);color:#fff}
 .ovl span{justify-self:center;background:var(--acc);color:var(--acc-ink);font-weight:700;font-size:14px;padding:6px 12px;border-radius:16px}
 .models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
@@ -27,7 +27,7 @@
   <div class="page-h">
     <span class="eyebrow rec">AI Reklam Stüdyosu · Yeni</span>
     <h1>Fotoğrafını yükle,<br><span class="acc">reklamını çeksin</span></h1>
-    <p class="lead">Ürününü veya mekânını yükle, sahneyi bir cümleyle anlat. Yapay zekâ gerçekçi videoyu çeker; ZodMotions markanı, fiyatını, kapanış motionını ve Türkçe seslendirmeyi ekler.</p>
+    <p class="lead">Ürününü veya mekânını yükle, sahneyi bir cümleyle anlat. Yapay zekâ gerçekçi videoyu çeker; sonra ZodClip’te firma adını, fiyatını ve kapanış motionını tek tıkla eklersin.</p>
   </div>
 
   <div class="studio">
@@ -51,17 +51,19 @@
         <div class="seg" role="group" aria-label="Ses" id="voices"><button aria-pressed="true">Sıcak kadın</button><button aria-pressed="false">Güven veren erkek</button><button aria-pressed="false">Genç enerjik</button></div></div>
       <div class="cost"><div><span class="mono" style="color:var(--mute)">Bu üretim</span><br><b id="cost">10</b> <span style="color:var(--mute)">kredi</span></div><div style="text-align:right"><span class="mono" style="color:var(--mute)">Bakiye (deneme)</span><br><b id="bal">50</b></div></div>
       <button class="btn pri" id="go" type="button">Reklamı üret</button>
-      <p class="msg" id="msg">Prototip: üretim akışını gösterir. Gerçek AI üretimi, ödeme bağlandığında açılacak.</p>
+      <p class="msg" id="msg">Fotoğrafını yükle, sahneyi anlat ve üret. Üretim genelde 1–4 dakika sürer; başarısız olursa kredin otomatik iade edilir.</p>
     </div>
 
     <div class="prev">
       <div class="scr"><canvas id="pc" width="540" height="960" style="width:100%;height:100%;display:block"></canvas>
         <div class="ovl" id="ovl"><b id="ovF">Firma adın</b><span id="ovC">Kampanya yazın</span></div>
+        <video id="aiv" playsinline controls loop hidden style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:2"></video>
         <div class="st" id="st" hidden><b id="stT" style="color:var(--fg);font-size:16px">Sıraya alındı</b><div class="bar"><i id="stB"></i></div><span id="stS">Sahne görseli hazırlanıyor</span></div>
       </div>
       <div class="endm"><video id="pv" muted loop playsinline autoplay width="96" height="171"></video><div><span class="note">Kapanış motionı</span><b id="kvE2">—</b><span class="note">Videonun sonuna eklenir</span></div></div>
       <div class="kv"><div><span>Format</span><b>1080 × 1920 · 30 fps</b></div><div><span>Model</span><b id="kvM">MiniMax H3</b></div><div><span>Kapanış</span><b id="kvE">—</b></div></div>
-      <p class="note" style="text-align:center">Önizleme, sektörüne uygun örnek bir şablonla gösterilir; gerçek üretimde AI sahnen burada olur.</p>
+      <div class="aiact" id="aiact" hidden><a class="btn pri" id="aidl" download="zodmotions-ai.mp4">Videoyu indir</a><button class="btn" id="aiclip" type="button">ZodClip'te düzenle</button></div>
+      <p class="note" id="pnote" style="text-align:center">Önizleme, sektörüne uygun örnek bir şablonla gösterilir; ürettiğin AI videosu burada oynar.</p>
     </div>
   </div>
 
@@ -115,15 +117,39 @@ $('voices').querySelectorAll('button').forEach(b=>b.onclick=()=>$('voices').quer
 const upd=()=>{$('ovF').textContent=$('firm').value||'Firma adın';$('ovC').textContent=$('camp').value||'Kampanya yazın'};$('firm').oninput=upd;$('camp').oninput=upd;
 $('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=$('dropImg');im.src=URL.createObjectURL(f);im.hidden=false;$('dropTx').textContent=f.name};
 const dr=$('drop');dr.ondragover=e=>{e.preventDefault()};dr.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const im=$('dropImg');im.src=URL.createObjectURL(f);im.hidden=false;$('dropTx').textContent=f.name}};
-const STEPS=['Sahne görseli hazırlanıyor','Yapay zekâ sahneyi çekiyor','ZodClip motionları ekleniyor','Seslendirme ve müzik ekleniyor'];
-$('go').onclick=()=>{const c=cost();const msg=$('msg');
-  if(!$('scn').value.trim()){msg.className='msg err';msg.textContent='Önce sahneyi bir cümleyle anlat.';$('scn').focus();return}
+const STEPS={kuyrukta:'Sırada bekliyor',uretiliyor:'Yapay zekâ sahneyi çekiyor'};
+// fotoğrafı en uzun kenarı 1280 px olacak şekilde küçültür (yükleme hızlı, kalite yeterli)
+function shrink(f){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.9))};im.onerror=()=>rej(new Error('Fotoğraf okunamadı.'));im.src=URL.createObjectURL(f)})}
+let curFile=null,lastUrl=null;
+$('file').addEventListener('change',e=>{curFile=e.target.files[0]||null});dr.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))curFile=f});
+function busy(on,t,s,pct){$('go').disabled=on;const box=$('st');box.hidden=!on;if(on){$('stT').textContent=t;$('stS').textContent=s;$('stB').style.width=pct+'%'}}
+$('go').onclick=async()=>{const c=cost();const msg=$('msg');msg.className='msg';
   if(!ZMA.user()){ZMA.requireLogin('ai-studyo.html');return}
+  if(!curFile){msg.className='msg err';msg.textContent='Önce ürün veya mekân fotoğrafını yükle.';$('drop').focus();return}
+  if(!$('scn').value.trim()){msg.className='msg err';msg.textContent='Sahneyi bir cümleyle anlat.';$('scn').focus();return}
   if(st.m==='pre'&&!ZMA.PLANS[ZMA.user().profile.plan].premium){msg.className='msg err';msg.innerHTML='Premium model (Kling 3.0 Pro) Pro ve Ajans paketlerinde açık. Standart modelle devam edebilir ya da <a class="link" href="fiyatlar.html">paketini yükseltebilirsin</a>.';return}
-  if(st.bal<c){msg.className='msg err';msg.innerHTML=`Bakiyen yetmiyor: ${c} kredi gerekli, ${st.bal} kredin var. <a class="link" href="fiyatlar.html">₺299 deneme paketiyle 50 kredi al</a>.`;return}
-  $('go').disabled=true;const box=$('st');box.hidden=false;let i=0;$('stT').textContent='Üretiliyor';
-  const tick=()=>{$('stS').textContent=STEPS[i];$('stB').style.width=((i+1)/STEPS.length*100)+'%';i++;if(i<STEPS.length)setTimeout(tick,900);else setTimeout(done,900)};tick();
-  async function done(){box.hidden=true;const r=await ZMA.useCredits(c,st.m==='pre');$('go').disabled=false;if(!r.ok){msg.className='msg err';msg.textContent=r.error;return}cost();msg.className='msg ok';msg.textContent=`Prototip üretimi tamamlandı, ${c} kredi düştü. Gerçek sürümde AI sahnesi bu motionın önüne eklenir.`;S.toast('Reklamın hazır (prototip)')}};
+  if(st.bal<c){msg.className='msg err';msg.innerHTML=`Bakiyen yetmiyor: ${c} kredi gerekli, ${st.bal} kredin var. <a class="link" href="fiyatlar.html">Kredi paketlerine bak</a>.`;return}
+  $('aiv').hidden=true;$('aiact').hidden=true;busy(true,'Hazırlanıyor','Fotoğraf yükleniyor',6);
+  let img;try{img=await shrink(curFile)}catch(e){busy(false);msg.className='msg err';msg.textContent=e.message;return}
+  const r=await ZMA.ai({action:'start',model:st.m,duration:st.d,prompt:$('scn').value.trim(),image:img});
+  if(!r||!r.ok){busy(false);msg.className='msg err';msg.textContent=(r&&r.error)||'Üretim başlatılamadı.';return}
+  msg.textContent=`Üretim başladı, ${r.cost} kredi düştü. Genelde 1–4 dakika sürer; sayfadan çıksan da kaldığın yerden devam eder.`;
+  try{localStorage.setItem('ai-last',JSON.stringify({id:r.id,t:Date.now()}))}catch(e){}
+  poll(r.id,Date.now())};
+async function poll(id,t0){const msg=$('msg');let fails=0;busy(true,'Üretiliyor','Sırada bekliyor',10);
+  while(Date.now()-t0<20*60e3){await new Promise(z=>setTimeout(z,5000));
+    const s=await ZMA.ai({action:'status',id});
+    if(!s||!s.ok){if(++fails>6){busy(false);msg.className='msg err';msg.textContent='Durum alınamıyor. Sayfayı yenilediğinde kaldığın yerden kontrol edilir.';return}continue}
+    fails=0;const sec=Math.round((Date.now()-t0)/1000);
+    if(s.status==='hazir'){busy(false);try{localStorage.removeItem('ai-last')}catch(e){}lastUrl=s.video;const v=$('aiv');v.src=s.video;v.hidden=false;v.play().catch(()=>{});$('aidl').href=s.video;$('aiact').hidden=false;$('pnote').textContent='Ürettiğin AI videosu. ZodClip\'te firma adını, kampanya yazısını ve kapanış motionını ekleyebilirsin.';
+      msg.className='msg ok';msg.textContent='Videon hazır. İndirebilir ya da ZodClip\'te düzenleyebilirsin.';S.toast('AI videon hazır');return}
+    if(s.status==='hata'){busy(false);try{localStorage.removeItem('ai-last')}catch(e){}msg.className='msg err';msg.textContent=s.error||'Video üretilemedi; kredin iade edildi.';return}
+    busy(true,'Üretiliyor',(STEPS[s.status]||'Üretiliyor')+(s.queue!=null&&s.queue>0?` (önünde ${s.queue} iş var)`:'')+` · ${sec} sn`,Math.min(95,10+sec/2))}
+  busy(false);msg.className='msg err';msg.textContent='Üretim beklenenden uzun sürdü. Sayfayı yenilediğinde tekrar kontrol edilir.'}
+// yarıda kalan üretim varsa kaldığı yerden devam et
+ZMA.ready.then(()=>{try{const l=JSON.parse(localStorage.getItem('ai-last')||'null');if(l&&l.id&&Date.now()-l.t<2*36e5&&ZMA.user())poll(l.id,l.t)}catch(e){}});
+$('aiclip').onclick=()=>{if(!lastUrl)return;try{localStorage.setItem('zc-ai',JSON.stringify({url:lastUrl,firm:$('firm').value.trim(),camp:$('camp').value.trim(),t:Date.now()}))}catch(e){}
+  if(window.top!==window){try{parent.postMessage({zc:'go',v:'clip',ai:true},location.origin);return}catch(e){}}location.href='/zodclipBeta/'};
 cost();upd();
 try{const q=new URLSearchParams(location.search).get('s');if(q)$('scn').value=q}catch(e){}
 })();

@@ -26,6 +26,9 @@ function frame(v,url){
   const f=document.createElement('iframe');f.title=v;f.allow='autoplay; clipboard-write; fullscreen';f.src=url||VIEWS[v];f.dataset.src=f.src;
   f.addEventListener('load',()=>{const l=box.querySelector('.loading');if(l)l.remove();hook(f,v)});
   box.appendChild(f);frames[v]=f;return f}
+// iç sayfalardan gelen yönlendirme (ör. AI Stüdyo → ZodClip'te düzenle)
+window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||e.data.zc!=='go')return;const v=e.data.v;if(!(v in VIEWS))return;const had=!!frames[v];go(v);
+  if(e.data.ai&&v==='clip'){const f=frames.clip;const send=()=>{try{f.contentWindow.postMessage({zc:'ai'},location.origin)}catch(x){}};if(had)send();else f.addEventListener('load',()=>setTimeout(send,300),{once:true})}});
 function go(v,opt={}){
   if(!(v in VIEWS))v='home';cur=v;
   try{window.ZodTheme&&ZodTheme.setPage({home:'Ana sayfa',clip:'ZodClip',motion:'Motionlar',ai:'AI Stüdyo',hesap:'Hesap'}[v])}catch(e){}

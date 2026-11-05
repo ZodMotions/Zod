@@ -983,10 +983,23 @@ $('#btn-new').addEventListener('click',async()=>{if(S.items.length&&!confirm('Ye
 /* ================= ayarlar ================= */
 function chipBind(sel,get,set){const sync=()=>$$(sel+' button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(get())));$(sel).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;set(b.dataset.v);sync();dirty=true});sync();return sync}
 function bindInput(sel,get,set){const el=$(sel);const isChk=el.type==='checkbox';const put=()=>{const v=get();if(isChk)el.checked=v;else el.value=v};put();el.addEventListener('input',()=>{set(isChk?el.checked:(el.type==='range'||el.type==='number'?parseFloat(el.value):el.value));dirty=true;scheduleSave()});return put}
+/* AI Stüdyo'dan gelen video: ZodClip açılınca zaman çizelgesine eklenir, firma adı ve kampanya yazısı da yazı katmanı olur */
+async function aiImport(){let o=null;try{o=JSON.parse(localStorage.getItem('zc-ai')||'null');localStorage.removeItem('zc-ai')}catch(e){}
+  if(!o||!o.url||Date.now()-(o.t||0)>36e5)return;
+  if(resumeOpen){$('#resume').hidden=true;resumeOpen=false}
+  toast('AI videon ZodClip\'e ekleniyor…',3000);
+  try{const r=await fetch(o.url);if(!r.ok)throw new Error(r.status);const b=await r.blob();const n0=S.items.length;
+    await addFiles([new File([b],'ai-sahne.mp4',{type:b.type||'video/mp4'})]);
+    const it=S.items[n0];const dur=it?(it.out-it.in):5,t0=it?it.t0:0;
+    if(o.firm)S.texts.push({id:nid(),t0,dur:Math.min(dur,4),text:String(o.firm).slice(0,28),font:'c',size:1.2,color:'#FFFFFF',bg:'shadow',bgc:'#FFFFFF',anim:'pop',x:.5,y:.14,upper:true});
+    if(o.camp)S.texts.push({id:nid(),t0:t0+Math.min(1,dur/3),dur:Math.max(1,dur-Math.min(1,dur/3)),text:String(o.camp).slice(0,40),font:'b',size:.8,color:'#111111',bg:'pill',bgc:'#FFFFFF',anim:'slide',x:.5,y:.84,upper:false});
+    afterChange();renderTList&&renderTList();toast('AI videon eklendi; yazıları sağdaki panelden düzenleyebilirsin.',4500)}
+  catch(e){toast('AI videosu indirilemedi; AI Stüdyo\'dan indirip buraya sürükleyebilirsin.',5000)}}
 function start(){
   setFormat();layout();renderTL();renderLib();renderCaps();renderTList();renderTPresets();renderInsp();requestAnimationFrame(tick);
   if(document.fonts)Promise.all(['700 40px "Archivo Narrow"','800 40px Inter','500 40px Inter','italic 700 40px "Playfair Display"','700 40px Unbounded','900 40px "Big Shoulders Display"','500 40px "JetBrains Mono"','700 40px Manrope','700 40px Anybody','700 40px "Hanken Grotesk"'].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{dirty=true;renderTPresets()});
   $$('#tabs button').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
+  setTimeout(aiImport,600);
   const sy=[];
   sy.push(chipBind('#cap-styles',()=>S.cfg.cap.style,v=>{hist();S.cfg.cap.style=v;scheduleSave()}));
   sy.push(chipBind('#fmts',()=>S.cfg.fmt,v=>{hist();S.cfg.fmt=v;setFormat();scheduleSave()}));
@@ -1049,7 +1062,7 @@ function start(){
   const TABS=['medya','motion','yazi','altyazi','ses','klip','gorunum'];
   const route=h=>{h=String(h||'').replace('#','');if(TABS.includes(h))openTab(h)};route(location.hash);
   window.addEventListener('hashchange',()=>route(location.hash));
-  window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||!e.data.zc)return;const d=e.data;if(d.zc==='tab')route(d.name);else if(d.zc==='mot'){openTab('motion');addMotClip(d.k)}else if(d.zc==='fmt'&&FORMATS[d.v]){if(S.cfg.fmt!==d.v){hist();S.cfg.fmt=d.v;setFormat();syncAll();scheduleSave()}}});
+  window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||!e.data.zc)return;const d=e.data;if(d.zc==='ai')aiImport();else if(d.zc==='tab')route(d.name);else if(d.zc==='mot'){openTab('motion');addMotClip(d.k)}else if(d.zc==='fmt'&&FORMATS[d.v]){if(S.cfg.fmt!==d.v){hist();S.cfg.fmt=d.v;setFormat();syncAll();scheduleSave()}}});
   try{if(window.self!==window.top&&window.top.location.pathname.startsWith('/app'))document.documentElement.classList.add('in-app')}catch(e){}
 }
 window.ZC={S,P,draw,addFiles,play,pause,seek,speechRanges,capsFromWords,select,doSplit,doUndo,doRedo,useClip,layout,afterChange,get total(){return total},get contentDur(){return contentDur},get clipRes(){return clipRes},get sel(){return SEL}};
