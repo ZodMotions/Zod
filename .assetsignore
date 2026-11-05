@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+supabase
+tools
+wrangler.jsonc
+.assetsignore
+_headers.example
+*.md
+CNAME
