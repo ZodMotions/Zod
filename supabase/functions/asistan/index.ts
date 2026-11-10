@@ -8,7 +8,9 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const SAGLAYICI = [
   { ad: "gemini", env: ["GEMINI_KEY", "gemini_key"], url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash" },
   { ad: "gemini-lite", env: ["GEMINI_KEY", "gemini_key"], url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash-lite" },
-  { ad: "groq", env: ["GROQ_KEY", "groq_key"], url: "https://api.groq.com/openai/v1/chat/completions", model: "llama-3.3-70b-versatile" },
+  { ad: "groq", env: ["GROQ_KEY", "groq_key"], url: "https://api.groq.com/openai/v1/chat/completions", model: "openai/gpt-oss-120b" },
+  { ad: "groq-20b", env: ["GROQ_KEY", "groq_key"], url: "https://api.groq.com/openai/v1/chat/completions", model: "openai/gpt-oss-20b" },
+  { ad: "groq-qwen", env: ["GROQ_KEY", "groq_key"], url: "https://api.groq.com/openai/v1/chat/completions", model: "qwen/qwen3-32b" },
 ];
 const anahtar = (env: string[]) => env.map((e) => Deno.env.get(e)).find(Boolean) || "";
 const OWNER = "info@zodiacwebdesign.com";
@@ -98,19 +100,23 @@ Deno.serve(async (req) => {
 
   const messages = [{ role: "system", content: SISTEM + "\n\n" + kim }, ...msgs];
   let metin = "";
+  const atla = new Set<string>();
   for (const x of hazir) {
+    if (atla.has(x.env[0])) continue;
     try {
       const r = await fetch(x.url, {
         method: "POST",
         headers: { Authorization: `Bearer ${anahtar(x.env)}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ model: x.model, temperature: 0.5, max_tokens: 1200, messages, ...(x.ad.startsWith("gemini") ? { reasoning_effort: "none" } : {}) }),
+        body: JSON.stringify({ model: x.model, temperature: 0.5, max_tokens: 1200, messages, ...(x.ad.startsWith("gemini") ? { reasoning_effort: "none" } : x.ad === "groq-qwen" ? { reasoning_format: "hidden" } : { reasoning_effort: "low" }) }),
         signal: AbortSignal.timeout(30000),
       });
       const out = await r.json().catch(() => ({}));
-      metin = String(out?.choices?.[0]?.message?.content || "").trim();
+      metin = String(out?.choices?.[0]?.message?.content || "").replace(/<think>[\s\S]*?<\/think>/g, "").trim();
       if (r.ok && metin) break;
       console.error("asistan", x.ad, r.status, JSON.stringify(out?.error || out).slice(0, 300));
       metin = "";
+      // aynı sağlayıcının anahtarı geçersizse / ödeme istiyorsa diğer modelini boşuna deneme
+      if (r.status === 401 || r.status === 402 || r.status === 403) atla.add(x.env[0]);
     } catch (e) {
       console.error("asistan", x.ad, String(e));
     }
