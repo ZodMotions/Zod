@@ -722,6 +722,19 @@ $('#m-q').addEventListener('input',()=>{clearTimeout(mFilter.t);mFilter.t=setTim
 $('#m-sector').addEventListener('change',mFilter);$('#m-cat').addEventListener('change',mFilter);$('#m-more').addEventListener('click',mMore);
 $('#m-grid').addEventListener('click',e=>{const b=e.target.closest('.mcard');if(!b)return;const t=TPL.get(b.dataset.tpl);if(!t)return;
   hist();const at=insertAt();const it=insertItem({type:'motion',tpl:t.id,f:{...t.def},dur:t.dur,off:0,photo:null,tr:{type:at?'fade':'none',d:.4}},at);afterChange();select('item',it.id,false);seek(it.t0+.6);toast('Motion eklendi: '+t.name+'. Yazılarını sağdaki panelden değiştir.',3500)});
+// kartın üstüne gelince kısa önizleme: şablon canlı çizilir, hazır motion videosu oynar
+const MPV={c:null,t:null,raf:0,last:0,tm:0};
+function mPrevStop(){cancelAnimationFrame(MPV.raf);if(MPV.c){const c=MPV.c;c.dataset.done='';mThumb(c)}MPV.c=null;MPV.t=null}
+function mPrevLoop(ts){if(!MPV.c)return;const dt=MPV.last?Math.min(.1,(ts-MPV.last)/1000):0;MPV.last=ts;MPV.tm=(MPV.tm+dt)%MPV.t.dur;
+  try{ZM.renderFrame(MPV.c.getContext('2d'),MPV.t,MPV.tm,MPV.t.def,{photo:null,logo:S.logo},false)}catch(e){}MPV.raf=requestAnimationFrame(mPrevLoop)}
+const canHover=matchMedia('(hover: hover)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(canHover){
+  $('#m-grid').addEventListener('pointerover',e=>{const b=e.target.closest('.mcard');if(!b)return;const c=b.querySelector('canvas');if(!c||MPV.c===c)return;mPrevStop();const t=TPL.get(b.dataset.tpl);if(!t)return;MPV.c=c;MPV.t=t;MPV.tm=0;MPV.last=0;MPV.raf=requestAnimationFrame(mPrevLoop)});
+  $('#m-grid').addEventListener('pointerleave',mPrevStop);
+  $('#m-clips').addEventListener('pointerover',e=>{const b=e.target.closest('.mcard');if(!b||b.querySelector('video'))return;$$('#m-clips video').forEach(v=>v.remove());
+    const v=document.createElement('video');v.src=`/zodmotionsBeta/m/${b.dataset.mot}.mp4`;v.muted=true;v.loop=true;v.playsInline=true;v.autoplay=true;v.className='mprev';b.prepend(v);v.play().catch(()=>{})});
+  $('#m-clips').addEventListener('pointerleave',()=>$$('#m-clips video').forEach(v=>v.remove()));
+}
 $('#m-clips').addEventListener('click',e=>{const b=e.target.closest('.mcard');if(b)addMotClip(b.dataset.mot)});
 async function addMotClip(k){const m=ZM.MOT.find(x=>x.k===k);if(!m)return;const url=`/zodmotionsBeta/m/${k}.mp4`;
   let s=S.sources.find(x=>x.url===url);

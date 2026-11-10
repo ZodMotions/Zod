@@ -21,8 +21,6 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(hist.slice(-30)))}ca
 let busy=false,kalan=null;
 
 /* ---------- arayüz ---------- */
-const fab=document.createElement('button');fab.className='zas-fab';fab.type='button';fab.title='Zod asistan';fab.setAttribute('aria-label','Asistanı aç');
-fab.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor"/></svg><span>Asistan</span>';
 const box=document.createElement('section');box.className='zas';box.hidden=true;box.setAttribute('aria-label','Zod asistan');
 box.innerHTML=`<header><span class="zas-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="currentColor"/></svg></span>
   <div class="zas-t"><b>Zod</b><small id="zas-sub">Yapay zekâ asistanın</small></div>
@@ -32,7 +30,7 @@ box.innerHTML=`<header><span class="zas-av" aria-hidden="true"><svg viewBox="0 0
  <form class="zas-in" id="zas-f"><textarea id="zas-q" rows="1" maxlength="1500" placeholder="Bir şey sor ya da iste… (örn. kafem için Reels metni yaz)" aria-label="Mesajın"></textarea>
   <button type="submit" id="zas-send" aria-label="Gönder"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2-7z" fill="currentColor"/></svg></button></form>
  <p class="zas-note">Zod hata yapabilir; önemli bilgileri kontrol et.</p>`;
-document.body.append(fab,box);
+document.body.append(box);
 const log=$('#zas-log',box),q=$('#zas-q',box);
 
 function ekran(){const h=(location.hash||'#home').slice(1);return h in ONERI?h:'home'}
@@ -111,10 +109,9 @@ async function send(text){
   save();render()}
 
 function fit(){q.style.height='auto';q.style.height=Math.min(140,q.scrollHeight)+'px'}
-function open(){box.hidden=false;fab.classList.add('on');document.body.classList.add('zas-open');render();setTimeout(()=>q.focus(),30)}
-function close(){box.hidden=true;fab.classList.remove('on');document.body.classList.remove('zas-open')}
+function open(){box.hidden=false;document.body.classList.add('zas-open');const nb=document.getElementById('btn-asistan');if(nb)nb.setAttribute('aria-expanded','true');render();setTimeout(()=>q.focus(),30)}
+function close(){box.hidden=true;document.body.classList.remove('zas-open');const nb=document.getElementById('btn-asistan');if(nb){nb.setAttribute('aria-expanded','false');nb.focus()}}
 
-fab.addEventListener('click',()=>box.hidden?open():close());
 $('#zas-x',box).onclick=close;
 $('#zas-new',box).onclick=()=>{hist=[];save();render();q.focus()};
 $('#zas-f',box).addEventListener('submit',e=>{e.preventDefault();send(q.value)});

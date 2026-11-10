@@ -58,7 +58,7 @@ h1,h2{margin:0}
 .fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .fmts button{display:grid;align-content:end;justify-items:start;gap:2px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--p1);cursor:pointer;text-align:left;min-height:190px;position:relative}
 .fmts button:hover{border-color:var(--acc);background:var(--p2)}
-.fmts i{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);border:2px solid var(--line2);border-radius:5px;background:linear-gradient(160deg,var(--p3),var(--p2))}
+.fmts i{position:absolute;left:50%;top:calc(50% - 22px);transform:translate(-50%,-50%);border:2px solid var(--line2);border-radius:5px;background:linear-gradient(160deg,var(--p3),var(--p2))}
 .fmts button:hover i{border-color:var(--acc)}
 .r916{width:46px;height:82px}.r45{width:62px;height:78px}.r11{width:72px;height:72px}.r169{width:100px;height:56px}
 .fmts b{font-size:13px}.fmts small{color:var(--mute);font-size:11.5px}
@@ -87,7 +87,7 @@ h1,h2{margin:0}
 .foot{color:var(--dim);font-size:11.5px;text-align:center;margin-top:44px}
 .offline{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#3a1d1d;border:1px solid #7a3434;color:#ffd6d6;padding:8px 14px;border-radius:10px;font-size:13px;z-index:30}
 
-@media (max-width:1100px){.tools{grid-template-columns:repeat(3,1fr)}.fmts{grid-template-columns:repeat(2,1fr)}.fmts button{min-height:120px}.fmts i{top:38%;transform:translate(-50%,-50%) scale(.7)}}
+@media (max-width:1100px){.tools{grid-template-columns:repeat(3,1fr)}.fmts{grid-template-columns:repeat(2,1fr)}.fmts button{min-height:140px}.fmts i{top:calc(50% - 24px);transform:translate(-50%,-50%) scale(.55)}}
 @media (max-width:760px){
   :root{--nav:0px}
   body{overflow:hidden}
@@ -98,6 +98,8 @@ h1,h2{margin:0}
   .home{width:calc(100% - 28px);padding-top:18px}
   .start{grid-template-columns:1fr}.newp{min-height:130px}
   .tools{grid-template-columns:1fr 1fr}
+  #btn-theme{display:none}
+  .mtheme{display:grid}
 }
 
 body.nosub .newp,body.nosub .fmts button,body.nosub .tools button[data-go=clip]{position:relative}
@@ -110,3 +112,8 @@ p,li,dd,figcaption{text-wrap:pretty}
 button,input,select,textarea,optgroup{font-family:inherit}
 table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-nums}
 ::selection{background:var(--sel,rgba(120,160,255,.35))}
+
+.hh-r{display:flex;align-items:center;gap:8px}
+.mtheme{display:none;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line2);background:var(--p2);color:var(--fg);cursor:pointer}
+.mtheme svg{width:18px;height:18px}
+@media (max-width:760px){.mtheme{display:grid}}

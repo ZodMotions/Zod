@@ -1,13 +1,4 @@
 /* ZodMotions Asistan — temaya uyumlu sohbet paneli */
-.zas-fab{position:fixed;right:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 16px 0 13px;border-radius:999px;border:1px solid var(--line2);
-  background:var(--chrome);color:var(--chrome-ink,#111);font:700 13px/1 var(--f-b);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .15s,opacity .15s}
-.zas-fab svg{width:18px;height:18px}
-.zas-fab:hover{transform:translateY(-1px)}
-.zas-fab.on{opacity:0;pointer-events:none}
-/* kurgu ekranında yalnızca simge, araç çubuklarını kapatmasın */
-body:has(#v-clip.on) .zas-fab span{display:none}
-body:has(#v-clip.on) .zas-fab{width:42px;padding:0;justify-content:center;bottom:64px}
-
 .zas{position:fixed;right:18px;bottom:18px;z-index:61;width:min(400px,calc(100vw - 36px));height:min(620px,calc(100vh - 70px));display:flex;flex-direction:column;
   background:linear-gradient(var(--p1),var(--p1)),var(--bg);border:1px solid var(--line2);border-radius:16px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 24px 70px rgba(0,0,0,.5);overflow:hidden;animation:zasIn .18s ease-out}
 @keyframes zasIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
@@ -60,6 +51,7 @@ body:has(#v-clip.on) .zas-fab{width:42px;padding:0;justify-content:center;bottom
 .zas-note{margin:0;padding:0 14px 9px;color:var(--dim);font-size:10.5px;text-align:center}
 
 @media (max-width:760px){
-  .zas-fab{bottom:calc(76px + env(safe-area-inset-bottom));right:12px}
-  .zas{inset:0;width:auto;height:auto;border-radius:0;border:0}
+  .zas{inset:0;width:auto;height:auto;border-radius:0;border:0;z-index:80}
 }
+
+body.zas-open #btn-asistan{background:var(--p3);color:var(--fg)}

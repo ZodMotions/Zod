@@ -27,6 +27,7 @@
  <symbol id="i-wand" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 4 5 5L8 21l-5-5zM12 7l5 5"/><path d="M5 3v4M3 5h4M19 15v4M17 17h4"/></g></symbol>
  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
  <symbol id="i-brush" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4.5l5 5-8 8-5-5z"/><path d="M6.5 12.5c-2 0-3.5 1.5-3.5 3.5 0 1.6-.6 2.6-1.5 3.5 4 .5 7.5-1 7.5-4.5"/></g></symbol>
+ <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 7.6l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z" fill="currentColor" stroke="none"/></g></symbol>
  <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
 </defs></svg>
 
@@ -37,6 +38,7 @@
   <button data-go="motion" type="button"><svg><use href="#i-spark"/></svg><span><span lang="en">Motion</span>lar</span></button>
   <button data-go="ai" type="button"><svg><use href="#i-ai"/></svg><span>AI Stüdyo</span></button>
   <span class="grow"></span>
+  <button id="btn-asistan" type="button" title="Zod asistan (Ctrl+J)" aria-haspopup="dialog"><svg><use href="#i-chat"/></svg><span>Asistan</span></button>
   <button id="btn-theme" type="button" title="Tema"><svg><use href="#i-brush"/></svg><span>Tema</span></button>
   <button data-go="hesap" type="button"><svg><use href="#i-user"/></svg><span>Hesap</span></button>
 </aside>
@@ -46,7 +48,7 @@
     <div class="home">
       <header class="hh">
         <div><p class="kick" id="hello">Hoş geldin</p><h1>Bugün ne üretiyoruz?</h1></div>
-        <div class="acct" id="acct"></div>
+        <div class="hh-r"><button class="mtheme" id="btn-theme2" type="button" aria-label="Temayı değiştir"><svg><use href="#i-brush"/></svg></button><div class="acct" id="acct"></div></div>
       </header>
 
       <section class="start">
@@ -76,7 +78,7 @@
       </section>
 
       <section class="blk">
-        <div class="sh"><h2><span lang="en">Motion</span> klipleri</h2><span class="muted">Tıkla, ZodClip’te videona eklensin</span></div>
+        <div class="sh"><h2>Hazır <span lang="en">motion</span> videoları</h2><span class="muted">Tıkla, ZodClip’te videona eklensin</span></div>
         <div class="mots" id="mots"></div>
       </section>
 

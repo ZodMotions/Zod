@@ -254,8 +254,10 @@ body.dragging .drop{border-color:var(--acc);background:rgba(28,40,56,.95)}
   .rail button{flex:1 0 auto;min-width:64px}
   .side{display:block}
   .props{position:static;width:auto;display:block!important;box-shadow:none;border-left:0;border-top:1px solid var(--line)}
-  .tl-heads{width:70px}
-  #tl-zoom{width:70px}
+  .tl-heads{width:88px}
+  .th{padding:0 5px;gap:4px}
+  #tl-zoom,.tl-bar .vsep{display:none}
+  .rail button{min-width:52px;flex:1 0 52px;padding:6px 2px}
 }
 html.in-app .brand,html.in-app #btn-out{display:none}
 
@@ -318,3 +320,6 @@ table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-
 .stock-grid button.busy{opacity:.5;pointer-events:none}
 .stock-credit{color:var(--mute);font-size:12px}
 @media (max-width:600px){.stock-grid{columns:2 120px}}
+.mcard{position:relative}
+.mcard video.mprev{position:absolute;inset:0 0 auto 0;width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;pointer-events:none}
+.mnote{margin:-2px 0 8px;font-size:11.5px}

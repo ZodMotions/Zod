@@ -89,4 +89,6 @@ window.addEventListener('storage',()=>{if(cur==='home')renderAcct()});
 const start=(location.hash||'').slice(1);go(start in VIEWS?start:'home');
 window.ZAPP={go,auth:user};
 document.getElementById('btn-theme').addEventListener('click',()=>window.ZodTheme&&ZodTheme.open());
+document.getElementById('btn-theme2').addEventListener('click',()=>window.ZodTheme&&ZodTheme.open());
+document.getElementById('btn-asistan').addEventListener('click',()=>window.ZodAsistan&&(document.body.classList.contains('zas-open')?ZodAsistan.close():ZodAsistan.open()));
 })();
