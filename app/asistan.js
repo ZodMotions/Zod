@@ -38,19 +38,23 @@ const log=$('#zas-log',box),q=$('#zas-q',box);
 function ekran(){const h=(location.hash||'#home').slice(1);return h in ONERI?h:'home'}
 function auth(){try{const r=window.ZAPP&&ZAPP.auth&&ZAPP.auth();if(r)return r}catch(e){}try{if(window.ZMA&&ZMA.user())return{u:ZMA.user(),z:ZMA}}catch(e){}return null}
 
-/* sade markdown: kalın, italik, kod, listeler, satır sonları */
+/* sade markdown: kalın, italik, kod, numaralı ve madde listeleri (iç içe madde dahil) */
 function md(t){
   const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g,'$1<i>$2</i>').replace(/`([^`]+)`/g,'<code>$1</code>');
-  const out=[];let list=null;
-  for(const raw of String(t).split('\n')){const l=raw.trimEnd();
-    let m;
-    if((m=l.match(/^\s*[-*•]\s+(.*)/))){if(list!=='ul'){if(list)out.push(`</${list}>`);out.push('<ul>');list='ul'}out.push(`<li>${inl(m[1])}</li>`);continue}
-    if((m=l.match(/^\s*\d+[.)]\s+(.*)/))){if(list!=='ol'){if(list)out.push(`</${list}>`);out.push('<ol>');list='ol'}out.push(`<li>${inl(m[1])}</li>`);continue}
-    if(list){out.push(`</${list}>`);list=null}
-    if(!l.trim()){out.push('<br>');continue}
-    out.push(`<p>${inl(l.replace(/^#+\s*/,''))}</p>`)}
-  if(list)out.push(`</${list}>`);
-  return out.join('').replace(/(<br>)+/g,'')}
+  const out=[];let top=null,sub=false,liOpen=false;
+  const closeSub=()=>{if(sub){out.push('</ul>');sub=false}};
+  const closeLi=()=>{closeSub();if(liOpen){out.push('</li>');liOpen=false}};
+  const closeTop=()=>{closeLi();if(top){out.push(`</${top}>`);top=null}};
+  for(const raw of String(t).split('\n')){const l=raw.replace(/\s+$/,'');let m;
+    const ind=(l.match(/^\s*/)||[''])[0].length;
+    if((m=l.match(/^\s*(\d+)[.)]\s+(.*)/))){closeLi();if(top!=='ol'){closeTop();out.push(`<ol start="${+m[1]||1}">`);top='ol'}out.push(`<li>${inl(m[2])}`);liOpen=true;continue}
+    if((m=l.match(/^\s*[-*•]\s+(.*)/))){
+      if(top==='ol'&&liOpen||(top==='ul'&&liOpen&&ind>=2)){if(!sub){out.push('<ul>');sub=true}out.push(`<li>${inl(m[1])}</li>`);continue}
+      closeLi();if(top!=='ul'){closeTop();out.push('<ul>');top='ul'}out.push(`<li>${inl(m[1])}`);liOpen=true;continue}
+    if(!l.trim()){continue}
+    if(top&&ind>=2&&liOpen){out.push(`<br>${inl(l.trim())}`);continue}
+    closeTop();out.push(`<p>${inl(l.replace(/^#+\s*/,''))}</p>`)}
+  closeTop();return out.join('')}
 
 /* cevaptaki [[eylem]] satırlarını ayıkla */
 const AD={home:'Ana sayfayı aç',clip:"ZodClip'i aç",motion:"Motionlar'ı aç",ai:"AI Stüdyo'yu aç",hesap:'Hesabımı aç',fiyatlar:'Paketleri gör'};
@@ -63,7 +67,7 @@ function parse(t){
     else if(k==='arac'&&ARAC[v])acts.push({k,v,ad:ARAC[v]});
     else if(k==='sahne'&&v)acts.push({k,v:v.slice(0,700),ad:"Bu sahneyi AI Stüdyo'ya yaz"});
     else if(k==='tema')acts.push({k,v:'',ad:'Tema panelini aç'});
-    return ''}).replace(/\n{3,}/g,'\n\n').trim();
+    return ''}).replace(/[ \t]*\(\s*\)/g,'').replace(/^\s*[-*•]?\s*$/gm,'').replace(/\n\s*(\*\*)?(Eylemler|Eylem butonları|Butonlar|Kısayollar)(\*\*)?:?\s*$/i,'').replace(/\n{3,}/g,'\n\n').trim();
   return{text,acts:acts.slice(0,3)}}
 
 function run(a){
