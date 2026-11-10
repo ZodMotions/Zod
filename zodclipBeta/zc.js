@@ -991,10 +991,12 @@ async function exportFast(opt,onP){
   if(!(await mb.canEncodeAudio('aac',{numberOfChannels:2,sampleRate:48000}))){try{const aac=await import('./vendor/mediabunny-aac-encoder.min.mjs');aac.registerAacEncoder()}catch(e){console.warn('AAC kodlayıcı yüklenemedi',e)}}
   const acodec=await mb.getFirstEncodableAudioCodec(['aac','opus'],{numberOfChannels:2,sampleRate:48000});
   const output=new mb.Output({format:new mb.Mp4OutputFormat({fastStart:'in-memory'}),target:new mb.BufferTarget()});
-  const vsrc=new mb.CanvasSource(cv,{codec:vcodec,bitrate:VBR,keyFrameInterval:2,bitrateMode:'variable',latencyMode:'quality'});output.addVideoTrack(vsrc,{frameRate:30});
+  let hw=false;if(vcodec==='avc'){try{const q=await VideoEncoder.isConfigSupported({codec:'avc1.640033',width:W,height:H,bitrate:VBR,framerate:30,hardwareAcceleration:'prefer-hardware'});hw=!!q.supported}catch(e){}}
+  const vsrc=new mb.CanvasSource(cv,{codec:vcodec,bitrate:VBR,keyFrameInterval:2,bitrateMode:'variable',latencyMode:'quality',...(hw?{hardwareAcceleration:'prefer-hardware'}:{})});
+  const TM={dec:0,draw:0,enc:0,mix:0,hw};window.__expT=TM;output.addVideoTrack(vsrc,{frameRate:30});
   let asrc=null;if(acodec){asrc=new mb.AudioBufferSource({codec:acodec,bitrate:256000});output.addAudioTrack(asrc)}
   await output.start();
-  if(asrc){onP(.02,'Ses karıştırılıyor…');const buf=await mixAudio();await asrc.add(buf);asrc.close()}
+  const mixP=asrc?(async()=>{const m0=performance.now();const buf=await mixAudio();TM.mix=performance.now()-m0;await asrc.add(buf);asrc.close()})():null;
   const inputs=new Map();const frames=new Map();FO=frames;
   const sinkFor=async s=>{if(!inputs.has(s.id)){const input=new mb.Input({source:s.blob?new mb.BlobSource(s.blob):new mb.UrlSource(s.url),formats:mb.ALL_FORMATS});const tr=await input.getPrimaryVideoTrack();inputs.set(s.id,{input,sink:tr?new mb.VideoSampleSink(tr):null})}return inputs.get(s.id)};
   const N=Math.max(1,Math.ceil(total*30));let curI=-1,gen=null;const tStart=performance.now();
@@ -1007,11 +1009,12 @@ async function exportFast(opt,onP){
         if(i!==curI){if(gen){try{await gen.return()}catch(e){}}gen=null;curI=i;
           for(const [id] of frames){const k=S.items.findIndex(x=>x.id===id);if(k<i-1||k>i)drop(id)}
           if(it.type==='video'){const ts=[];for(let g=f;g<N&&g/30<it.t0+idur(it);g++)ts.push(Math.min(it.out-.001,it.in+(g/30-it.t0)*(it.speed||1)));const {sink}=await sinkFor(srcById(it.src));gen=sink?sink.samplesAtTimestamps(ts):null}}
-        if(gen){const r=await gen.next();const smp=r.value;if(smp){drop(it.id);frames.set(it.id,{smp,m:smp.toCanvasImageSource(),w:smp.displayWidth,h:smp.displayHeight})}}}
-      draw(t);
-      await vsrc.add(t,1/30);
+        if(gen){const d0=performance.now();const r=await gen.next();TM.dec+=performance.now()-d0;const smp=r.value;if(smp){drop(it.id);frames.set(it.id,{smp,m:smp.toCanvasImageSource(),w:smp.displayWidth,h:smp.displayHeight})}}}
+      const r0=performance.now();draw(t);const r1=performance.now();TM.draw+=r1-r0;
+      await vsrc.add(t,1/30);TM.enc+=performance.now()-r1;
       if(f%6===0){const el=(performance.now()-tStart)/1000,rem=f>15?el/f*(N-f):0;onP(.05+.9*f/N,`Kareler işleniyor… ${Math.round(f/N*100)}%`+(rem>1?` · yaklaşık ${rem<60?Math.ceil(rem)+' sn':Math.ceil(rem/60)+' dk'} kaldı`:''));P.t=t;updateClock();await new Promise(r=>setTimeout(r,0))}
     }
+    if(mixP){onP(.96,'Ses ekleniyor…');await mixP}
     vsrc.close();onP(.97,'Dosya yazılıyor…');await output.finalize();
   }finally{if(gen){try{await gen.return()}catch(e){}}for(const [id] of frames)drop(id);FO=null;for(const v of inputs.values()){try{v.input.dispose&&v.input.dispose()}catch(e){}}}
   return new Blob([output.target.buffer],{type:'video/mp4'})}
