@@ -14,8 +14,6 @@ const SAGLAYICI = [
 ];
 const anahtar = (env: string[]) => env.map((e) => Deno.env.get(e)).find(Boolean) || "";
 const OWNER = "info@zodiacwebdesign.com";
-const LIMIT_ABONE = 50;   // aktif aboneliği olanlara günlük mesaj
-const LIMIT_UCRETSIZ = 15; // diğer hesaplara günlük mesaj
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -86,15 +84,11 @@ Deno.serve(async (req) => {
     .map((m: any) => ({ role: m.rol === "kullanici" ? "user" : "assistant", content: m.metin.slice(0, 2000) }));
   if (!msgs.length || msgs[msgs.length - 1].role !== "user") return json({ ok: false, error: "Bir şey yaz." }, 400);
 
-  // profil ve günlük hak
+  // profil (cevabı kişiye göre vermek için)
   const { data: p } = await admin.from("profiles").select("ad,firma,plan,kredi,period_end,email").eq("id", user.id).single();
   const email = String(p?.email || user.email || "").toLowerCase();
   const aktif = email === OWNER || (["baslangic", "pro", "ajans"].includes(p?.plan) && !!p?.period_end && new Date(p.period_end) > new Date());
-  const limit = email === OWNER ? 1000 : aktif ? LIMIT_ABONE : LIMIT_UCRETSIZ;
   const gun = new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10); // Türkiye günü
-  const { data: k } = await admin.from("asistan_kullanim").select("n").eq("user_id", user.id).eq("gun", gun).maybeSingle();
-  const n = k?.n || 0;
-  if (n >= limit) return json({ ok: false, error: aktif ? "Bugünkü asistan hakkın doldu; yarın yenilenir." : `Ücretsiz hesapta günde ${limit} mesaj hakkın var; yarın yenilenir. Paket alırsan günde ${LIMIT_ABONE} mesaja çıkar.`, kalan: 0 }, 429);
 
   const ekran = EKRAN[String(b.ekran)] || "Ana sayfa";
   const kim = `KULLANICI BİLGİSİ: ad: ${p?.ad || "-"}, firma: ${p?.firma || "-"}, paket: ${PLAN[p?.plan] || "Ücretsiz"}${aktif ? " (aktif)" : " (aktif abonelik yok)"}, AI kredisi: ${p?.kredi ?? 0}. Şu an açık ekran: ${ekran}. Bugünün tarihi: ${gun}.`;
@@ -123,6 +117,5 @@ Deno.serve(async (req) => {
     }
   }
   if (!metin) return json({ ok: false, error: "Asistan şu an çok yoğun. Bir dakika sonra tekrar dene." }, 503);
-  await admin.from("asistan_kullanim").upsert({ user_id: user.id, gun, n: n + 1 }, { onConflict: "user_id,gun" });
-  return json({ ok: true, metin, kalan: limit - n - 1 });
+  return json({ ok: true, metin });
 });
