@@ -1,12 +1,18 @@
 // ZodMotions Asistan — uygulamanın içindeki yapay zekâ yardımcısı.
-// Dil modeli fal.ai üzerinden (OpenRouter) çağrılır; anahtar (FAL_KEY) sadece Supabase gizli ayarlarında durur.
+// ÜCRETSİZ dil modelleri kullanılır (kart gerekmez):
+//   1) Google Gemini (GEMINI_KEY — aistudio.google.com/apikey)   2) Groq (GROQ_KEY — console.groq.com/keys, yedek)
+// Biri kotasını doldurursa ya da hata verirse sıradaki denenir. Anahtarlar sadece Supabase gizli ayarlarında durur.
 // İstek: POST { mesajlar: [{rol:'kullanici'|'asistan', metin}], ekran: 'home'|'clip'|'motion'|'ai'|'hesap' }
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const MODEL = "google/gemini-2.5-flash";
-const LLM_URL = "https://fal.run/openrouter/router/openai/v1/chat/completions";
+const SAGLAYICI = [
+  { ad: "gemini", env: ["GEMINI_KEY", "gemini_key"], url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash" },
+  { ad: "gemini-lite", env: ["GEMINI_KEY", "gemini_key"], url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", model: "gemini-2.5-flash-lite" },
+  { ad: "groq", env: ["GROQ_KEY", "groq_key"], url: "https://api.groq.com/openai/v1/chat/completions", model: "llama-3.3-70b-versatile" },
+];
+const anahtar = (env: string[]) => env.map((e) => Deno.env.get(e)).find(Boolean) || "";
 const OWNER = "info@zodiacwebdesign.com";
-const LIMIT_ABONE = 80;   // aktif aboneliği olanlara günlük mesaj
+const LIMIT_ABONE = 50;   // aktif aboneliği olanlara günlük mesaj
 const LIMIT_UCRETSIZ = 15; // diğer hesaplara günlük mesaj
 
 const cors = {
@@ -62,9 +68,9 @@ Eylem satırlarını açıklama içine gömme; kullanıcı bunları buton olarak
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ ok: false, error: "Yalnızca POST." }, 405);
-  const FAL = Deno.env.get("FAL_KEY") || Deno.env.get("fal_key");
+  const hazir = SAGLAYICI.filter((x) => anahtar(x.env));
   const URL_ = Deno.env.get("SUPABASE_URL")!, ANON = Deno.env.get("SUPABASE_ANON_KEY")!, SRV = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  if (!FAL) return json({ ok: false, error: "Asistan henüz ayarlanmadı." }, 503);
+  if (!hazir.length) return json({ ok: false, error: "Asistan henüz ayarlanmadı." }, 503);
   const asUser = createClient(URL_, ANON, { global: { headers: { Authorization: req.headers.get("Authorization") || "" } } });
   const admin = createClient(URL_, SRV);
   const { data: { user } } = await asUser.auth.getUser();
@@ -90,24 +96,26 @@ Deno.serve(async (req) => {
   const ekran = EKRAN[String(b.ekran)] || "Ana sayfa";
   const kim = `KULLANICI BİLGİSİ: ad: ${p?.ad || "-"}, firma: ${p?.firma || "-"}, paket: ${PLAN[p?.plan] || "Ücretsiz"}${aktif ? " (aktif)" : " (aktif abonelik yok)"}, AI kredisi: ${p?.kredi ?? 0}. Şu an açık ekran: ${ekran}. Bugünün tarihi: ${gun}.`;
 
-  try {
-    const r = await fetch(LLM_URL, {
-      method: "POST",
-      headers: { Authorization: `Key ${FAL}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: MODEL, temperature: 0.5, max_tokens: 900, messages: [{ role: "system", content: SISTEM + "\n\n" + kim }, ...msgs] }),
-    });
-    const out = await r.json().catch(() => ({}));
-    const metin = String(out?.choices?.[0]?.message?.content || "").trim();
-    if (!r.ok || !metin) {
-      const d = JSON.stringify(out?.detail || out?.error || out).slice(0, 300);
-      console.error("asistan llm", r.status, d);
-      const para = /balance|locked|exhausted/i.test(d);
-      return json({ ok: false, error: para ? "Asistan şu an bakımda. Biraz sonra tekrar dene." : "Asistan şu an cevap veremedi. Tekrar dene." }, 502);
+  const messages = [{ role: "system", content: SISTEM + "\n\n" + kim }, ...msgs];
+  let metin = "";
+  for (const x of hazir) {
+    try {
+      const r = await fetch(x.url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${anahtar(x.env)}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ model: x.model, temperature: 0.5, max_tokens: 1200, messages, ...(x.ad.startsWith("gemini") ? { reasoning_effort: "none" } : {}) }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const out = await r.json().catch(() => ({}));
+      metin = String(out?.choices?.[0]?.message?.content || "").trim();
+      if (r.ok && metin) break;
+      console.error("asistan", x.ad, r.status, JSON.stringify(out?.error || out).slice(0, 300));
+      metin = "";
+    } catch (e) {
+      console.error("asistan", x.ad, String(e));
     }
-    await admin.from("asistan_kullanim").upsert({ user_id: user.id, gun, n: n + 1 }, { onConflict: "user_id,gun" });
-    return json({ ok: true, metin, kalan: limit - n - 1 });
-  } catch (e) {
-    console.error("asistan", String(e));
-    return json({ ok: false, error: "Asistan şu an cevap veremedi. Tekrar dene." }, 502);
   }
+  if (!metin) return json({ ok: false, error: "Asistan şu an çok yoğun. Bir dakika sonra tekrar dene." }, 503);
+  await admin.from("asistan_kullanim").upsert({ user_id: user.id, gun, n: n + 1 }, { onConflict: "user_id,gun" });
+  return json({ ok: true, metin, kalan: limit - n - 1 });
 });
