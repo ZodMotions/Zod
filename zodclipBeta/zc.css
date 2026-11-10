@@ -301,3 +301,20 @@ table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-
 .sect.lay>.btn{width:100%;margin-top:4px}
 .blk.ov.mot{background:color-mix(in srgb,var(--c-mot) 70%,transparent)}
 .sect.lay .chk{margin-top:6px}
+/* stok görsel */
+.stock-open{width:100%;margin:8px 0 4px;justify-content:center}
+.stock-pick{width:100%;margin-top:8px;justify-content:center}
+.stock-box{width:min(760px,100%);max-height:min(86vh,820px);grid-template-rows:auto auto auto auto 1fr auto}
+.stock-box .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.stock-q{display:flex;gap:8px}
+.stock-q input{flex:1;min-height:38px;padding:0 12px;border-radius:9px;border:1px solid var(--line2);background:var(--p0);color:var(--fg);font:14px var(--f-b,Inter)}
+.stock-q input:focus{outline:none;border-color:var(--acc)}
+.stock-grid{overflow-y:auto;columns:4 150px;column-gap:8px;min-height:200px;overscroll-behavior:contain}
+.stock-grid button{display:block;width:100%;margin:0 0 8px;padding:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;position:relative;cursor:pointer;break-inside:avoid}
+.stock-grid button:hover,.stock-grid button:focus-visible{border-color:var(--acc)}
+.stock-grid img{display:block;width:100%;height:100%;object-fit:cover}
+.stock-grid span{position:absolute;left:0;right:0;bottom:0;padding:14px 8px 5px;font-size:10.5px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7));text-align:left;opacity:0;transition:opacity .15s}
+.stock-grid button:hover span,.stock-grid button:focus-visible span{opacity:1}
+.stock-grid button.busy{opacity:.5;pointer-events:none}
+.stock-credit{color:var(--mute);font-size:12px}
+@media (max-width:600px){.stock-grid{columns:2 120px}}

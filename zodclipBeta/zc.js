@@ -476,6 +476,39 @@ function doDel(){const o=selObj();if(!o)return;hist();
   const L=listOf(SEL.kind);L.splice(L.indexOf(o),1);
   if(SEL.kind==='item'&&S.items[0]&&S.items[0].tr)S.items[0].tr.type='none';
   select(null);afterChange();P.t=Math.min(P.t,total);showFrame()}
+
+/* ================= ücretsiz stok görsel (Pexels) ================= */
+const STK={q:'',yon:'portrait',sayfa:1,hedef:null,list:[],busy:false};
+function stockOpen(hedef){STK.hedef=hedef||null;$('#stock').hidden=false;$('#stock-t').textContent=hedef?'Motion için stok görsel':'Stok görsel';
+  if(!STK.list.length)stockSearch(true);else $('#stock-msg').textContent='Birine dokun, medyana eklensin'+(hedef?' ve motionda kullanılsın.':'.');setTimeout(()=>$('#stock-q').focus(),30)}
+function stockClose(){$('#stock').hidden=true;STK.hedef=null}
+async function stockSearch(reset){if(STK.busy)return;if(!window.ZMA||!ZMA.stok){$('#stock-msg').textContent='Stok arama için giriş yapman gerekiyor.';return}
+  if(reset){STK.sayfa=1;STK.list=[];$('#stock-grid').innerHTML=''}
+  STK.busy=true;$('#stock-msg').textContent='Aranıyor…';
+  const r=await ZMA.stok({action:'ara',q:STK.q,sayfa:STK.sayfa,yon:STK.yon});STK.busy=false;
+  if(!r.ok){$('#stock-msg').textContent=r.error==='login'?'Stok görsel aramak için giriş yap. Hesap ücretsiz.':r.error;$('#stock-more').hidden=true;return}
+  const start=STK.list.length;STK.list.push(...r.fotolar);
+  $('#stock-msg').textContent=STK.list.length?'Birine dokun, medyana eklensin'+(STK.hedef?' ve motionda kullanılsın.':'.'):'Sonuç bulunamadı; başka bir kelime dene.';
+  $('#stock-grid').insertAdjacentHTML('beforeend',r.fotolar.map((f,i)=>`<button type="button" data-i="${start+i}" title="${esc(f.alt||'Fotoğraf')} · ${esc(f.kim)}" style="background:${esc(f.renk||'#222')};aspect-ratio:${f.w}/${f.h}"><img src="${esc(f.kucuk)}" alt="${esc(f.alt||'Stok fotoğraf')}" loading="lazy"><span>${esc(f.kim)}</span></button>`).join(''));
+  $('#stock-more').hidden=!r.devam;STK.sayfa++}
+async function stockPick(f,btn){if(btn.dataset.busy)return;btn.dataset.busy='1';btn.classList.add('busy');$('#stock-msg').textContent='Görsel indiriliyor…';
+  try{let blob=null;try{const rr=await fetch(f.buyuk,{mode:'cors'});if(rr.ok)blob=await rr.blob()}catch(e){}
+    if(!blob){const r=await ZMA.stok({action:'indir',url:f.buyuk});if(!r.ok)throw new Error(r.error);blob=r.blob}
+    const file=new File([blob],`stok-${f.id}.jpg`,{type:blob.type||'image/jpeg'});const before=snap();
+    const s=await makeSource({kind:'image',name:'Stok · '+f.kim,blob:file});pushUndo(before);
+    const h=STK.hedef;let o=null;if(h){o=listOf(h.kind).find(x=>x.id===h.id)||null}
+    if(o&&o.tpl){o.photo=s.id;stockClose();afterChange();renderInsp();showFrame();toast('Görsel motiona yerleştirildi')}
+    else{stockClose();afterChange();toast('Stok görsel medyana eklendi; zaman çizgisine sürükle ya da +V2 ile üste koy')}}
+  catch(e){$('#stock-msg').textContent='Görsel indirilemedi: '+(e.message||'tekrar dene')}
+  finally{delete btn.dataset.busy;btn.classList.remove('busy')}}
+$('#btn-stock').addEventListener('click',()=>stockOpen(null));
+$('#stock-x').addEventListener('click',stockClose);
+$('#stock').addEventListener('click',e=>{if(e.target.id==='stock')stockClose()});
+$('#stock-f').addEventListener('submit',e=>{e.preventDefault();STK.q=$('#stock-q').value.trim();stockSearch(true)});
+$('#stock-yon').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;STK.yon=b.dataset.v;$$('#stock-yon button').forEach(x=>x.classList.toggle('on',x===b));stockSearch(true)});
+$('#stock-more').addEventListener('click',()=>stockSearch(false));
+$('#stock-grid').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const f=STK.list[+b.dataset.i];if(f)stockPick(f,b)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#stock').hidden)stockClose()});
 $('#tl-split').addEventListener('click',doSplit);$('#tl-dup').addEventListener('click',doDup);$('#tl-del').addEventListener('click',doDel);
 
 /* ================= tuvalde yazı sürükleme ================= */
@@ -557,7 +590,7 @@ function renderInsp(){
       h+=`</div><div class="sect"><h3><span lang="en">Motion</span> yazıları</h3><div class="fields">${Object.keys(lb).map(k=>`<label>${esc(lb[k])}<input type="text" data-f="${k}" value="${esc(it.f[k]||'')}"></label>`).join('')}</div>
       <div class="grid2"><label>Ana renk<input type="color" data-f="p" value="${it.f.p||'#111111'}"></label><label>Vurgu rengi<input type="color" data-f="a" value="${it.f.a||'#ffcc00'}"></label></div>
       ${motionDesignHTML(it,tpl)}
-      <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${it.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
+      <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${it.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><button class="btn sm stock-pick" data-a="stock" type="button"><svg><use href="#i-search"/></svg>Stoktan görsel seç</button>
       <p class="note">Logoyu Görünüm sekmesinden yüklersen motionda da görünür.${ACCESS.motionWm?' Bu ayki filigransız motion hakkın bittiği için motionlar filigranlı çıkar.':''}</p>`+layHTML(it,tpl)}
     h+=`</div><div class="sect"><h3>Girişteki geçiş</h3>${first?'<p class="note">İlk parçada geçiş olmaz.</p>':chipsHTML('tr',TRANS,(it.tr||{}).type||'none')+`<label>Geçiş süresi<input type="range" min="0.2" max="1.5" step="0.1" data-k="trd" value="${(it.tr||{}).d||.5}"></label>`}`;
     h+=`</div><div class="acts2"><button class="btn sm" data-a="split" type="button"><svg><use href="#i-cut"/></svg>Böl</button><button class="btn sm" data-a="dup" type="button"><svg><use href="#i-copy"/></svg>Kopyala</button><button class="btn sm" data-a="left" type="button">Başa al</button><button class="btn sm" data-a="right" type="button">Sona al</button><button class="btn ghost sm" data-a="del" type="button" style="color:#ff8a8a;grid-column:1/-1"><svg><use href="#i-trash"/></svg>Sil</button></div>`}
@@ -581,7 +614,7 @@ function renderInsp(){
     if(tpl)h+=`</div><div class="sect"><h3><span lang="en">Motion</span> yazıları</h3><div class="fields">${Object.keys(lb).map(k=>`<label>${esc(lb[k])}<input type="text" data-f="${k}" value="${esc(O.f[k]||'')}"></label>`).join('')}</div>
       <div class="grid2"><label>Ana renk<input type="color" data-f="p" value="${O.f.p||'#111111'}"></label><label>Vurgu rengi<input type="color" data-f="a" value="${O.f.a||'#ffcc00'}"></label></div>
       ${motionDesignHTML(O,tpl)}
-      <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${O.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>`;
+      <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${O.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><button class="btn sm stock-pick" data-a="stock" type="button"><svg><use href="#i-search"/></svg>Stoktan görsel seç</button>`;
     h+=`</div><div class="sect"><h3>Boyut ve görünüm</h3><label>Boyut<input type="range" min="0.2" max="1.2" step="0.01" data-k="w" value="${O.w}"></label><label>Saydamlık<input type="range" min="0.1" max="1" step="0.05" data-k="op" value="${O.op??1}"></label>
       <h3>Giriş / çıkış</h3>${chipsHTML('anim',[['none','Motionun kendisi'],['fade','Belir'],['pop','Zıpla']],O.anim||'none')}
       </div><div class="acts2"><button class="btn sm" data-a="center" type="button">Ortala</button><button class="btn sm" data-a="dup" type="button"><svg><use href="#i-copy"/></svg>Kopyala</button><button class="btn ghost sm" data-a="del" type="button" style="color:#ff8a8a;grid-column:1/-1"><svg><use href="#i-trash"/></svg>Sil</button></div>`}
@@ -650,6 +683,7 @@ $('#insp').addEventListener('click',e=>{
     else if(k==='nobg'){o.lay={bg:false};if(motCoverage(o)>.9)o.lay.photo=false}
     layChanged(o);return}
   if(act){const a=act.dataset.a;
+    if(a==='stock'){stockOpen({kind:SEL.kind,id:o.id});return}
     if(a==='toV2'){hist();const O=motToV2(o);if(O){afterChange();renderInsp();seek(O.t0+.5);toast('Motion videonun üstüne alındı')}return}
     if(a==='toV1'){hist();const it=motToV1(o);afterChange();renderInsp();seek(it.t0+.5);toast('Motion ana videoya alındı');return}
     if(a==='del')doDel();else if(a==='dup')doDup();

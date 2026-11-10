@@ -106,6 +106,11 @@ window.ZMA={mode:LIVE?'live':'preview',PLANS,ready,
     try{const {data,error}=await sb.functions.invoke('asistan',{body});
       if(error){let m=null;try{m=await error.context.json()}catch(e){}if(m&&m.error)return{ok:false,error:m.error,kalan:m.kalan};return{ok:false,error:/Failed to send|fetch/i.test(error.message)?'Asistana ulaşılamadı. İnternetini kontrol et.':'Asistan şu an hazır değil. Biraz sonra tekrar dene.'}}
       return data||{ok:false,error:'Boş yanıt.'}}catch(e){return{ok:false,error:'Asistana ulaşılamadı.'}}},
+  async stok(body){if(!LIVE||!sb)return{ok:false,error:'Stok arama için hesap sistemi bağlı olmalı.'};if(!current)return{ok:false,error:'login'};
+    try{const {data,error}=await sb.functions.invoke('stok',{body});
+      if(error){let m=null;try{m=await error.context.json()}catch(e){}if(m&&m.error)return{ok:false,error:m.error};return{ok:false,error:/Failed to send|fetch/i.test(error.message)?'Stok aramaya ulaşılamadı. İnternetini kontrol et.':'Stok arama şu an hazır değil.'}}
+      if(body.action==='indir')return data instanceof Blob?{ok:true,blob:data}:{ok:false,error:'Görsel indirilemedi.'};
+      return data||{ok:false,error:'Boş yanıt.'}}catch(e){return{ok:false,error:'Stok aramaya ulaşılamadı.'}}},
   initials(u){const s=(u&&u.profile&&u.profile.ad)||(u&&u.email)||'?';return s.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toLocaleUpperCase('tr')).join('')},
   // giriş gerekiyorsa kayıt sayfasına yönlendirir; geri dönülecek sayfayı hatırlar
   requireLogin(next){if(current)return true;location.href='giris.html?mode=kayit&next='+encodeURIComponent(next||location.pathname.split('/').pop()+location.hash);return false}
