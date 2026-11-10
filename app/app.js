@@ -87,6 +87,6 @@ if(window.zodNative&&window.zodNative.version)$('#ver').textContent='Masaüstü 
 if(window.ZMA&&ZMA.onChange)ZMA.onChange(()=>{if(cur==='home')renderAcct()});
 window.addEventListener('storage',()=>{if(cur==='home')renderAcct()});
 const start=(location.hash||'').slice(1);go(start in VIEWS?start:'home');
-window.ZAPP={go};
+window.ZAPP={go,auth:user};
 document.getElementById('btn-theme').addEventListener('click',()=>window.ZodTheme&&ZodTheme.open());
 })();
