@@ -80,12 +80,21 @@ function drawContain(m,mw,mh,z=1){const sc=Math.min(W/mw,H/mh)*z,dw=mw*sc,dh=mh*
 function mediaOf(it,local){
   if(it.type==='video'){if(FO){const f=FO.get(it.id);return f?{m:f.m,w:f.w,h:f.h}:null}const e=it.el;return e&&e.videoWidth?{m:e,w:e.videoWidth,h:e.videoHeight}:null}
   if(it.type==='image'){const s=srcById(it.src);return s&&s.img?{m:s.img,w:s.img.naturalWidth,h:s.img.naturalHeight}:null}
-  if(it.type==='motion'){const tpl0=TPL.get(it.tpl);if(!tpl0||!ZM)return null;const ph=it.photo?srcById(it.photo):null;
-    const tpl=it.st&&tpl0.st?Object.assign(Object.create(tpl0),{st:Object.assign({},tpl0.st,it.st)}):tpl0;
-    const lt=clamp((it.off||0)+local*(it.ms||1),0,tpl.dur-.001);
-    try{ZM.renderFrame(mctx,tpl,lt,it.f,{photo:ph?ph.img:null,logo:S.logo},P.exporting?!!it._wm:ACCESS.motionWm)}catch(e){}
-    return{m:mcv,w:1080,h:1920,motion:true}}
+  if(it.type==='motion'){if(!renderMot(mctx,it,local))return null;return{m:mcv,w:1080,h:1920,motion:true}}
   return null}
+// motion şablonunu (katman ayarlarıyla) 1080×1920 bir tuvale çizer; ana iz ve üst katman ortak kullanır
+function motTpl(o){const tpl0=TPL.get(o.tpl);if(!tpl0)return null;return o.st&&tpl0.st?Object.assign(Object.create(tpl0),{st:Object.assign({},tpl0.st,o.st)}):tpl0}
+function renderMot(c,o,local){const tpl=motTpl(o);if(!tpl||!ZM)return false;const ph=o.photo?srcById(o.photo):null;const lt=clamp((o.off||0)+local*(o.ms||1),0,tpl.dur-.001);
+  if(o.lay){c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,c.canvas.width,c.canvas.height)}
+  try{ZM.renderFrame(c,tpl,lt,o.f,{photo:ph?ph.img:null,logo:S.logo},P.exporting?!!o._wm:ACCESS.motionWm,o.lay||undefined)}catch(e){}return true}
+const motW=()=>Math.min(1,(H*1080/1920)/W);
+function drawMotOv(O,t){const local=t-O.t0;if(local<0||local>O.dur){O._bb=null;return}
+  if(!O._cv){O._cv=document.createElement('canvas');O._cv.width=1080;O._cv.height=1920;O._cx=O._cv.getContext('2d');O._cx.imageSmoothingQuality='high'}
+  O._cx.setTransform(1,0,0,1,0,0);O._cx.clearRect(0,0,1080,1920);if(!renderMot(O._cx,O,local))return;
+  const w=O.w*W,h=w*1920/1080,cx=O.x*W,cy=O.y*H;O._bb={x:cx-w/2,y:cy-h/2,w,h};
+  const ain=O.anim==='none'||!O.anim?1:ease(local/.35),aout=O.anim==='none'||!O.anim?1:clamp((O.dur-local)/.3,0,1);
+  ctx.save();ctx.globalAlpha=(O.op??1)*ain*aout;ctx.drawImage(O._cv,cx-w/2,cy-h/2,w,h);ctx.restore();
+  if(SEL&&SEL.kind==='ov'&&SEL.id===O.id&&!P.exporting&&!P.playing){ctx.save();ctx.setLineDash([12,8]);ctx.lineWidth=3;ctx.strokeStyle='rgba(75,163,255,.95)';ctx.strokeRect(O._bb.x,O._bb.y,O._bb.w,O._bb.h);ctx.restore()}}
 function drawItem(it,local){
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   const md=mediaOf(it,local);if(!md||!md.w)return;
@@ -192,7 +201,7 @@ function drawEnd(t){
   ctx.restore();
 }
 // V2 üst katman: logo, ürün fotoğrafı, PNG
-function drawOverlay(O,t){const local=t-O.t0;if(local<0||local>O.dur){O._bb=null;return}const s=srcById(O.src);if(!s||!s.img||!s.img.naturalWidth)return;
+function drawOverlay(O,t){if(O.type==='motion'){drawMotOv(O,t);return}const local=t-O.t0;if(local<0||local>O.dur){O._bb=null;return}const s=srcById(O.src);if(!s||!s.img||!s.img.naturalWidth)return;
   const iw=s.img.naturalWidth,ih=s.img.naturalHeight,w=O.w*W,h=w*ih/iw,cx=O.x*W,cy=O.y*H;
   const ain=O.anim==='none'?1:ease(local/.35),aout=O.anim==='none'?1:clamp((O.dur-local)/.3,0,1);let sc=1,dy=0;
   if(O.anim==='pop')sc=.6+.4*eback(local/.4);if(O.anim==='slide')dy=(1-ease(local/.45))*H*.05;
@@ -373,7 +382,7 @@ function renderTL(){
   $('#lane-text').innerHTML=pos.map(([L,k])=>`<div class="blk text${SEL&&SEL.kind==='text'&&SEL.id===L.id?' sel':''}" data-k="text" data-id="${L.id}" style="left:${L.t0*pps}px;width:${Math.max(8,L.dur*pps-1)}px;top:${k*(lh+2)}px;height:${lh}px"><span>${esc(L.text.replace(/\n/g,' '))}</span><b class="h l"></b><b class="h r"></b></div>`).join('');
   const ol=[];const opos=S.ovs.slice().sort((a,b)=>a.t0-b.t0).map(O=>{let k=ol.findIndex(end=>end<=O.t0+.01);if(k<0){k=ol.length;ol.push(0)}ol[k]=O.t0+O.dur;return[O,k]});
   const onl=Math.max(1,ol.length),olh=onl===1?44:22,oth=onl===1?44:onl*(olh+2);$('#lane-ov').parentElement.style.height=oth+'px';$('.th[data-tr=ov]').style.height=oth+'px';
-  $('#lane-ov').innerHTML=opos.map(([O,k])=>{const s=srcById(O.src);return `<div class="blk ov${SEL&&SEL.kind==='ov'&&SEL.id===O.id?' sel':''}" data-k="ov" data-id="${O.id}" style="left:${O.t0*pps}px;width:${Math.max(8,O.dur*pps-1)}px;top:${k*(olh+2)}px;height:${olh}px">${s&&s.thumb?`<div class="film" style="top:0;background-image:url('${s.thumb}');opacity:.35"></div>`:''}<span>${esc(s?s.name:'Katman')}</span><b class="h l"></b><b class="h r"></b></div>`}).join('');
+  $('#lane-ov').innerHTML=opos.map(([O,k])=>{const tp=O.type==='motion'?TPL.get(O.tpl):null;const s=tp?null:srcById(O.src);const th=tp?tplThumbURL(tp):(s&&s.thumb);return `<div class="blk ov${tp?' mot':''}${SEL&&SEL.kind==='ov'&&SEL.id===O.id?' sel':''}" data-k="ov" data-id="${O.id}" style="left:${O.t0*pps}px;width:${Math.max(8,O.dur*pps-1)}px;top:${k*(olh+2)}px;height:${olh}px">${th?`<div class="film" style="top:0;background-image:url('${th}');opacity:.35"></div>`:''}<span>${esc(tp?tp.name:s?s.name:'Katman')}</span><b class="h l"></b><b class="h r"></b></div>`}).join('');
   $('#lane-cap').innerHTML=S.caps.map(c=>`<div class="blk cap${SEL&&SEL.kind==='cap'&&SEL.id===c.id?' sel':''}" data-k="cap" data-id="${c.id}" style="left:${c.s*pps}px;width:${Math.max(4,(c.e-c.s)*pps-1)}px"><span>${esc(c.t)}</span></div>`).join('');
   $('#lane-music').innerHTML=S.music?`<div class="blk music" data-k="music" style="left:0;width:${Math.max(4,total*pps)}px"><span>${esc(S.music.name)}</span></div>`:'';
   const hs=$('#tl-heads');if(hs)hs.scrollTop=tlScroll.scrollTop;
@@ -461,7 +470,7 @@ function doSplit(){const st=splitTarget();if(!st){toast('Oynatma çizgisini bir 
   afterChange();renderInsp();showFrame();toast('Bölündü')}
 function doDup(){const o=selObj();if(!o||SEL.kind==='cap')return;hist();
   if(SEL.kind==='item'){const i=S.items.indexOf(o);const {el,...plain}=o;const n={...JSON.parse(JSON.stringify(plain)),id:nid()};S.items.splice(i+1,0,n);afterChange();select('item',n.id,false)}
-  else{const k=SEL.kind;const {_bb,...plain}=o;const n={...plain,id:nid(),t0:o.t0+o.dur};listOf(k).push(n);afterChange();select(k,n.id,false)}
+  else{const k=SEL.kind;const {_bb,_cv,_cx,...plain}=o;const n={...JSON.parse(JSON.stringify(plain)),id:nid(),t0:o.t0+o.dur};listOf(k).push(n);afterChange();select(k,n.id,false)}
   toast('Kopyalandı')}
 function doDel(){const o=selObj();if(!o)return;hist();
   const L=listOf(SEL.kind);L.splice(L.indexOf(o),1);
@@ -500,6 +509,36 @@ function motionDesignHTML(it,tpl){
   return h}
 const chipsHTML=(k,list,cur)=>`<div class="chips" data-chips="${k}">${list.map(([v,n])=>`<button type="button" data-v="${v}" class="${String(v)===String(cur)?'on':''}">${n}</button>`).join('')}</div>`;
 const swHTML=(k,cur)=>`<div class="sw" data-sw="${k}">${COLORS.map(c=>`<button type="button" data-v="${c}" class="${c.toLowerCase()===String(cur).toLowerCase()?'on':''}" style="background:${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-k="${k}" value="${cur||'#ffffff'}" aria-label="Özel renk"></div>`;
+/* ---------- motion katmanları ---------- */
+const LAYN=[['bg','Arka plan'],['photo','Fotoğraf / görsel'],['shape','Şekiller ve süsler'],['text','Yazılar'],['logo','Logo']];
+const LPRE=[['all','Tümü'],['text','Sadece yazı'],['photo','Sadece görsel'],['nobg','Arka planı kaldır']];
+function presetOf(o){const L=o.lay;if(!L)return 'all';const off=k=>L[k]===false;
+  if(off('bg')&&off('photo')&&off('shape')&&off('logo')&&!off('text'))return 'text';
+  if(off('bg')&&off('shape')&&off('text')&&off('logo')&&!off('photo'))return 'photo';
+  if(off('bg')&&!off('text')&&!off('shape'))return 'nobg';return ''}
+function motCoverage(o){const tpl=motTpl(o);if(!tpl)return 0;const c=document.createElement('canvas');c.width=90;c.height=160;const x=c.getContext('2d',{willReadFrequently:true});let mx=0;
+  for(const k of [.35,.6,.85]){x.clearRect(0,0,90,160);try{ZM.renderFrame(x,tpl,tpl.dur*k,o.f,{photo:null,logo:S.logo},false,o.lay||undefined)}catch(e){}const d=x.getImageData(0,0,90,160).data;let n=0;for(let i=3;i<d.length;i+=4)if(d[i]>8)n++;mx=Math.max(mx,n/(90*160))}return mx}
+function normLay(o){const L=o.lay;if(!L)return;for(const k of Object.keys(L))if(L[k]===true||L[k]===undefined)delete L[k];if(L.hide&&!L.hide.length)delete L.hide;if(!Object.keys(L).length)o.lay=null}
+function layHTML(o,tpl){const L=o.lay||{};const lb=tpl.labels||{};const hide=new Set(L.hide||[]);const pr=presetOf(o);
+  const fields=Object.keys(lb).filter(f=>typeof o.f[f]==='string'&&o.f[f].trim());
+  let h=`</div><div class="sect lay"><h3>Katmanlar</h3><p class="note">Motionun sadece istediğin parçasını kullan: kapattıkların görünmez.</p>
+    <div class="lay-pre">${LPRE.map(([k,n])=>`<button type="button" class="${pr===k?'on':''}" data-lp="${k}" aria-pressed="${pr===k}">${n}</button>`).join('')}</div><div class="lay-list">`;
+  for(const [k,n] of LAYN){h+=`<label class="chk"><input type="checkbox" data-ly="${k}" ${L[k]===false?'':'checked'}> ${n}${k==='logo'&&!S.logo?' <small>(Görünüm sekmesinden logo yükle)</small>':''}</label>`;
+    if(k==='text'&&fields.length)h+=`<div class="lay-sub">${fields.map(f=>`<label class="chk"><input type="checkbox" data-lh="${f}" ${hide.has(f)?'':'checked'} ${L.text===false?'disabled':''}> ${esc(lb[f])}</label>`).join('')}</div>`}
+  h+='</div>';
+  if(SEL.kind==='ov')h+=`<p class="note">Bu motion videonun üstünde${L.bg===false?' şeffaf':''} duruyor. Önizlemede sürükleyerek yerini, fare tekerleğiyle boyutunu değiştir.</p><button class="btn sm" data-a="toV1" type="button">Ana videoya taşı</button>`;
+  else h+=`<p class="note">Arka planı kapatınca motion kendiliğinden videonun üstüne (V2) geçer ve altındaki video görünür.</p><button class="btn sm" data-a="toV2" type="button">Videonun üstüne taşı</button>`;
+  return h}
+function motToV2(it){if(S.items.length<2){toast('Motionu videonun üstüne almak için önce bir video ya da fotoğraf ekle');return null}
+  const i=S.items.indexOf(it);const t0=it.t0,d=idur(it);S.items.splice(i,1);if(S.items[0]&&S.items[0].tr)S.items[0].tr.type='none';layout();
+  const O={id:nid(),type:'motion',tpl:it.tpl,f:it.f,st:it.st,ms:it.ms,off:it.off,photo:it.photo,lay:it.lay,t0:Math.max(0,Math.min(t0,contentDur-Math.min(d,contentDur))),dur:Math.min(d,Math.max(.5,contentDur)),x:.5,y:.5,w:motW(),op:1,anim:'none'};
+  S.ovs.push(O);SEL={kind:'ov',id:O.id};return O}
+function motToV1(O){const idx=S.items.findIndex(it=>it.t0>=O.t0-.01);const at=idx<0?S.items.length:idx;
+  const it=insertItem({type:'motion',tpl:O.tpl,f:O.f,st:O.st,ms:O.ms,off:O.off,photo:O.photo,lay:O.lay,dur:O.dur,tr:{type:at?'fade':'none',d:.4}},at);
+  S.ovs.splice(S.ovs.indexOf(O),1);SEL={kind:'item',id:it.id};return it}
+function layChanged(o){normLay(o);let moved=false;
+  if(SEL.kind==='item'&&o.lay&&o.lay.bg===false){const O=motToV2(o);if(O){moved=true;toast('Motion videonun üstüne alındı; altındaki video görünüyor')}}
+  afterChange();renderInsp();if(moved)seek(SEL&&selObj()?selObj().t0+.5:P.t);else showFrame()}
 function renderInsp(){
   const box=$('#insp');const o=selObj();if(!o){box.innerHTML='<div class="insp-empty"><svg><use href="#i-sliders"/></svg><b>Seçili öğe yok</b><span>Zaman çizgisinden bir video, yazı ya da altyazı seç; ayarları burada görünür.</span></div>';return}
   let h='';
@@ -519,7 +558,7 @@ function renderInsp(){
       <div class="grid2"><label>Ana renk<input type="color" data-f="p" value="${it.f.p||'#111111'}"></label><label>Vurgu rengi<input type="color" data-f="a" value="${it.f.a||'#ffcc00'}"></label></div>
       ${motionDesignHTML(it,tpl)}
       <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${it.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
-      <p class="note">Logoyu Görünüm sekmesinden yüklersen motionda da görünür.${ACCESS.motionWm?' Bu ayki filigransız motion hakkın bittiği için motionlar filigranlı çıkar.':''}</p>`}
+      <p class="note">Logoyu Görünüm sekmesinden yüklersen motionda da görünür.${ACCESS.motionWm?' Bu ayki filigransız motion hakkın bittiği için motionlar filigranlı çıkar.':''}</p>`+layHTML(it,tpl)}
     h+=`</div><div class="sect"><h3>Girişteki geçiş</h3>${first?'<p class="note">İlk parçada geçiş olmaz.</p>':chipsHTML('tr',TRANS,(it.tr||{}).type||'none')+`<label>Geçiş süresi<input type="range" min="0.2" max="1.5" step="0.1" data-k="trd" value="${(it.tr||{}).d||.5}"></label>`}`;
     h+=`</div><div class="acts2"><button class="btn sm" data-a="split" type="button"><svg><use href="#i-cut"/></svg>Böl</button><button class="btn sm" data-a="dup" type="button"><svg><use href="#i-copy"/></svg>Kopyala</button><button class="btn sm" data-a="left" type="button">Başa al</button><button class="btn sm" data-a="right" type="button">Sona al</button><button class="btn ghost sm" data-a="del" type="button" style="color:#ff8a8a;grid-column:1/-1"><svg><use href="#i-trash"/></svg>Sil</button></div>`}
   else if(SEL.kind==='text'){const L=o;
@@ -534,6 +573,17 @@ function renderInsp(){
       <h3>Animasyon</h3>${chipsHTML('anim',[['pop','Zıpla'],['fade','Belir'],['slide','Kay'],['type','Daktilo'],['none','Yok']],L.anim)}
       <div class="grid2"><label>Başlangıç (sn)<input type="number" step="0.1" min="0" data-k="t0" value="${r2(L.t0)}"></label><label>Süre (sn)<input type="number" step="0.1" min="0.3" data-k="dur" value="${r2(L.dur)}"></label></div>
       <p class="note">Önizlemede yazıyı sürükleyerek yerini değiştir.</p>
+      </div><div class="acts2"><button class="btn sm" data-a="center" type="button">Ortala</button><button class="btn sm" data-a="dup" type="button"><svg><use href="#i-copy"/></svg>Kopyala</button><button class="btn ghost sm" data-a="del" type="button" style="color:#ff8a8a;grid-column:1/-1"><svg><use href="#i-trash"/></svg>Sil</button></div>`}
+  else if(SEL.kind==='ov'&&o.type==='motion'){const O=o;const tpl=TPL.get(O.tpl);const lb=(tpl&&tpl.labels)||{};
+    h+=`<div class="insp-h"><span class="sw2" style="background:var(--c-mot)"></span><div><b><span lang="en">Motion</span> · üst katman</b><small>${esc(tpl?tpl.name:'')}</small></div><span class="d">${tc(O.dur)}</span></div>
+      <div class="sect"><h3>Zamanlama</h3><div class="grid2"><label>Başlangıç (sn)<input type="number" step="0.1" min="0" data-k="t0" value="${r2(O.t0)}"></label><label>Süre (sn)<input type="number" step="0.1" min="0.3" data-k="dur" value="${r2(O.dur)}"></label></div>`;
+    if(tpl)h+=layHTML(O,tpl);
+    if(tpl)h+=`</div><div class="sect"><h3><span lang="en">Motion</span> yazıları</h3><div class="fields">${Object.keys(lb).map(k=>`<label>${esc(lb[k])}<input type="text" data-f="${k}" value="${esc(O.f[k]||'')}"></label>`).join('')}</div>
+      <div class="grid2"><label>Ana renk<input type="color" data-f="p" value="${O.f.p||'#111111'}"></label><label>Vurgu rengi<input type="color" data-f="a" value="${O.f.a||'#ffcc00'}"></label></div>
+      ${motionDesignHTML(O,tpl)}
+      <label>Fotoğraf<select data-k="photo"><option value="">Yok</option>${S.sources.filter(x=>x.kind==='image').map(x=>`<option value="${x.id}" ${O.photo===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>`;
+    h+=`</div><div class="sect"><h3>Boyut ve görünüm</h3><label>Boyut<input type="range" min="0.2" max="1.2" step="0.01" data-k="w" value="${O.w}"></label><label>Saydamlık<input type="range" min="0.1" max="1" step="0.05" data-k="op" value="${O.op??1}"></label>
+      <h3>Giriş / çıkış</h3>${chipsHTML('anim',[['none','Motionun kendisi'],['fade','Belir'],['pop','Zıpla']],O.anim||'none')}
       </div><div class="acts2"><button class="btn sm" data-a="center" type="button">Ortala</button><button class="btn sm" data-a="dup" type="button"><svg><use href="#i-copy"/></svg>Kopyala</button><button class="btn ghost sm" data-a="del" type="button" style="color:#ff8a8a;grid-column:1/-1"><svg><use href="#i-trash"/></svg>Sil</button></div>`}
   else if(SEL.kind==='ov'){const O=o;const sr=srcById(O.src);
     h+=`<div class="insp-h"><span class="sw2" style="background:var(--c-ov)"></span><div><b>Üst katman (V2)</b><small>${esc(sr?sr.name:'')}</small></div><span class="d">${tc(O.dur)}</span></div>
@@ -565,6 +615,7 @@ function inspApply(el,val){
     else if(k==='photo')it.photo=val?+val:null;
     layout();renderTL();if(k!=='vol')showFrame()}
   else if(SEL.kind==='ov'){const O=o;
+    if(k==='photo'){O.photo=val?+val:null;showFrame()}
     if(k==='w')O.w=parseFloat(val);else if(k==='op')O.op=parseFloat(val);else if(k==='shadow')O.shadow=val;else if(k==='round')O.round=val;
     else if(k==='t0'){const v=parseFloat(val);if(!isNaN(v))O.t0=Math.max(0,v)}else if(k==='dur'){const v=parseFloat(val);if(!isNaN(v))O.dur=Math.max(.3,v)}
     if(k==='t0'||k==='dur')renderTL()}
@@ -577,6 +628,11 @@ function inspApply(el,val){
 }
 $('#insp').addEventListener('input',e=>{const el=e.target;if(el.dataset.k===undefined&&el.dataset.f===undefined)return;if(el.type==='number')return;inspApply(el,el.type==='checkbox'?el.checked:el.value)});
 $('#insp').addEventListener('change',e=>{const el=e.target;if(el.type==='number'){inspApply(el,el.value);renderInsp()}else if(el.tagName==='SELECT')inspApply(el,el.value)});
+$('#insp').addEventListener('change',e=>{const el=e.target;if(el.dataset.ly===undefined&&el.dataset.lh===undefined)return;const o=selObj();if(!o||!o.tpl)return;hist();
+  const L=o.lay=Object.assign({},o.lay||{});
+  if(el.dataset.ly!==undefined){if(el.checked)delete L[el.dataset.ly];else L[el.dataset.ly]=false}
+  else{const h=new Set(L.hide||[]);if(el.checked)h.delete(el.dataset.lh);else h.add(el.dataset.lh);L.hide=[...h]}
+  layChanged(o)});
 $('#insp').addEventListener('click',e=>{
   const o=selObj();if(!o)return;
   const chip=e.target.closest('[data-chips] button'),sw=e.target.closest('[data-sw] button'),act=e.target.closest('[data-a]');
@@ -589,7 +645,13 @@ $('#insp').addEventListener('click',e=>{
     afterChange();renderInsp();showFrame();if(k==='tr'&&v!=='none')seek(o.t0);return}
   if(sw){hist();o[sw.parentElement.dataset.sw]=sw.dataset.v;dirty=true;renderInsp();scheduleSave();return}
   const pal=e.target.closest('[data-pal]');if(pal&&o.f){hist();const [a,b]=pal.dataset.pal.split('|');o.f.p=a;o.f.a=b;dirty=true;renderInsp();scheduleSave();return}
+  const lp=e.target.closest('[data-lp]');if(lp&&o.tpl){hist();const k=lp.dataset.lp;
+    if(k==='all')o.lay=null;else if(k==='text')o.lay={bg:false,photo:false,shape:false,logo:false};else if(k==='photo')o.lay={bg:false,shape:false,text:false,logo:false};
+    else if(k==='nobg'){o.lay={bg:false};if(motCoverage(o)>.9)o.lay.photo=false}
+    layChanged(o);return}
   if(act){const a=act.dataset.a;
+    if(a==='toV2'){hist();const O=motToV2(o);if(O){afterChange();renderInsp();seek(O.t0+.5);toast('Motion videonun üstüne alındı')}return}
+    if(a==='toV1'){hist();const it=motToV1(o);afterChange();renderInsp();seek(it.t0+.5);toast('Motion ana videoya alındı');return}
     if(a==='del')doDel();else if(a==='dup')doDup();
     else if(a==='split'){if(SEL.kind==='item')P.t=clamp(P.t,o.t0+.2,o.t0+idur(o)-.2);doSplit()}
     else if(a==='center'){hist();o.x=.5;if(SEL.kind==='ov')o.y=.5;dirty=true;scheduleSave()}
@@ -912,7 +974,7 @@ function finishExport(blob,opt){const ext=blob.type.includes('mp4')?'mp4':'webm'
   $('#exp-t').textContent=opt.last===false?'Sıradaki klip hazırlanıyor':'Video hazır';$('#exp-msg').textContent=`${name} · ${(blob.size/1048576).toFixed(1)} MB`;$('#exp-cancel').textContent='Kapat';setExpProgress(1);return name}
 async function exportVideo(opt={}){
   ensureAudio();pause();if(SEL)select(null);
-  const mots=S.items.filter(it=>it.type==='motion');
+  const mots=[...S.items,...S.ovs].filter(it=>it.type==='motion');
   if(ACCESS.free){for(const it of mots)it._wm=true;toast('Abonelik olmadan video filigranlı çıkar. Filigransız için bir paket seç.',4500)}
   else{for(const it of mots){try{const r=await ZMA.useMotion();it._wm=!r.ok||!!r.wm}catch(e){it._wm=true}}
   if(mots.some(it=>it._wm))toast('Bazı motionlar filigranlı çıkacak: filigransız motion hakkın bitti.',4500)}
@@ -944,7 +1006,7 @@ $('#btn-cover').addEventListener('click',()=>{if(!S.items.length){toast('Önce b
 
 /* ================= geri al / yinele ================= */
 const undo=[],redo=[];
-function snap(){return JSON.stringify({items:S.items.map(({el,t0,_wm,...r})=>r),ovs:S.ovs.map(({_bb,...r})=>r),texts:S.texts.map(({_bb,...r})=>r),caps:S.caps,cfg:S.cfg})}
+function snap(){return JSON.stringify({items:S.items.map(({el,t0,_wm,...r})=>r),ovs:S.ovs.map(({_bb,_cv,_cx,_wm,...r})=>r),texts:S.texts.map(({_bb,...r})=>r),caps:S.caps,cfg:S.cfg})}
 let syncAll=()=>{};
 function restore(j){const o=JSON.parse(j);S.items=o.items;S.ovs=o.ovs||[];S.texts=o.texts;S.caps=o.caps;Object.assign(S.cfg,o.cfg);try{$('#pname').value=S.cfg.name||'Yeni proje'}catch(e){}
   for(const x of [...S.items,...S.ovs,...S.texts,...S.caps]){if(!x.id)x.id=nid();uid=Math.max(uid,x.id)}
@@ -974,7 +1036,7 @@ async function tryResume(){
     for(const id of p.srcIds){const r=await dbGet('src:'+id);if(!r||(!r.blob&&!r.url))continue;try{await makeSource({...r,restoring:true})}catch(e){}}
     const lg=await dbGet('logo');if(lg&&lg.blob)await setLogo(lg.blob,true);
     const mu=await dbGet('music');if(mu&&mu.blob)await setMusic(new File([mu.blob],mu.name||'muzik',{type:mu.blob.type}),o.cfg.music.start||0);
-    const ids=new Set(S.sources.map(s=>s.id));o.items=o.items.filter(it=>!it.src||ids.has(it.src));o.ovs=(o.ovs||[]).filter(O=>ids.has(O.src));
+    const ids=new Set(S.sources.map(s=>s.id));o.items=o.items.filter(it=>!it.src||ids.has(it.src));o.ovs=(o.ovs||[]).filter(O=>O.type==='motion'?TPL.has(O.tpl):ids.has(O.src));
     resumeOpen=false;restore(JSON.stringify(o));undo.length=0;redo.length=0;updTools();fitTL();toast('Proje açıldı')};
   $('#resume-no').onclick=async()=>{$('#resume').hidden=true;await dbClear();resumeOpen=false;for(const s of S.sources)dbPutSource(s);scheduleSave()};
 }

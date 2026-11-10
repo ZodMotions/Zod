@@ -289,3 +289,15 @@ table,time,.tc,[data-num],.kv b,.price,.amount,kbd{font-variant-numeric:tabular-
 /* bırakma alanı her temada siyah video tuvalinin üstünde durur: yazılar her zaman açık renk */
 .drop{color:#ECECEF;border-color:rgba(255,255,255,.22)}.drop span{color:#B4B4BC}.steps{border-top-color:rgba(255,255,255,.16)}.steps li{color:#E4E4E8}
 .steps li b{background:rgba(255,255,255,.12);color:#fff}
+/* motion katmanları */
+.sect.lay .lay-pre{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 10px}
+.sect.lay .lay-pre button{min-height:34px;padding:6px 8px;border-radius:8px;border:1px solid var(--line2);background:var(--p2);color:var(--fg);font:600 12.5px/1.2 var(--f-b,Inter);cursor:pointer}
+.sect.lay .lay-pre button:hover{background:var(--p3)}
+.sect.lay .lay-pre button.on{border-color:var(--acc);background:var(--accbg);color:var(--fg)}
+.sect.lay .lay-list{display:grid;gap:2px;margin-bottom:8px}
+.sect.lay .lay-list small{color:var(--dim);font-weight:400}
+.sect.lay .lay-sub{display:grid;gap:2px;margin:0 0 4px 24px;padding-left:10px;border-left:2px solid var(--line2)}
+.sect.lay .lay-sub input:disabled+*{opacity:.5}
+.sect.lay>.btn{width:100%;margin-top:4px}
+.blk.ov.mot{background:color-mix(in srgb,var(--c-mot) 70%,transparent)}
+.sect.lay .chk{margin-top:6px}

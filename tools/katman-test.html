@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/fonts/ui.css"><script src="/zodmotionsBeta/zm-engine.js"></script>
+<body><script>
+window.run=async(from,to)=>{await document.fonts.ready;const Z=window.ZM,W=135,H=240;const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c.getContext('2d',{willReadFrequently:true})};
+ const a=mk(),b=mk();const out=[];
+ const px=c=>c.getImageData(0,0,W,H).data;
+ const cnt=d=>{let n=0;for(let i=3;i<d.length;i+=4)if(d[i]>8)n++;return n/(W*H)};
+ for(const T of Z.TEMPLATES.slice(from,to)){const t=Math.min(T.dur*.55,T.dur-.6);const r={id:T.id};
+  try{a.clearRect(0,0,W,H);Z.renderFrame(a,T,t,T.def,Z.NOIMG,false);b.clearRect(0,0,W,H);Z.renderFrame(b,T,t,T.def,Z.NOIMG,false,{hide:['__yok']});
+   const da=px(a),db=px(b);let diff=0;for(let i=0;i<da.length;i++)diff+=Math.abs(da[i]-db[i]);r.fid=+(diff/da.length).toFixed(3);
+   for(const k of ['bg','photo','shape','text']){const v={bg:false,photo:false,shape:false,text:false,logo:false};v[k]=true;b.clearRect(0,0,W,H);Z.renderFrame(b,T,t,T.def,Z.NOIMG,false,v);r[k]=+cnt(px(b)).toFixed(3)}
+   const nb={bg:false};b.clearRect(0,0,W,H);Z.renderFrame(b,T,t,T.def,Z.NOIMG,false,nb);r.nobg=+cnt(px(b)).toFixed(3);
+  }catch(e){r.err=String(e).slice(0,120)}out.push(r)}
+ return out};
+</script>
