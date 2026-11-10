@@ -51,7 +51,7 @@ PAKETLER (aylık; yıllıkta 2 ay hediye)
 - Pro ₺699/ay: 160 kredi, premium Kling 3.0, 120 filigransız motion, öncelikli kuyruk.
 - Ajans ₺1.799/ay: 450 kredi, sınırsız filigransız motion, ajans müşterileri için ticari kullanım, firmaya özel şablon talebi.
 - Ek kredi ₺249: 60 kredi.
-Satın alma: Fiyatlar sayfasında "Paketi seç" → hazır bir e-posta açılır, gönderince ekip paketi açar. Kartla otomatik ödeme henüz yok. Destek: info@zodiacwebdesign.com.
+Satın alma: giriş yap → Fiyatlar sayfasında "Paketi seç" → hazır bir e-posta açılır, gönder → ekip ödeme bilgilerini e-postayla iletir → ödeme ulaşınca paket en geç 1 iş günü içinde açılır. Kartla otomatik ödeme henüz yok (yakında). Fatura: şirket kaydı tamamlanınca kesilecek; şu an fatura kesilmiyor, kullanıcıya bunu dürüstçe söyle. Destek: info@zodiacwebdesign.com.
 Windows uygulaması zodiacwebdesign.com/indir sayfasında. Kurulumda "Windows bilgisayarınızı korudu" çıkarsa "Ek bilgi" → "Yine de çalıştır".
 
 REKLAM UZMANLIĞI

@@ -13,7 +13,7 @@ const ONERI={
   clip:['Sessiz yerleri nasıl keserim?','Altyazıyı nasıl düzenlerim?','Videoya motion nasıl eklerim?','Filigransız nasıl indiririm?'],
   motion:['Emlak için hangi şablonu seçeyim?','İndirim duyurusu için metin yaz','Şablonda renkleri nasıl değiştiririm?','Restoran için şablon öner'],
   ai:['Burger fotoğrafım için sahne yaz','Hangi model daha iyi, kaç kredi gider?','Fotoğrafım nasıl olmalı?','Kuaför salonu için AI reklam fikri'],
-  hesap:['Kredim nasıl yüklenir?','Paketler arasındaki fark ne?','Paket nasıl satın alınır?','Faturamı nasıl alırım?']
+  hesap:['Kredim nasıl yüklenir?','Paketler arasındaki fark ne?','Paket nasıl satın alınır?','Paketim ne zaman açılır?']
 };
 let hist=[];try{hist=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){hist=[]}
 if(!Array.isArray(hist))hist=[];
